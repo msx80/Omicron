@@ -1,0 +1,59 @@
+/*
+
+Omicron cartridge build file
+ver 1.0
+
+Do not change this, they're equals for all games.
+Personalize your src/main/resources/omicron.properties
+
+*/
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.6
+
+assert file("./src/main/resources/omicron.properties").exists() 
+assert file("./src/main/resources/omicron.png").exists() 
+
+file("./src/main/resources/omicron.properties").withReader { 
+   Properties props = new Properties()
+   props.load(it)
+   ext.omicron = props
+   println ext.omicron
+}
+
+assert omicron.entry!=null : "In omicron.properties: entry is mandatory"
+assert omicron.name!=null : "In omicron.properties: name is mandatory"
+assert omicron.description!=null : "In omicron.properties: description is mandatory"
+assert omicron.version!=null : "In omicron.properties: version is mandatory"
+assert omicron.author!=null : "In omicron.properties: author is mandatory"
+assert omicron.year!=null : "In omicron.properties: year is mandatory"
+assert omicron.minPlayers!=null : "In omicron.properties: minPlayers is mandatory"
+assert omicron.maxPlayers!=null : "In omicron.properties: maxPlayers is mandatory"
+assert omicron.mouse!=null : "In omicron.properties: mouse is mandatory"
+assert omicron.keyboard!=null : "In omicron.properties: keyboard is mandatory"
+assert omicron.omicronVersion!=null : "In omicron.properties: omicronVersion is mandatory"
+// check that name of game is a valid java identifier
+assert omicron.name ==~ /[A-Za-z][A-Za-z0-9_]*/  : "In omicron.properties: name should be a valid Java identifier"
+
+version = omicron.version
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile group: 'com.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
+
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Omicron cartridge '+omicron.name,
+                   'Implementation-Version': omicron.version
+    }
+    archiveName omicron.name+'.omicron'
+}
