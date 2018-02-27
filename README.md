@@ -52,3 +52,45 @@ public interface Sys {
 	void exit(Object returnValue);
 }
 ```
+
+Hello World
+-----------
+
+Here's the minimal Hello World example, a controlled sprite with a background:
+
+```java
+package omicron.demo;
+
+import com.github.msx80.omicron.*;
+
+public class HelloWorld implements Game {
+
+	Image background, sprite;
+	int x = 100, y = 100;
+	Sys sys;
+	
+	public void init(Sys sys) 
+	{
+		this.sys = sys;
+		background = sys.loadImage("stars.png");
+		sprite = sys.loadImage("ufo.png");
+	}
+
+	public void update() 
+	{
+		Controller c = sys.controller(0);
+		y += c.up() ? -2 : c.down() ? 2 : 0;
+		x += c.left() ? -2 : c.right() ? 2 : 0;
+	}
+
+	public void render() {
+		sys.draw(background, 0, 0);
+		sys.draw(sprite, x, y);
+		sys.color(0.5f, 1, 0, 1);
+		sys.write(null, 5, 5, "Very simple movement demo. Have fun!");
+	}
+
+	public void close() {		
+	}
+}
+```
