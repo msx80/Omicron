@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.github.msx80.omicron</groupId>
+  <artifactId>omicron-desktop-runner</artifactId>
+  <version>0.0.1</version>
+ 
+  <dependencies>
+<dependency>
+    <groupId>org.github.msx80.omicron</groupId>
+    <artifactId>omicron-engine</artifactId>
+    <version>0.0.1</version>
+</dependency>
+
+  <dependency>
+    <groupId>org.github.msx80.omicron</groupId>
+    <artifactId>omicron-demo</artifactId>
+    <version>0.0.1</version>
+</dependency>
+  
+<dependency>
+    <groupId>org.github.msx80.omicron</groupId>
+    <artifactId>omicron-api</artifactId>
+    <version>0.0.1</version>
+</dependency>
+<dependency>
+    <groupId>com.badlogicgames.gdx</groupId>
+    <artifactId>gdx-backend-lwjgl</artifactId>
+    <version>1.9.9</version>
+</dependency>
+
+<dependency>
+    <groupId>com.badlogicgames.gdx</groupId>
+    <artifactId>gdx-platform</artifactId>
+    <version>1.9.9</version>
+</dependency>
+
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-desktop</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-armeabi</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-armeabi-v7a</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-arm64-v8a</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-x86</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-x86_64</classifier></dependency>
+  </dependencies>
+  
+</project>
