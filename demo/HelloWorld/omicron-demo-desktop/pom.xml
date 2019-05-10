@@ -37,5 +37,21 @@
 <dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-x86</classifier></dependency>
 <dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-x86_64</classifier></dependency>
   </dependencies>
-  
+<build>  
+<plugins>
+ <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>org.github.msx80.omicron.DesktopLauncher</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
+</plugins>      
+</build>  
 </project>
