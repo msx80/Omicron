@@ -46,7 +46,7 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-        compile "org.github.msx80.omicron:omicron-demo:0.0.1"
+        compile "org.github.msx80.omicron:alienbuster-demo:0.0.1"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "org.github.msx80.omicron:omicron-api:0.0.1"
 		compile "org.github.msx80.omicron:omicron-engine:0.0.1"

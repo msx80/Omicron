@@ -225,12 +225,22 @@ public class GdxOmicron extends ApplicationAdapter implements Sys {
 		   }
 
 		   public boolean touchDown (int x, int y, int pointer, int button) {
-			  if(mouse != null) mouse.btn[0] = true;
+			   if(mouse == null) return true;
+			   proj.set(x,y,0);
+			   cam.unproject(proj);
+			   mouse.x = (int) proj.x;
+			   mouse.y = (int) proj.y;
+			  mouse.btn[0] = true;
 		      return true;
 		   }
 
 		   public boolean touchUp (int x, int y, int pointer, int button) {
-			   if(mouse != null) mouse.btn[0] = false;
+			   if(mouse == null) return true;
+			   proj.set(x,y,0);
+			   cam.unproject(proj);
+			   mouse.x = (int) proj.x;
+			   mouse.y = (int) proj.y;
+			   mouse.btn[0] = false;
 		      return true;
 		   }
 
@@ -302,6 +312,12 @@ public class GdxOmicron extends ApplicationAdapter implements Sys {
 	@Override
 	public Controller[] controllers() {
 		return controllers;
+	}
+
+	@Override
+	public String dbg() {
+		
+		return Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight();
 	}
 	
 }

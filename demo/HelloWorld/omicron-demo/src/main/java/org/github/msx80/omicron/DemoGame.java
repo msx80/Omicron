@@ -40,7 +40,7 @@ public class DemoGame implements Game {
 
     	//sys.offset(30, 0);
     	
-    	sys.draw(1, 10, 10, 0,0, 128, 128);
+    	
     	
     	for (int i = 0; i < 10; i++) 
     	{
@@ -52,6 +52,7 @@ public class DemoGame implements Game {
 		    	}
 			}
     	}
+    	sys.draw(7, 0, 0, 0, 0, 400, 255);
         msxFont.print("ciaoo :P", 10, 0);
         msxFont.print("FPS: "+sys.fps(), 10, 40);
         sys.color(Colors.GREEN);
@@ -59,8 +60,11 @@ public class DemoGame implements Game {
         sys.color(Colors.WHITE);
         tic80Font.print("FPS: "+sys.fps(), 140, 46);
         
+        msxFont.print(sys.dbg(), 10, 70);
+        
         Mouse m = sys.mouse();
         msxFont.print("Mouse: "+m.x+" "+m.y+" "+m.btn[0], 10, 50);
+        
         Controller c = sys.controllers()[0];
         msxFont.print("Ctrl: "+c.up+" "+c.down+" "+c.left+" "+c.right+" "+c.btn[0]+" "+c.btn[1]+" "+c.btn[2], 10, 60);
     	
@@ -68,6 +72,8 @@ public class DemoGame implements Game {
         
         // mouse pointer
         sys.draw(2, m.x,m.y,0,24,8,8);
+        
+        sys.draw(2, x,y,256-32,0,32,32);
         
         // keyboard controlled sprite
         sys.draw(2, x, y, 0, 32, 8, 8);

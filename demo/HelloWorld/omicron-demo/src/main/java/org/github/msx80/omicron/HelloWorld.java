@@ -1,8 +1,6 @@
 package org.github.msx80.omicron;
 
 
-import java.util.stream.IntStream;
-
 import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
@@ -33,8 +31,10 @@ public class HelloWorld implements Game {
     	sys.clear(bgColor);
     	
         font.print("Hello world!", 10, 10);
+        
         sys.color(Colors.RED);
         font.print("FPS: "+sys.fps(), 10, 40);
+        
         sys.color(Colors.WHITE);
         
         Mouse m = sys.mouse();
@@ -49,7 +49,6 @@ public class HelloWorld implements Game {
         
         sys.draw(2, tic % 100, 50, 0,0, 24, 24);
     	
-        
     }
 
     public boolean update() {

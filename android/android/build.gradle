@@ -1,6 +1,7 @@
 android {
     buildToolsVersion "28.0.3"
     compileSdkVersion 27
+	// compileSdkVersion 27
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -18,11 +19,13 @@ android {
     }
     defaultConfig {
         applicationId "org.github.msx80.omicron"
-        minSdkVersion 24
-        targetSdkVersion 27
+        //minSdkVersion 24
+        //targetSdkVersion 27
+        minSdkVersion 23
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "gameClass", "\"org.github.msx80.omicron.DemoGame\""
+        buildConfigField "String", "gameClass", "\"org.github.msx80.omicron.alienbuster.AlienBusterGame\""
     }
     buildTypes {
         release {

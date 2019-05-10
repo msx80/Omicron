@@ -21,4 +21,6 @@ public interface Sys {
 	Mouse mouse();
 
 	Controller[] controllers();
+	
+	String dbg();
 }
