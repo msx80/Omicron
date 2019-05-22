@@ -2,12 +2,15 @@ Omicron
 ======
 Omicron is an open source Game Engine/Fantasy Console for Java based on LibGDX. Write your retro games with the simplest possible API and either package it as a cartridge, or include the runtime in your own distribution!
 
+![A screenshot from the demo](https://i.imgur.com/esxGpDW.png)
+
 How can I try it?
 -----------------
 
-1. Build the omicron-api, omicron-engine  project (mvn clean install)
-2. Build the HelloWorld cartridge (or your own) (gradlew build)
-3. Run the cartridge (java -jar omicron.jar Helloworld.omicron)
+1. Build the omicron-api and omicron-engine  project (mvn clean install)
+2. Build the alienbuster demo project (mvn clean install)
+3. Build the alienbuster-desktop project (mvn clean install assembly:single)
+4. Run the output jar.
 
 The API
 -------
