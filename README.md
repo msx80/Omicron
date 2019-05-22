@@ -30,17 +30,19 @@ public interface Sys {
     int getPix(int sheetNum, int x, int y);
     void setPix(int sheetNum, int x, int y, int color);
     
-	void offset(int x, int y);
+    void offset(int x, int y);
 
-	void clear(int color);
+    void clear(int color);
 
-	void color(int color);
+    void color(int color);
 	
-	int fps();
+    int fps();
 	
-	Mouse mouse();
+    Mouse mouse();
 
-	Controller[] controllers();
+    Controller[] controllers();
+    
+    // Audio yet to be added :)
 }
 
 ```
