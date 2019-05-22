@@ -4,6 +4,7 @@ Omicron is an open source Game Engine/Fantasy Console for Java based on LibGDX. 
 
 
 ![A screenshot from the demo](https://i.imgur.com/esxGpDW.png)
+
 A screenshot from the demo game, Alien Buster
 
 
