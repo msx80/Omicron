@@ -13,8 +13,9 @@ public class AlienBusterDesktop {
 	public static void launch (Game game) {
 		ScreenConfig s = game.screenConfig();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = s.width*2;
-		config.height = s.height*2;
+		config.width = s.width*3;
+		config.height = s.height*3;
+		//config.fullscreen = true;
 		new LwjglApplication(new GdxOmicron(game), config);
 	}
 	

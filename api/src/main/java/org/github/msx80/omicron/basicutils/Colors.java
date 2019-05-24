@@ -17,4 +17,9 @@ public class Colors
 	{
 		return from(r, g, b, 255);
 	}
+	
+	public static String str(int c)
+	{
+		return Long.toString(c, 16); // format in hex
+	}
 }

@@ -38,18 +38,24 @@ public class AlienBusterGame implements Game {
     {
         this.sys = sys;
         td = new TextDrawer(sys, 1, 6, 6, 6);
-        
     }
 
     public void render() 
     {
     	// background
+    	sys.clear(Colors.BLUE);
     	sys.draw(3, 0,0, 0,0, 240,136);
-    	
 		switch (status) {
 		case INTRO:
 			sys.draw(4, 56, 0, 0, 0, 128, 64);
 			textWithBorder("TAP TO START", 90,50);
+			
+			
+			System.out.println(Colors.str(sys.getPix(0, 1, 1)));
+			sys.setPix(0, 1, 1, Colors.RED);
+			System.out.println(Colors.str(sys.getPix(0, 1, 1)));
+			
+			
 			break;
 		case GAME:
 			renderGame();
@@ -79,6 +85,9 @@ public class AlienBusterGame implements Game {
         td.print("Score: "+score, 1, 1);
         td.print("FPS:"+sys.fps(), 200, 1);
         sys.color(Colors.WHITE);
+        
+        
+        
         for (Alien a : aliens) {
 			sys.draw(2, (int)a.x-16,(int)a.y-16,0,0,32,32);
 		}
