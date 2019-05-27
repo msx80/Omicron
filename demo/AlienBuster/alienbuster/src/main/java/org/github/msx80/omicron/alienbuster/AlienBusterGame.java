@@ -10,7 +10,6 @@ import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.ScreenConfig;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
-import org.github.msx80.omicron.basicutils.LineDrawer;
 import org.github.msx80.omicron.basicutils.MomentaryMouse;
 import org.github.msx80.omicron.basicutils.TextDrawer;
 
@@ -44,25 +43,18 @@ public class AlienBusterGame implements Game {
     public void render() 
     {
     	// background
-    	sys.clear(Colors.BLUE);
     	sys.draw(3, 0,0, 0,0, 240,136);
 		switch (status) {
 		case INTRO:
 			sys.draw(4, 56, 0, 0, 0, 128, 64);
 			textWithBorder("TAP TO START", 90,50);
-			
-			sys.setPix(0, 1, 1, Colors.RED);
-			
-			LineDrawer.bresenham(sys, 0, Colors.GREEN, 0,0,30,136);
-			
-			
 			break;
 		case GAME:
 			renderGame();
 			break;
 		case GAMEOVER:
 			sys.draw(4, 56, 0, 0, 64, 128, 64);
-			textWithBorder("Che scarso!!", 90,50);
+			textWithBorder("Defeated !!", 90,50);
 			break;
 
 		}
@@ -83,7 +75,7 @@ public class AlienBusterGame implements Game {
 	private void renderGame() {
 		sys.color(Colors.BLACK);
         td.print("Score: "+score, 1, 1);
-        td.print("FPS:"+sys.fps(), 200, 1);
+        td.print("FPS:"+sys.fps(), 100, 130);
         sys.color(Colors.WHITE);
         
         

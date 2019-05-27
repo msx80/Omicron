@@ -10,9 +10,6 @@ public class Alien extends Entity {
 		this.vy = vy;
 	}
 
-
-
-
 	public void update()
 	{
 		x += vx;

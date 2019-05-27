@@ -12,7 +12,6 @@ import org.github.msx80.omicron.api.Acceptor;
 import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
-import org.github.msx80.omicron.api.ScreenConfig;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 
@@ -32,6 +31,7 @@ import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -56,7 +56,10 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	Texture pixel;
 	private int lastPixel;
 	
-	ScreenConfig s;
+	ScreenInfo screenInfo = new ScreenInfo();
+	
+	Rectangle scissor = new Rectangle();
+	
 	
 	public GdxOmicron(Game game) {
 		super();
@@ -65,6 +68,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 	
 	Vector3 proj = new Vector3();
+	private Rectangle clipBounds;
 
 	@Override
 	public void create () {
@@ -86,9 +90,9 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
 		Gdx.graphics.setCursor(cursor);
 		
-		s = game.screenConfig();
+		screenInfo.requiredScreenConfig = game.screenConfig();
 		game.init(this);
-		if(s.title!=null) Gdx.graphics.setTitle(s.title);
+		if(screenInfo.requiredScreenConfig.title!=null) Gdx.graphics.setTitle(screenInfo.requiredScreenConfig.title);
 		setUpCam(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		
 	}
@@ -97,21 +101,27 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		System.out.println("Resize to "+winwidth+" "+winheight);
 		cam = new OrthographicCamera();//768/2,384/2);
 		
-		int nx = winwidth / s.width;
-		int ny = winheight / s.height;
+		int nx = winwidth / screenInfo.requiredScreenConfig.width;
+		int ny = winheight / screenInfo.requiredScreenConfig.height;
 		
-		int times = Math.min(nx, ny); // number of times the virtual screen fits nicely on the window
+		screenInfo.times = Math.min(nx, ny); // number of times the virtual screen fits nicely on the window
 		
-		int dx = winwidth - (s.width*times);
-		int dy = winheight - (s.height*times);
+		screenInfo.dx = winwidth - (screenInfo.requiredScreenConfig.width * screenInfo.times);
+		screenInfo.dy = winheight - (screenInfo.requiredScreenConfig.height * screenInfo.times);
 		
 		
-		System.out.println(dx+" "+dy);
+		// System.out.println(dx+" "+dy);
 		
-		cam.setToOrtho(true,s.width+(float)dx/(float)times, s.height+(float)dy/(float)times);
+		cam.setToOrtho(true,
+				screenInfo.requiredScreenConfig.width + (float)screenInfo.dx/(float)screenInfo.times,
+				screenInfo.requiredScreenConfig.height + (float)screenInfo.dy/(float)screenInfo.times
+				);
 		
-		cam.position.set(s.width / 2f, s.height / 2f, 0); // center on screen
+		cam.position.set(screenInfo.requiredScreenConfig.width / 2f, screenInfo.requiredScreenConfig.height / 2f, 0); // center on screen
 		cam.update();
+		
+		
+		
 	}
 
 	
@@ -154,10 +164,21 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		batch.setProjectionMatrix(cam.combined);
 	
 		this.colorf(1, 1, 1, 1);
+		Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
+		this.clear(Colors.BLACK);
+
+		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 			
+		Gdx.gl.glScissor(screenInfo.dx/2,screenInfo.dy/2,screenInfo.requiredScreenConfig.width * screenInfo.times,screenInfo.requiredScreenConfig.height * screenInfo.times);
 		batch.begin();
-		game.render();
-		batch.end();
+		try
+		{
+			game.render();
+		}
+		finally
+		{
+			batch.end();
+		}
 	}
 
 	private void uploadDirtyTexture() {
@@ -261,9 +282,12 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		{
 			if(lastPixel != color)
 			{
+				boolean a = batch.isDrawing();
+				if(a)batch.end();
 				( (PixmapTextureData) pixel.getTextureData() ).consumePixmap().drawPixel(0, 0, color);
 				lastPixel = color;
 				pixel.load(pixel.getTextureData());
+				if(a)batch.begin();
 			}
 			batch.draw(pixel, x+ox, y+oy);
 		}
