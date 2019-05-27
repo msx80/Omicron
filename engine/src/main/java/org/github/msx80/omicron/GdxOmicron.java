@@ -56,6 +56,8 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	Texture pixel;
 	private int lastPixel;
 	
+	ScreenConfig s;
+	
 	public GdxOmicron(Game game) {
 		super();
 		this.game = game;
@@ -84,13 +86,40 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
 		Gdx.graphics.setCursor(cursor);
 		
-		ScreenConfig s = game.screenConfig();
+		s = game.screenConfig();
 		game.init(this);
 		if(s.title!=null) Gdx.graphics.setTitle(s.title);
+		setUpCam(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+		
+	}
+
+	private void setUpCam(int winwidth, int winheight) {
+		System.out.println("Resize to "+winwidth+" "+winheight);
 		cam = new OrthographicCamera();//768/2,384/2);
-		cam.setToOrtho(true,s.width, s.height);
-		cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
+		
+		int nx = winwidth / s.width;
+		int ny = winheight / s.height;
+		
+		int times = Math.min(nx, ny); // number of times the virtual screen fits nicely on the window
+		
+		int dx = winwidth - (s.width*times);
+		int dy = winheight - (s.height*times);
+		
+		
+		System.out.println(dx+" "+dy);
+		
+		cam.setToOrtho(true,s.width+(float)dx/(float)times, s.height+(float)dy/(float)times);
+		
+		cam.position.set(s.width / 2f, s.height / 2f, 0); // center on screen
 		cam.update();
+	}
+
+	
+	
+	@Override
+	public void resize(int width, int height) {
+		
+		setUpCam(width, height);
 		
 	}
 

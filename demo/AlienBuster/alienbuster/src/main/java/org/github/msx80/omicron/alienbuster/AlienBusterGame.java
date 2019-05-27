@@ -10,6 +10,7 @@ import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.ScreenConfig;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
+import org.github.msx80.omicron.basicutils.LineDrawer;
 import org.github.msx80.omicron.basicutils.MomentaryMouse;
 import org.github.msx80.omicron.basicutils.TextDrawer;
 
@@ -50,10 +51,9 @@ public class AlienBusterGame implements Game {
 			sys.draw(4, 56, 0, 0, 0, 128, 64);
 			textWithBorder("TAP TO START", 90,50);
 			
-			
-			System.out.println(Colors.str(sys.getPix(0, 1, 1)));
 			sys.setPix(0, 1, 1, Colors.RED);
-			System.out.println(Colors.str(sys.getPix(0, 1, 1)));
+			
+			LineDrawer.bresenham(sys, 0, Colors.GREEN, 0,0,30,136);
 			
 			
 			break;
