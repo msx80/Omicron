@@ -32,7 +32,7 @@ public class AlienBusterGame implements Game {
 	
 	List<Alien> aliens;
 	
-	Random r = new Random(System.currentTimeMillis()); 
+	Random r = new Random(System.currentTimeMillis());
 	
     public void init(final Sys sys) 
     {
@@ -43,23 +43,37 @@ public class AlienBusterGame implements Game {
     public void render() 
     {
     	// background
-    	sys.draw(3, 0,0, 0,0, 240,136);
+    	sys.draw(3, 0,0, 0,0, 240,136, 0, 0);
 		switch (status) {
 		case INTRO:
-			sys.draw(4, 56, 0, 0, 0, 128, 64);
+			sys.draw(4, 56, 0, 0, 0, 128, 64, 0, 0);
 			textWithBorder("TAP TO START", 90,50);
+			testRot();
 			break;
 		case GAME:
 			renderGame();
 			break;
 		case GAMEOVER:
-			sys.draw(4, 56, 0, 0, 64, 128, 64);
+			sys.draw(4, 56, 0, 0, 64, 128, 64, 0, 0);
 			textWithBorder("Defeated !!", 90,50);
 			break;
 
 		}
     	
     }
+
+	private void testRot() {
+		for (int i = 0; i < 4; i++) {
+			sys.draw(2, 10+i*18,10, 32,32, 16, 16, i, 0 );
+			
+			
+			sys.draw(2, 10+i*18,30, 32,32, 16, 16, i, 1 );
+			
+			sys.draw(2, 10+i*18,50, 32,32, 16, 16, i, 2 );
+			sys.draw(2, 10+i*18,70, 32,32, 16, 16, i, 3 );
+		}
+		//sys.draw(2, 10,10, 32,32, 16, 16);
+	}
 
 	private void textWithBorder(String text, int tx, int ty) {
 		sys.color(Colors.BLACK);
@@ -81,26 +95,26 @@ public class AlienBusterGame implements Game {
         
         
         for (Alien a : aliens) {
-			sys.draw(2, (int)a.x-16,(int)a.y-16,0,0,32,32);
+			sys.draw(2, (int)a.x-16,(int)a.y-16,0,0,32,32, 0, 0);
 		}
         
         // shots left
         for (int i = 0; i < shots; i++) {
-        	sys.draw(2, i*16,136-16,32,0,16,16);
+        	sys.draw(2, i*16,136-16,32,0,16,16, 0, 0);
 		}
         // lives left
         for (int i = 0; i < lives; i++) {
-        	sys.draw(2, 224-i*16,136-16,32,16,16,16);
+        	sys.draw(2, 224-i*16,136-16,32,16,16,16, 0, 0);
 		}
         
         // reload icon
         if (shots == 0)
         {
-        	sys.draw(2, 240-32,0,32+16,0,32,32);
+        	sys.draw(2, 240-32,0,32+16,0,32,32, 0, 0);
         }
         
         // crossair
-        sys.draw(2, sys.mouse().x-8,sys.mouse().y-8,80,0,16,16);
+        sys.draw(2, sys.mouse().x-8,sys.mouse().y-8,80,0,16,16, 0, 0);
 	}
 
 
@@ -167,6 +181,7 @@ public class AlienBusterGame implements Game {
         
         if(m.btn[0])
         {
+        	sys.sound(1,1f,1f);
         	if(shots>0)
         	{
 	        	shots--;

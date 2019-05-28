@@ -32,7 +32,7 @@ public class TextDrawer {
 			int dx = c % 16;
 			int dy = c / 16;
 			
-			sys.draw(sheetNum, x+i*stepping, y, dx*charWidth, dy*charHeight, charWidth, charHeight);
+			sys.draw(sheetNum, x+i*stepping, y, dx*charWidth, dy*charHeight, charWidth, charHeight, 0, 0);
 		
 		}
 	}

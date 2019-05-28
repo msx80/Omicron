@@ -41,13 +41,13 @@ public class HelloWorld implements Game {
         font.print("Mouse: "+m.x+" "+m.y+" "+m.btn[0], 10, 50);
       
         // mouse pointer
-        sys.draw(2, m.x,m.y,0,24,8,8);
+        sys.draw(2, m.x,m.y,0,24,8,8,0,0);
         
         // keyboard controlled sprite
-        sys.draw(2, x, y, 0, 32, 8, 8);
+        sys.draw(2, x, y, 0, 32, 8, 8,0,0);
         
         
-        sys.draw(2, tic % 100, 50, 0,0, 24, 24);
+        sys.draw(2, tic % 100, 50, 0,0, 24, 24,0,0);
     	
     }
 

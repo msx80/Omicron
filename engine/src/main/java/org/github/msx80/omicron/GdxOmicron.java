@@ -1,8 +1,6 @@
 package org.github.msx80.omicron;
 
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,10 +13,13 @@ import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -27,7 +28,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
@@ -40,7 +40,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	
 	FPSLogger fps = new FPSLogger();
 	SpriteBatch batch;
-	OrthographicCamera cam;
+	OrthographicCamera cam=new OrthographicCamera();
 	
 	Game game;
 	
@@ -48,6 +48,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	Controller[] controllers;
 	
 	Map<Integer, TextureRegion> sheets = new HashMap<Integer, TextureRegion>();
+	Map<Integer, Sound> sounds = new HashMap<Integer, Sound>();
 	
 	private int ox = 0;
 	private int oy = 0;
@@ -68,7 +69,6 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 	
 	Vector3 proj = new Vector3();
-	private Rectangle clipBounds;
 
 	@Override
 	public void create () {
@@ -97,31 +97,10 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		
 	}
 
-	private void setUpCam(int winwidth, int winheight) {
+	private void setUpCam(int winwidth, int winheight) 
+	{
 		System.out.println("Resize to "+winwidth+" "+winheight);
-		cam = new OrthographicCamera();//768/2,384/2);
-		
-		int nx = winwidth / screenInfo.requiredScreenConfig.width;
-		int ny = winheight / screenInfo.requiredScreenConfig.height;
-		
-		screenInfo.times = Math.min(nx, ny); // number of times the virtual screen fits nicely on the window
-		
-		screenInfo.dx = winwidth - (screenInfo.requiredScreenConfig.width * screenInfo.times);
-		screenInfo.dy = winheight - (screenInfo.requiredScreenConfig.height * screenInfo.times);
-		
-		
-		// System.out.println(dx+" "+dy);
-		
-		cam.setToOrtho(true,
-				screenInfo.requiredScreenConfig.width + (float)screenInfo.dx/(float)screenInfo.times,
-				screenInfo.requiredScreenConfig.height + (float)screenInfo.dy/(float)screenInfo.times
-				);
-		
-		cam.position.set(screenInfo.requiredScreenConfig.width / 2f, screenInfo.requiredScreenConfig.height / 2f, 0); // center on screen
-		cam.update();
-		
-		
-		
+		screenInfo.handleResize(winwidth, winheight, cam);
 	}
 
 	
@@ -149,6 +128,17 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
         }
         return b;
     }
+    private Sound getSound(int soundNum) {
+    	Sound b = sounds.get(soundNum);
+        if(b == null)
+        {
+        	
+        	b = loadSound(soundNum);
+            
+        	sounds.put(soundNum, b);
+        }
+        return b;
+    }
 	
 	
 	@Override
@@ -156,20 +146,17 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		fps.log();
 		offset(0,0); // reset offset
 			
-		// render:
-		//cam.update();
-		game.update(); // update topmost game on the stack
-		//batch.setTransformMatrix(new Matrix4());
+		game.update(); 
 		
 		batch.setProjectionMatrix(cam.combined);
 	
 		this.colorf(1, 1, 1, 1);
 		Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
 		this.clear(Colors.BLACK);
-
 		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 			
-		Gdx.gl.glScissor(screenInfo.dx/2,screenInfo.dy/2,screenInfo.requiredScreenConfig.width * screenInfo.times,screenInfo.requiredScreenConfig.height * screenInfo.times);
+		screenInfo.applyGlClipping();
+		
 		batch.begin();
 		try
 		{
@@ -208,15 +195,12 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 
 		Gdx.gl.glClearColor(r, g, b, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		
 	}
 
 
-	@Override
-	public void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h)
+	private void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h)
 	{
-		uploadDirtyTexture();
+		// uploadDirtyTexture();
 		
 		TextureRegion r = getSheet(sheetNum);
 		r.setRegion(srcx, srcy, w, h);
@@ -226,11 +210,28 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 	
 	@Override
-	public void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate)
+	public void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip)
 	{
 		uploadDirtyTexture();
-		TextureRegion r = getSheet(sheetNum);
-		batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w,h,1,1,rotate, srcx, srcy, w, h, false, true); 
+		if(rotate == 0 && flip == 0)
+		{
+			draw(sheetNum, x, y, srcx, srcy, w, h);
+		}
+		else
+		{
+			/* 0 = No Flip
+					1 = Flip horizontally
+					2 = Flip vertically
+					3 = Flip both vertically and horizontally
+				*/	
+			boolean flipx = flip == 1 || flip == 3; 
+			boolean flipy = flip >= 2;
+			
+			int angle = rotate * 90;
+			
+			TextureRegion r = getSheet(sheetNum);
+			batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w,h,1,1,angle, srcx, srcy, w, h, false != flipx, true != flipy);
+		}
 		
 	}
 
@@ -266,14 +267,23 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 
 	@Override
-	public void http(String arg0, String arg1, String arg2, Acceptor<String> arg3, Acceptor<Exception> arg4) {
-		
-	}
-
-	@Override
 	public int newSurface(int w, int h) {
-		// TODO Auto-generated method stub
-		return 0;
+		Pixmap p = new Pixmap(w, h, Format.RGBA8888);
+		
+		int i = -1;
+		while(sheets.containsKey(i))
+		{
+			i--;
+		}
+		
+		Texture tt = new Texture(p, false);
+		
+		TextureRegion img = new TextureRegion(tt);
+		img.flip(false, true);
+		
+		sheets.put(i, img);
+		
+		return i;
 	}
 
 	@Override
@@ -397,26 +407,29 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		}
 
 	private TextureRegion loadSheet(int n) {
-		
-		InputStream stre  = game.getClass().getResourceAsStream("/sheet"+n+".png");
-		try
-		{
-			Pixmap p = new Pixmap(Gdx2DPixmap.newPixmap(stre, 0));
+
+		Pixmap p = new Pixmap( new ResourceFileHandle("/sheet"+n+".png", game.getClass()) ); // Gdx2DPixmap.newPixmap(stre, 0));
 			
-			Texture tt = new Texture(p, false);
+		Texture tt = new Texture(p, false);
 			
-			TextureRegion img = new TextureRegion(tt);
-			img.flip(false, true);
-			return img;
-		}
-		finally
+		TextureRegion img = new TextureRegion(tt);
+		img.flip(false, true);
+		return img;
+	}
+	private Sound loadSound(int n) {
+		String fn = "/sound"+n+".wav";
+		if(Gdx.app.getType() == ApplicationType.Android)
 		{
-			try {
-				stre.close();
-			} catch (IOException e) {
-				throw new RuntimeException("Error closing resource", e);
-			}
+			// no way to load from stream :(
+			FileHandle ff = Gdx.files.local(fn);
+			ff.write(game.getClass().getResourceAsStream(fn), false);
+			return Gdx.audio.newSound(ff);
 		}
+		else
+		{
+			return Gdx.audio.newSound( new ResourceFileHandle(fn, game.getClass())   );
+		}
+	
 	}
 
 	@Override
@@ -446,6 +459,12 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	public String dbg() {
 		
 		return Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight();
+	}
+
+	@Override
+	public void sound(int soundNum, float volume, float pitch) {
+		getSound(soundNum).play(volume, pitch, 0);
+		
 	}
 	
 }

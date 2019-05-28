@@ -48,11 +48,11 @@ public class DemoGame implements Game {
 	    	{
 		    	for (int y = 0; y < HEIGHT/8; y++) 
 		    	{
-		    			sys.draw(2, x*8, y*8, 8,32,8,8);
+		    			sys.draw(2, x*8, y*8, 8,32,8,8,0,0);
 		    	}
 			}
     	}
-    	sys.draw(7, 0, 0, 0, 0, 400, 255);
+    	sys.draw(7, 0, 0, 0, 0, 400, 255,0,0);
         msxFont.print("ciaoo :P", 10, 0);
         msxFont.print("FPS: "+sys.fps(), 10, 40);
         sys.color(Colors.GREEN);
@@ -71,16 +71,16 @@ public class DemoGame implements Game {
         testRotate();
         
         // mouse pointer
-        sys.draw(2, m.x,m.y,0,24,8,8);
+        sys.draw(2, m.x,m.y,0,24,8,8,0,0);
         
-        sys.draw(2, x,y,256-32,0,32,32);
+        sys.draw(2, x,y,256-32,0,32,32,0,0);
         
         // keyboard controlled sprite
-        sys.draw(2, x, y, 0, 32, 8, 8);
+        sys.draw(2, x, y, 0, 32, 8, 8,0,0);
         
         IntStream.range(1, 5).forEach(i -> {
     		sys.offset(i*5, 0);
-    		sys.draw(2, (ii+i)  % 100, 20+i*30, 0,0,24,24);
+    		sys.draw(2, (ii+i)  % 100, 20+i*30, 0,0,24,24,0,0);
     		sys.color(Colors.from(10, 255, 10, 170));
         });
         
@@ -91,20 +91,7 @@ public class DemoGame implements Game {
     }
 
 	private void testRotate() {
-		sys.draw(2, 20,20, 0,96,16,16);
-        sys.draw(2, 20+16,20, 0,96,16,16, 0);
-        sys.draw(2, 20+32,20, 0,96,16,16, 90);
-        sys.draw(2, 20+32+16,20, 0,96,16,16, 180);
-        sys.draw(2, 20+64,20, 0,96,16,16, 270);
-        sys.draw(2, 20+64+16,20, 0,96,16,16, ii%360);
-        
-
-        sys.draw(2, 10,100, 0,112,24,24);
-        sys.draw(2, 10,124, 0,112,24,24,0);
-        sys.draw(2, 10+24,100, 0,112,24,24, 90);
-        sys.draw(2, 10+48,100, 0,112,24,24, 180);
-        sys.draw(2, 10+72,100, 0,112,24,24, 270);
-        sys.draw(2, 10+96,100, 0,112,24,24, ii%360);
+		
 	}
 
     public boolean update() {

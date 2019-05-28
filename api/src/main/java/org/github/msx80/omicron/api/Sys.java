@@ -2,8 +2,7 @@ package org.github.msx80.omicron.api;
 
 public interface Sys {
 	
-    void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h);
-    void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate);
+    void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip);
     
     int newSurface(int w, int h);
     
@@ -12,7 +11,6 @@ public interface Sys {
     
 	void offset(int x, int y);
 
-	void http(String url, String method, String request, Acceptor<String> onSuccess, Acceptor<Exception> onError);
 	void clear(int color);
 	void color(int color);
 	
@@ -21,6 +19,8 @@ public interface Sys {
 	Mouse mouse();
 
 	Controller[] controllers();
+	
+	void sound(int soundNum, float volume, float pitch);
 	
 	String dbg();
 }
