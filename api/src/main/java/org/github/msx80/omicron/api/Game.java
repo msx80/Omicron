@@ -1,7 +1,7 @@
 package org.github.msx80.omicron.api;
 public interface Game {
 
-    ScreenConfig screenConfig();
+    SysConfig sysConfig();
     
     void init(Sys sys);
     

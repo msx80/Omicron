@@ -7,7 +7,7 @@ import java.util.Random;
 
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
-import org.github.msx80.omicron.api.ScreenConfig;
+import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.MomentaryMouse;
@@ -76,6 +76,7 @@ public class AlienBusterGame implements Game {
 	}
 
 	private void textWithBorder(String text, int tx, int ty) {
+		if(text == null) return;
 		sys.color(Colors.BLACK);
 		td.print(text, tx-1, ty);
 		td.print(text, tx+1, ty);
@@ -213,8 +214,8 @@ public class AlienBusterGame implements Game {
 	}
 
 	@Override
-	public ScreenConfig screenConfig() {
-		return new ScreenConfig(WIDTH, HEIGHT, "Alien Buster");
+	public SysConfig sysConfig() {
+		return new SysConfig(WIDTH, HEIGHT, "Alien Buster", "alienbuster");
 	}
     
 }

@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.github.msx80.omicron.api.Acceptor;
 import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -61,6 +61,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	
 	Rectangle scissor = new Rectangle();
 	
+	Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
 	
 	public GdxOmicron(Game game) {
 		super();
@@ -69,6 +70,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 	
 	Vector3 proj = new Vector3();
+	private Preferences prefs = null;
 
 	@Override
 	public void create () {
@@ -90,9 +92,12 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
 		Gdx.graphics.setCursor(cursor);
 		
-		screenInfo.requiredScreenConfig = game.screenConfig();
+		screenInfo.requiredSysConfig = game.sysConfig();
+
+		HardwarePlugin pp = new DebugPlugin();
+		plugins.put(pp.name(), pp);
 		game.init(this);
-		if(screenInfo.requiredScreenConfig.title!=null) Gdx.graphics.setTitle(screenInfo.requiredScreenConfig.title);
+		if(screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(screenInfo.requiredSysConfig.title);
 		setUpCam(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		
 	}
@@ -456,15 +461,36 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 
 	@Override
-	public String dbg() {
-		
-		return Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight();
-	}
-
-	@Override
 	public void sound(int soundNum, float volume, float pitch) {
 		getSound(soundNum).play(volume, pitch, 0);
 		
+	}
+
+	@Override
+	public String mem(String key) {
+		return getPrefs().getString(key);
+		
+	}
+
+	private Preferences getPrefs() {
+		if(prefs == null)
+		{
+			prefs = Gdx.app.getPreferences(screenInfo.requiredSysConfig.code);
+		}
+		return prefs ;
+	}
+
+	@Override
+	public void mem(String key, String value) {
+		
+			getPrefs().putString(key, value).flush();
+		
+	}
+
+	@Override
+	public String hardware(String module, String command, String param) {
+		HardwarePlugin e = plugins.get(module);
+		return e == null ? null : e.exec(command, param);
 	}
 	
 }

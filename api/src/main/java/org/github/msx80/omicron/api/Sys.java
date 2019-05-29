@@ -16,11 +16,15 @@ public interface Sys {
 	
 	int fps();
 	
+	String mem(String key);
+	void mem(String key, String value);
+	
 	Mouse mouse();
 
 	Controller[] controllers();
 	
 	void sound(int soundNum, float volume, float pitch);
 	
-	String dbg();
+	String hardware(String module, String command, String param);
+
 }

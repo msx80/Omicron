@@ -3,22 +3,22 @@ package org.github.msx80.omicron;
 
 
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.ScreenConfig;
+import org.github.msx80.omicron.api.SysConfig;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-public class DesktopLauncher {
+public class HelloWorldLauncher {
 	public static void launch (Game game) {
-		ScreenConfig s = game.screenConfig();
+		SysConfig s = game.sysConfig();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = s.width*2;
-		config.height = s.height*2;
+		config.width = s.width*3;
+		config.height = s.height*3;
 		new LwjglApplication(new GdxOmicron(game), config);
 	}
 	
 	public static void main(String[] args)
 	{
-		launch(new DemoGame());
+		launch(new HelloWorld());
 	}
 }
