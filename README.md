@@ -37,7 +37,8 @@ The API
 
 Here's Omicron minimalistic and self-explaining API:
 
-```package org.github.msx80.omicron.api;
+```java
+package org.github.msx80.omicron.api;
 
 public interface Sys 
 {
