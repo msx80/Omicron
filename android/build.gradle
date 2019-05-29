@@ -17,17 +17,10 @@ buildscript {
 }
 
 allprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
 
     version = '1.0'
     ext {
-        appName = "OmicronGdx"
         gdxVersion = '1.9.9'
-        roboVMVersion = '2.3.5'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
     }
 
     repositories {
@@ -46,7 +39,12 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-        compile "org.github.msx80.omicron:alienbuster:0.0.1"
+	
+		ext.omicron = new Properties()
+		ext.omicron.load(file("../omicron.properties").newReader())
+
+	
+        compile ext.omicron.dependency
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "org.github.msx80.omicron:omicron-api:0.0.1"
 		compile "org.github.msx80.omicron:omicron-engine:0.0.1"
@@ -58,9 +56,4 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
         
     }
-}
-
-
-tasks.eclipse.doLast {
-    delete ".project"
 }

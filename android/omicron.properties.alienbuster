@@ -1,0 +1,16 @@
+# Android specific properties for building omicron apps
+
+# screen orientation
+orientation=landscape
+
+# application name, it appear on your icon
+appname=Alien Buster
+
+# main Game class of your game
+main=org.github.msx80.omicron.alienbuster.AlienBusterGame
+
+# application id to uniquely identify your app on the store and on phones
+appid=best.game.AlienBusterGame
+
+# a gradle style dependecy for your project, must be installed dependecies paths (maven)
+dependency=org.github.msx80.omicron:alienbuster:0.0.1
