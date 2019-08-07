@@ -22,7 +22,12 @@ public class TextDrawer {
 		this.charHeight = charHeight;
 		this.stepping = stepping;
 	}
-
+	public void center(String text, int x, int y)
+	{
+		int w = text.length() * stepping;
+		print(text, x-w/2, y);
+	}
+	
 	public void print(String text, int x, int y)
 	{
 	

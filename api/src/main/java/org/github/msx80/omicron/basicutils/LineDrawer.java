@@ -14,7 +14,7 @@ public class LineDrawer {
         int error = 0;
         int y = y1;
         for( int x=x1; x<x2; x++) {
-            sys.setPix(sheetNum, x, y, color);
+            sys.fill(sheetNum, x, y, 1,1,color);
             error = error + deltay;
             if( 2*error >= deltax ) {
                 y = y + 1;

@@ -89,8 +89,8 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
-		Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
-		Gdx.graphics.setCursor(cursor);
+		//Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
+		//Gdx.graphics.setCursor(cursor);
 		
 		screenInfo.requiredSysConfig = game.sysConfig();
 
@@ -292,7 +292,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 
 	@Override
-	public void setPix(int sheetNum, int x, int y, int color) {
+	public void fill(int sheetNum, int x, int y, int w, int h, int color) {
 		if(sheetNum==0)
 		{
 			if(lastPixel != color)
@@ -304,13 +304,15 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 				pixel.load(pixel.getTextureData());
 				if(a)batch.begin();
 			}
-			batch.draw(pixel, x+ox, y+oy);
+			batch.draw(pixel, x+ox, y+oy, w, h);
 		}
 		else
 		{
 			TextureRegion r = getSheet(sheetNum);
 			PixmapTextureData d = (PixmapTextureData) r.getTexture().getTextureData();
-			d.consumePixmap().drawPixel(x, y, color);
+			Pixmap pp = d.consumePixmap();
+			pp.setColor(color);
+			pp.fillRectangle(x, y, w, h);
 			
 			// we don't actually update textures now, just mark as dirty so we upload later
 			// user could be updating a large area

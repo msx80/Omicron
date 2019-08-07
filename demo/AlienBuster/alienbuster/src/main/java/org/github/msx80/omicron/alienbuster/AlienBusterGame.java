@@ -48,7 +48,6 @@ public class AlienBusterGame implements Game {
 		case INTRO:
 			sys.draw(4, 56, 0, 0, 0, 128, 64, 0, 0);
 			textWithBorder("TAP TO START", 90,50);
-			testRot();
 			break;
 		case GAME:
 			renderGame();
@@ -62,21 +61,7 @@ public class AlienBusterGame implements Game {
     	
     }
 
-	private void testRot() {
-		for (int i = 0; i < 4; i++) {
-			sys.draw(2, 10+i*18,10, 32,32, 16, 16, i, 0 );
-			
-			
-			sys.draw(2, 10+i*18,30, 32,32, 16, 16, i, 1 );
-			
-			sys.draw(2, 10+i*18,50, 32,32, 16, 16, i, 2 );
-			sys.draw(2, 10+i*18,70, 32,32, 16, 16, i, 3 );
-		}
-		//sys.draw(2, 10,10, 32,32, 16, 16);
-	}
-
 	private void textWithBorder(String text, int tx, int ty) {
-		if(text == null) return;
 		sys.color(Colors.BLACK);
 		td.print(text, tx-1, ty);
 		td.print(text, tx+1, ty);

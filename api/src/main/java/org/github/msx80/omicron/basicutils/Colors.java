@@ -1,5 +1,7 @@
 package org.github.msx80.omicron.basicutils;
 
+import java.math.BigInteger;
+
 public class Colors 
 {
 	public static final int BLACK = from(0,0,0);
@@ -21,5 +23,9 @@ public class Colors
 	public static String str(int c)
 	{
 		return Long.toString(c, 16); // format in hex
+	}
+	public static int fromHex(String string) {
+		BigInteger b = new BigInteger(string, 16);
+		return (b.intValue() << 8) | 255;
 	}
 }
