@@ -6,6 +6,8 @@ import org.github.msx80.omicron.api.Sys;
 
 public class TextDrawer {
 	
+	public static enum Align {LEFT, CENTER, RIGHT};
+	
 	private static final Charset charset = Charset.forName("Cp437");
 	
 	private final int sheetNum;
@@ -22,10 +24,19 @@ public class TextDrawer {
 		this.charHeight = charHeight;
 		this.stepping = stepping;
 	}
-	public void center(String text, int x, int y)
+	public void print(String text, int x, int y, Align align)
 	{
-		int w = text.length() * stepping;
-		print(text, x-w/2, y);
+		int dx = 0;
+		if(align == Align.CENTER)
+		{
+			dx = -width(text)/2;
+		}
+		else if(align == Align.RIGHT)
+		{
+			dx = -width(text);
+		}
+		
+		print(text, x+dx, y);
 	}
 	
 	public void print(String text, int x, int y)
@@ -41,5 +52,8 @@ public class TextDrawer {
 		
 		}
 	}
-	
+	public int width(String text)
+	{
+		return text.length() * stepping;
+	}
 }
