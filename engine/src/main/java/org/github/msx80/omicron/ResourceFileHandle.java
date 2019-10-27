@@ -21,6 +21,13 @@ public class ResourceFileHandle extends FileHandleStream {
 		return cls.getResourceAsStream(resourceName);
 	}
 
+
+	@Override
+	public boolean exists() {
+		return cls.getResourceAsStream(resourceName) != null;
+	}
+
+	
 	
 
 }

@@ -1,10 +1,14 @@
 package org.github.msx80.omicron;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.management.RuntimeErrorException;
 
 import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
@@ -18,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -26,6 +31,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -49,6 +55,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	
 	Map<Integer, TextureRegion> sheets = new HashMap<Integer, TextureRegion>();
 	Map<Integer, Sound> sounds = new HashMap<Integer, Sound>();
+	Map<Integer, Music> music = new HashMap<Integer, Music>();
 	
 	private int ox = 0;
 	private int oy = 0;
@@ -62,6 +69,8 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	Rectangle scissor = new Rectangle();
 	
 	Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
+	
+	Music currentMusic = null;
 	
 	public GdxOmicron(Game game) {
 		super();
@@ -83,7 +92,9 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		
 		
 		batch = new SpriteBatch();
-				
+		//batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
+		//batch.enableBlending();
+		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
 	
 		controllers = new Controller[] {new Controller()}; // first is keyboard, TODO use joypad etc.
 		
@@ -96,6 +107,16 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 
 		HardwarePlugin pp = new DebugPlugin();
 		plugins.put(pp.name(), pp);
+		
+		// for some reason, sounds are not played the first time on android, possibly becouse of asyncronous loading
+		// and sounds not ready yet. As a super sketchy patch, we preload some sounds here (work sequentially, if there's an hole, whatever)
+		if(Gdx.app.getType() == ApplicationType.Android) {
+			for (int i = 1; true; i++) {
+				Sound x = getSound(i);
+				if(x==null)break;
+			}
+		}
+		
 		game.init(this);
 		if(screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(screenInfo.requiredSysConfig.title);
 		setUpCam(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
@@ -141,6 +162,18 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
         	b = loadSound(soundNum);
             
         	sounds.put(soundNum, b);
+        }
+        return b;
+    }
+	
+    private Music getMusic(int musicNum) {
+    	Music b = music.get(musicNum);
+        if(b == null)
+        {
+        	
+        	b = loadMusic(musicNum);
+            
+        	music.put(musicNum, b);
         }
         return b;
     }
@@ -274,6 +307,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	@Override
 	public int newSurface(int w, int h) {
 		Pixmap p = new Pixmap(w, h, Format.RGBA8888);
+		p.setBlending(Blending.None);
 		
 		int i = -1;
 		while(sheets.containsKey(i))
@@ -312,7 +346,8 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 			PixmapTextureData d = (PixmapTextureData) r.getTexture().getTextureData();
 			Pixmap pp = d.consumePixmap();
 			pp.setColor(color);
-			pp.fillRectangle(x, y, w, h);
+			
+			pp.fillRectangle(x, y, w, h); // this works becouse we set blending to none
 			
 			// we don't actually update textures now, just mark as dirty so we upload later
 			// user could be updating a large area
@@ -415,26 +450,91 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 
 	private TextureRegion loadSheet(int n) {
 
-		Pixmap p = new Pixmap( new ResourceFileHandle("/sheet"+n+".png", game.getClass()) ); // Gdx2DPixmap.newPixmap(stre, 0));
-			
+		System.out.println("Reading resource "+n);
+	
+		//System.out.println(game.getClass());
+		//System.out.println(game.getClass().getPackage().getName());
+		ResourceFileHandle r = new ResourceFileHandle("/sheet"+n+".png", game.getClass());
+		if(!r.exists()) return null;
+		if(r.read() == null)
+		{
+			String resourceName = "/"+game.getClass().getPackage().getName().replace('.', '/')+"/sheet"+n+".png";
+			System.out.println("trying "+resourceName);
+			r = new ResourceFileHandle(resourceName, game.getClass());
+		}
+		Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
+		p.setBlending(Blending.None);
 		Texture tt = new Texture(p, false);
 			
 		TextureRegion img = new TextureRegion(tt);
 		img.flip(false, true);
 		return img;
 	}
+	private Music loadMusic(int n) {
+		String fn = "/music"+n+".mp3";
+		if(Gdx.app.getType() == ApplicationType.Android)
+		{
+			// no way to load from stream :( unload on the local disk and load from there.
+			InputStream is = game.getClass().getResourceAsStream(fn);
+			if(is == null) return null; // no such resource
+			
+			FileHandle ff = Gdx.files.local(fn);
+			
+			long av;
+			try {
+				av = is.available();
+			} catch (IOException e) {
+				throw new RuntimeException("available() failed: "+e.getMessage(), e);
+			}
+			if(ff.exists() && (ff.length() == av))
+			{
+				// already cached, resuse the same file
+			}
+			else
+			{
+				ff.write(is, false);
+			}
+			return Gdx.audio.newMusic(ff);
+		}
+		else
+		{
+			ResourceFileHandle res = new ResourceFileHandle(fn, game.getClass());
+			if (!res.exists()) return null;
+			return Gdx.audio.newMusic( res   );
+		}
+	
+	}
 	private Sound loadSound(int n) {
 		String fn = "/sound"+n+".wav";
 		if(Gdx.app.getType() == ApplicationType.Android)
 		{
-			// no way to load from stream :(
+			// no way to load from stream :( unload on the local disk and load from there.
+			InputStream is = game.getClass().getResourceAsStream(fn);
+			if(is == null) return null; // no such resource
+			
 			FileHandle ff = Gdx.files.local(fn);
-			ff.write(game.getClass().getResourceAsStream(fn), false);
+			
+			long av;
+			try {
+				av = is.available();
+			} catch (IOException e) {
+				throw new RuntimeException("available() failed: "+e.getMessage(), e);
+			}
+			if(ff.exists() && (ff.length() == av))
+			{
+				// already cached, resuse the same file
+			}
+			else
+			{
+				ff.write(is, false);
+			}
 			return Gdx.audio.newSound(ff);
 		}
 		else
 		{
-			return Gdx.audio.newSound( new ResourceFileHandle(fn, game.getClass())   );
+			ResourceFileHandle res = new ResourceFileHandle(fn, game.getClass());
+			if (!res.exists()) return null;
+			return Gdx.audio.newSound( res   );
 		}
 	
 	}
@@ -493,6 +593,24 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	public String hardware(String module, String command, String param) {
 		HardwarePlugin e = plugins.get(module);
 		return e == null ? null : e.exec(command, param);
+	}
+
+	@Override
+	public void music(int musicNum, float volume, boolean loop) {
+		if (currentMusic != null) {
+			currentMusic.stop();
+		}
+		currentMusic = getMusic(musicNum);
+		currentMusic.setVolume(volume);
+		currentMusic.setLooping(loop);
+		currentMusic.play();
+		
+	}
+
+	@Override
+	public void stopMusic() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

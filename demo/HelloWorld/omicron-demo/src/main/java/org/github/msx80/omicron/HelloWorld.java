@@ -39,7 +39,7 @@ public class HelloWorld implements Game {
 		
         for (int x = 0; x < 64; x++) {
 			for (int y = 0; y < 16; y++) {
-				sys.setPix(newSurf, x, y, r.nextInt());
+				sys.fill(newSurf, x, y, 1, 1, r.nextInt());
 			}
 		}
 	}
