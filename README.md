@@ -19,6 +19,10 @@ Hello Wolrd example
 
 A screenshot from the demo game, Alien Buster
 
+![Doors of Doom](https://i.imgur.com/GoCecbG.png)
+
+A videogame developed with Omicron.
+
 
 How can I try it?
 -----------------
