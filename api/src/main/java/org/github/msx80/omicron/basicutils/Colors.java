@@ -28,4 +28,9 @@ public class Colors
 		BigInteger b = new BigInteger(string, 16);
 		return (b.intValue() << 8) | 255;
 	}
+	
+	public static int alpha(int c)
+	{
+		return c & 0xFF;
+	}
 }

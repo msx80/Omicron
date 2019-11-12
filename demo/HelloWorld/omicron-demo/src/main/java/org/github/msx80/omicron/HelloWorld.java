@@ -9,12 +9,12 @@ import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
-import org.github.msx80.omicron.basicutils.TextDrawer;
+import org.github.msx80.omicron.basicutils.TextDrawerFixed;
 
 public class HelloWorld implements Game {
 	
 	private Sys sys;
-	private TextDrawer font = null;
+	private TextDrawerFixed font = null;
 
 	private int bgColor = Colors.from(150, 200, 255);
 	Random r = new Random(10);
@@ -29,7 +29,7 @@ public class HelloWorld implements Game {
     public void init(final Sys sys) 
     {
         this.sys = sys;
-        font = new TextDrawer(sys, 1, 8, 8, 6);
+        font = new TextDrawerFixed(sys, 1, 8, 8, 6);
         
         setupSurf(sys);
     }

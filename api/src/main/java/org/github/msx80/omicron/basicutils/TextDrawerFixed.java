@@ -4,10 +4,12 @@ import java.nio.charset.Charset;
 
 import org.github.msx80.omicron.api.Sys;
 
-public class TextDrawer {
-	
-	public static enum Align {LEFT, CENTER, RIGHT};
-	
+/**
+ * TextDrawer that implements monospaced font. The stepping value controls how much to advance for each character. 
+ *
+ */
+public class TextDrawerFixed implements TextDrawer {
+		
 	private static final Charset charset = Charset.forName("Cp437");
 	
 	private final int sheetNum;
@@ -16,7 +18,7 @@ public class TextDrawer {
 	private final int stepping;
 	private final Sys sys;
 	
-	public TextDrawer(Sys sys, int sheetNum, int charWidth, int charHeight, int stepping) {
+	public TextDrawerFixed(Sys sys, int sheetNum, int charWidth, int charHeight, int stepping) {
 		super();
 		this.sys = sys;
 		this.sheetNum = sheetNum;
@@ -24,6 +26,7 @@ public class TextDrawer {
 		this.charHeight = charHeight;
 		this.stepping = stepping;
 	}
+	@Override
 	public void print(String text, int x, int y, Align align)
 	{
 		int dx = 0;
@@ -39,6 +42,7 @@ public class TextDrawer {
 		print(text, x+dx, y);
 	}
 	
+	@Override
 	public void print(String text, int x, int y)
 	{
 	
@@ -52,6 +56,7 @@ public class TextDrawer {
 		
 		}
 	}
+	@Override
 	public int width(String text)
 	{
 		return text.length() * stepping;

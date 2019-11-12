@@ -11,7 +11,7 @@ import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.MomentaryMouse;
-import org.github.msx80.omicron.basicutils.TextDrawer;
+import org.github.msx80.omicron.basicutils.TextDrawerFixed;
 
 public class AlienBusterGame implements Game {
 	
@@ -24,7 +24,7 @@ public class AlienBusterGame implements Game {
 	
 	private Sys sys;
 	private int timeToNext = 100;
-	private TextDrawer td = null;
+	private TextDrawerFixed td = null;
 	
 	int shots;
 	int lives;
@@ -37,7 +37,7 @@ public class AlienBusterGame implements Game {
     public void init(final Sys sys) 
     {
         this.sys = sys;
-        td = new TextDrawer(sys, 1, 6, 6, 6);
+        td = new TextDrawerFixed(sys, 1, 6, 6, 6);
     }
 
     public void render() 
