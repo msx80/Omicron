@@ -7,6 +7,7 @@ import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.SysConfig;
+import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.TextDrawerFixed;
@@ -130,7 +131,7 @@ public class HelloWorld implements Game {
 
 	@Override
 	public SysConfig sysConfig() {
-		return new SysConfig(240, 136, "Hello World!", "helloworld");
+		return new SysConfig(240, 136, VirtualScreenMode.STRETCH_FULL, "Hello World!", "helloworld");
 	}
   
 }

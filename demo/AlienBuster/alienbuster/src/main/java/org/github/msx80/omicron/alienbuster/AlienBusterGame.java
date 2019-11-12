@@ -8,6 +8,7 @@ import java.util.Random;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.SysConfig;
+import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.MomentaryMouse;
@@ -200,7 +201,7 @@ public class AlienBusterGame implements Game {
 
 	@Override
 	public SysConfig sysConfig() {
-		return new SysConfig(WIDTH, HEIGHT, "Alien Buster", "alienbuster");
+		return new SysConfig(WIDTH, HEIGHT, VirtualScreenMode.SCALED,"Alien Buster", "alienbuster");
 	}
     
 }
