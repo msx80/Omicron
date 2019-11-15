@@ -27,10 +27,11 @@ A videogame developed with Omicron.
 How can I try it?
 -----------------
 
-1. Build the omicron-api and omicron-engine  project (`mvn clean install`)
-2. Build the helloworld demo project (`mvn clean install`)
-3. Build the helloworld-desktop project (`mvn clean install assembly:single`)
-4. Run the output jar (`java -jar omicron-demo-desktop-0.0.1-jar-with-dependencies.jar`)
+1. Build the omicron-api project (`mvn clean install`)
+2. Build the omicron-engine project (`mvn clean install`)
+3. Build the helloworld demo project (`mvn clean install`)
+4. Build the helloworld-desktop project (`mvn clean install assembly:single`)
+5. Run the output jar (`java -jar target/hello-world-desktop-0.0.1-jar-with-dependencies.jar`)
 
 For android:
 
@@ -40,10 +41,11 @@ The API
 -------
 
 Omicron has a minimalistic and self-explanatory API.
-Take a look [here](https://github.com/msx80/Omicron/blob/master/api/src/main/java/org/github/msx80/omicron/api/Sys.java) for the full API!
+Take a look at it [here](https://github.com/msx80/Omicron/blob/master/api/src/main/java/org/github/msx80/omicron/api/Sys.java) for the full API!
 
 Get Started
 -----------
 
-Take a look at the [Hello World](https://github.com/msx80/Omicron/blob/master/demo/HelloWorld/hello-world/src/main/java/org/github/msx80/omicron/helloworld/HelloWorld.java) example to get started!
+Take a look at the [Hello World](https://github.com/msx80/Omicron/blob/master/demo/HelloWorld/hello-world/src/main/java/org/github/msx80/omicron/helloworld/HelloWorld.java) example to get a feeling!
 
+Then head to the [wiki](https://github.com/msx80/Omicron/wiki) for some documentation!
