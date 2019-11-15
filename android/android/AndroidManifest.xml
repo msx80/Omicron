@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_launcher"
         android:isGame="true"
         android:appCategory="game"
-        android:label="@string/app_name"
+        android:label="${appname}"
         android:theme="@style/GdxTheme" >
         <activity
             android:name="org.github.msx80.omicron.AndroidLauncher"

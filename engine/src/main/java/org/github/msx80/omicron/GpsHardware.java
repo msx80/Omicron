@@ -2,20 +2,20 @@ package org.github.msx80.omicron;
 
 import org.github.msx80.omicron.api.Sys;
 
-import com.badlogic.gdx.Gdx;
+public class GpsHardware implements HardwarePlugin {
 
-public class DebugPlugin implements HardwarePlugin {
-
+	
+	
 	@Override
 	public String exec(String command, String params) {
 		
-		return "RES: "+Gdx.graphics.getWidth()+"x"+Gdx.graphics.getHeight();
+		return null;
 	}
 
 	@Override
 	public String name() {
-		
-		return "DEBUG";
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

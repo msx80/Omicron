@@ -1,19 +1,15 @@
 package org.github.msx80.omicron;
 
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-
-import javax.management.RuntimeErrorException;
+import java.util.Stack;
+import java.util.function.Consumer;
 
 import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
-import org.github.msx80.omicron.api.Sys;
+import org.github.msx80.omicron.api.adv.AdvancedSys;
 import org.github.msx80.omicron.basicutils.Colors;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -24,9 +20,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -37,45 +31,45 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 
-public final class GdxOmicron extends ApplicationAdapter implements Sys {
+public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys {
 	
 	FPSLogger fps = new FPSLogger();
 	SpriteBatch batch;
 	OrthographicCamera cam=new OrthographicCamera();
 	
-	Game game;
+	// a stack of all currently running Game
+	Stack<GameRun> gameStack = new Stack<GameRun>();
+	
+	GameRun current; // top of the stack
 	
 	Mouse mouse = new Mouse();
 	Controller[] controllers;
 	
-	Map<Integer, TextureRegion> sheets = new HashMap<Integer, TextureRegion>();
-	Map<Integer, Sound> sounds = new HashMap<Integer, Sound>();
-	Map<Integer, Music> music = new HashMap<Integer, Music>();
 	
 	private int ox = 0;
 	private int oy = 0;
-	private Set<Integer> textureToReload = new HashSet<Integer>();	
 	
 	Texture pixel;
 	private int lastPixel;
+		
+	//Rectangle scissor = new Rectangle();
+
 	
-	ScreenInfo screenInfo = new ScreenInfo();
 	
-	Rectangle scissor = new Rectangle();
-	
-	Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
 	
 	Music currentMusic = null;
+	private HardwareInterface hw;
 	
-	public GdxOmicron(Game game) {
+	public GdxOmicron(Game game, HardwareInterface hw) {
 		super();
-		this.game = game;
-		
+		this.hw = hw;
+		GameRun gr = new GameRun(game, new ScreenInfo(), null);
+		this.gameStack.push(gr);
+		current = gr;
 	}
 	
 	Vector3 proj = new Vector3();
@@ -103,30 +97,38 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		//Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
 		//Gdx.graphics.setCursor(cursor);
 		
-		screenInfo.requiredSysConfig = game.sysConfig();
+		initOrResumeGameRun(current);
+		
+	}
 
-		HardwarePlugin pp = new DebugPlugin();
-		plugins.put(pp.name(), pp);
+	private void initOrResumeGameRun(GameRun r) {
+		boolean isResume = r.screenInfo.requiredSysConfig != null;
+		if(!isResume) r.screenInfo.requiredSysConfig = r.game.sysConfig();
+
 		
 		// for some reason, sounds are not played the first time on android, possibly becouse of asyncronous loading
 		// and sounds not ready yet. As a super sketchy patch, we preload some sounds here (work sequentially, if there's an hole, whatever)
 		if(Gdx.app.getType() == ApplicationType.Android) {
 			for (int i = 1; true; i++) {
-				Sound x = getSound(i);
+				Sound x = r.getSound(i);
 				if(x==null)break;
 			}
 		}
-		
-		game.init(this);
-		if(screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(screenInfo.requiredSysConfig.title);
-		setUpCam(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
-		
+		if(!isResume) 
+		{
+			r.game.init(this);
+			for (HardwarePlugin hwp : r.plugins.values()) {
+				hwp.init(this, hw);
+			}
+		}
+		if(r.screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(r.screenInfo.requiredSysConfig.title);
+		setUpCam(r, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 	}
 
-	private void setUpCam(int winwidth, int winheight) 
+	private void setUpCam(GameRun r, int winwidth, int winheight) 
 	{
 		System.out.println("Resize to "+winwidth+" "+winheight);
-		screenInfo.handleResize(winwidth, winheight, cam);
+		r.screenInfo.handleResize(winwidth, winheight, cam);
 	}
 
 	
@@ -134,7 +136,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	@Override
 	public void resize(int width, int height) {
 		
-		setUpCam(width, height);
+		setUpCam(current,width, height);
 		
 	}
 
@@ -143,48 +145,14 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	}
 
 	
-    private TextureRegion getSheet(int sheetNum) {
-    	TextureRegion b = sheets.get(sheetNum);
-        if(b == null)
-        {
-        	
-        	b = loadSheet(sheetNum);
-            
-        	sheets.put(sheetNum, b);
-        }
-        return b;
-    }
-    private Sound getSound(int soundNum) {
-    	Sound b = sounds.get(soundNum);
-        if(b == null)
-        {
-        	
-        	b = loadSound(soundNum);
-            
-        	sounds.put(soundNum, b);
-        }
-        return b;
-    }
-	
-    private Music getMusic(int musicNum) {
-    	Music b = music.get(musicNum);
-        if(b == null)
-        {
-        	
-        	b = loadMusic(musicNum);
-            
-        	music.put(musicNum, b);
-        }
-        return b;
-    }
-	
+
 	
 	@Override
 	public void render () {
 		fps.log();
 		offset(0,0); // reset offset
 			
-		game.update(); 
+		current.game.update(); 
 		
 		batch.setProjectionMatrix(cam.combined);
 	
@@ -193,12 +161,12 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		this.clear(Colors.BLACK);
 		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 			
-		screenInfo.applyGlClipping();
+		current.screenInfo.applyGlClipping();
 		
 		batch.begin();
 		try
 		{
-			game.render();
+			current.game.render();
 		}
 		finally
 		{
@@ -206,16 +174,9 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		}
 	}
 
-	private void uploadDirtyTexture() {
-		if (textureToReload != null)
-		{
-			for (Integer sn : textureToReload) {
-				Texture r = getSheet(sn).getTexture();
-				r.load(r.getTextureData());
-			}
-			textureToReload=null;
-		}
-	}
+
+
+	
 	
 	@Override
 	public void dispose () {
@@ -240,7 +201,8 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	{
 		// uploadDirtyTexture();
 		
-		TextureRegion r = getSheet(sheetNum);
+		TextureRegion r = current.getSheet(sheetNum);
+		if(r == null) throw new RuntimeException("Trying to draw sheet "+sheetNum+" but was not found");
 		r.setRegion(srcx, srcy, w, h);
 		r.flip(false, true);
 		batch.draw(r, x+ox, y+oy);
@@ -250,7 +212,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	@Override
 	public void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip)
 	{
-		uploadDirtyTexture();
+		current.uploadDirtyTexture();
 		if(rotate == 0 && flip == 0)
 		{
 			draw(sheetNum, x, y, srcx, srcy, w, h);
@@ -267,7 +229,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 			
 			int angle = rotate * 90;
 			
-			TextureRegion r = getSheet(sheetNum);
+			TextureRegion r = current.getSheet(sheetNum);
 			batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w,h,1,1,angle, srcx, srcy, w, h, false != flipx, true != flipy);
 		}
 		
@@ -297,7 +259,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		}
 		else
 		{
-			TextureRegion r = getSheet(sheetNum);
+			TextureRegion r = current.getSheet(sheetNum);
 			PixmapTextureData d = (PixmapTextureData) r.getTexture().getTextureData();
 			
 			return d.consumePixmap().getPixel(x, y);
@@ -310,7 +272,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		p.setBlending(Blending.None);
 		
 		int i = -1;
-		while(sheets.containsKey(i))
+		while(current.sheets.containsKey(i))
 		{
 			i--;
 		}
@@ -320,7 +282,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		TextureRegion img = new TextureRegion(tt);
 		img.flip(false, true);
 		
-		sheets.put(i, img);
+		current.sheets.put(i, img);
 		
 		return i;
 	}
@@ -342,17 +304,14 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		}
 		else
 		{
-			TextureRegion r = getSheet(sheetNum);
+			TextureRegion r = current.getSheet(sheetNum);
 			PixmapTextureData d = (PixmapTextureData) r.getTexture().getTextureData();
 			Pixmap pp = d.consumePixmap();
 			pp.setColor(color);
 			
 			pp.fillRectangle(x, y, w, h); // this works becouse we set blending to none
 			
-			// we don't actually update textures now, just mark as dirty so we upload later
-			// user could be updating a large area
-			if(textureToReload == null) textureToReload = new HashSet<Integer>();
-			textureToReload.add(sheetNum);
+			current.addDirtyTexture(sheetNum);
 		}
 	}
 
@@ -448,96 +407,6 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		   }
 		}
 
-	private TextureRegion loadSheet(int n) {
-
-		System.out.println("Reading resource "+n);
-	
-		//System.out.println(game.getClass());
-		//System.out.println(game.getClass().getPackage().getName());
-		ResourceFileHandle r = new ResourceFileHandle("/sheet"+n+".png", game.getClass());
-		if(!r.exists()) return null;
-		if(r.read() == null)
-		{
-			String resourceName = "/"+game.getClass().getPackage().getName().replace('.', '/')+"/sheet"+n+".png";
-			System.out.println("trying "+resourceName);
-			r = new ResourceFileHandle(resourceName, game.getClass());
-		}
-		Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
-		p.setBlending(Blending.None);
-		Texture tt = new Texture(p, false);
-			
-		TextureRegion img = new TextureRegion(tt);
-		img.flip(false, true);
-		return img;
-	}
-	private Music loadMusic(int n) {
-		String fn = "/music"+n+".mp3";
-		if(Gdx.app.getType() == ApplicationType.Android)
-		{
-			// no way to load from stream :( unload on the local disk and load from there.
-			InputStream is = game.getClass().getResourceAsStream(fn);
-			if(is == null) return null; // no such resource
-			
-			FileHandle ff = Gdx.files.local(fn);
-			
-			long av;
-			try {
-				av = is.available();
-			} catch (IOException e) {
-				throw new RuntimeException("available() failed: "+e.getMessage(), e);
-			}
-			if(ff.exists() && (ff.length() == av))
-			{
-				// already cached, resuse the same file
-			}
-			else
-			{
-				ff.write(is, false);
-			}
-			return Gdx.audio.newMusic(ff);
-		}
-		else
-		{
-			ResourceFileHandle res = new ResourceFileHandle(fn, game.getClass());
-			if (!res.exists()) return null;
-			return Gdx.audio.newMusic( res   );
-		}
-	
-	}
-	private Sound loadSound(int n) {
-		String fn = "/sound"+n+".wav";
-		if(Gdx.app.getType() == ApplicationType.Android)
-		{
-			// no way to load from stream :( unload on the local disk and load from there.
-			InputStream is = game.getClass().getResourceAsStream(fn);
-			if(is == null) return null; // no such resource
-			
-			FileHandle ff = Gdx.files.local(fn);
-			
-			long av;
-			try {
-				av = is.available();
-			} catch (IOException e) {
-				throw new RuntimeException("available() failed: "+e.getMessage(), e);
-			}
-			if(ff.exists() && (ff.length() == av))
-			{
-				// already cached, resuse the same file
-			}
-			else
-			{
-				ff.write(is, false);
-			}
-			return Gdx.audio.newSound(ff);
-		}
-		else
-		{
-			ResourceFileHandle res = new ResourceFileHandle(fn, game.getClass());
-			if (!res.exists()) return null;
-			return Gdx.audio.newSound( res   );
-		}
-	
-	}
 
 	@Override
 	public int fps() {
@@ -564,7 +433,9 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 
 	@Override
 	public void sound(int soundNum, float volume, float pitch) {
-		getSound(soundNum).play(volume, pitch, 0);
+		Sound r = current.getSound(soundNum);
+		if(r == null) throw new RuntimeException("Trying to play sound "+soundNum+" but was not found");
+		r.play(volume, pitch, 0);
 		
 	}
 
@@ -577,7 +448,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 	private Preferences getPrefs() {
 		if(prefs == null)
 		{
-			prefs = Gdx.app.getPreferences(screenInfo.requiredSysConfig.code);
+			prefs = Gdx.app.getPreferences(current.screenInfo.requiredSysConfig.code);
 		}
 		return prefs ;
 	}
@@ -591,7 +462,7 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 
 	@Override
 	public String hardware(String module, String command, String param) {
-		HardwarePlugin e = plugins.get(module);
+		HardwarePlugin e = current.plugins.get(module);
 		return e == null ? null : e.exec(command, param);
 	}
 
@@ -600,7 +471,8 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 		if (currentMusic != null) {
 			currentMusic.stop();
 		}
-		currentMusic = getMusic(musicNum);
+		currentMusic = current.getMusic(musicNum);
+		if(currentMusic == null) throw new RuntimeException("Trying to play music "+musicNum+" but was not found");
 		currentMusic.setVolume(volume);
 		currentMusic.setLooping(loop);
 		currentMusic.play();
@@ -609,8 +481,45 @@ public final class GdxOmicron extends ApplicationAdapter implements Sys {
 
 	@Override
 	public void stopMusic() {
-		// TODO Auto-generated method stub
+		if (currentMusic != null) {
+			currentMusic.stop();
+			currentMusic = null;
+		}
+	}
+	
+	@Override
+	public void execute(Game game, Consumer<String> onResult) {
+		GameRun gr = new GameRun(game, new ScreenInfo(), onResult);
+		gameStack.push(gr);
+		current = gr;
+		initOrResumeGameRun(gr);
+		// we clean mouse state so that clicking doesn't pass to child
+		for (int i = 0; i < mouse.btn.length; i++) {
+			mouse.btn[i] = false;
+		}
+		// need to run an update() becouse startChildGame is called in the parent game's update(), so the child will lose a loop and get render() called first, which is wrong
+		gr.game.update();
+	}
+
+	@Override
+	public void quit(String result) {
+		GameRun old = gameStack.pop();
+		old.dispose();
+		Consumer<String> x = old.onResult;
+		current = gameStack.peek();
 		
+		// we clean mouse state so that clicking doesn't pass to parent
+		for (int i = 0; i < mouse.btn.length; i++) {
+			mouse.btn[i] = false;
+		}
+		
+		initOrResumeGameRun(current);
+		
+		if(x!=null) x.accept(result);
+		
+		old = null;
+		x = null;
+		System.gc();
 	}
 	
 }
