@@ -39,36 +39,11 @@ For android:
 The API
 -------
 
-Here's Omicron minimalistic and self-explaining API:
+Omicron has a minimalistic and self-explanatory API.
+Take a look [here](https://github.com/msx80/Omicron/blob/master/api/src/main/java/org/github/msx80/omicron/api/Sys.java) for the full API!
 
-```java
-package org.github.msx80.omicron.api;
-
-public interface Sys 
-{
-	void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip);
-	int newSurface(int w, int h);
-	int getPix(int sheetNum, int x, int y);
-	void fill(int sheetNum, int x, int y, int w, int h, int color);
-	void offset(int x, int y);
-	void clear(int color);
-	void color(int color);
-	int fps();
-	String mem(String key);
-	void mem(String key, String value);
-	Mouse mouse();
-	Controller[] controllers();
-	void sound(int soundNum, float volume, float pitch);
-	void music(int musicNum, float volume, boolean loop);
-	void stopMusic();
-	String hardware(String module, String command, String param);
-}
-
-
-```
-
-Hello World
+Get Started
 -----------
 
-Take a look at the [Hello World](https://github.com/msx80/Omicron/blob/master/demo/HelloWorld/omicron-demo/src/main/java/org/github/msx80/omicron/HelloWorld.java) example to get started!
+Take a look at the [Hello World](https://github.com/msx80/Omicron/blob/master/demo/HelloWorld/hello-world/src/main/java/org/github/msx80/omicron/helloworld/HelloWorld.java) example to get started!
 
