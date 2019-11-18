@@ -11,13 +11,15 @@ import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import org.github.msx80.omicron.api.adv.AdvancedSys;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
+import org.github.msx80.omicron.basicutils.MapDrawer;
 import org.github.msx80.omicron.basicutils.TextDrawerFixed;
 
 public class FeaturesDemo implements Game {
 	
 	private Sys sys;
 	private TextDrawerFixed font = null;
-
+	private MapDrawer mapDrawer = null;
+	
 	private int bgColor = Colors.from(150, 200, 255);
 	Random r = new Random(10);
 	
@@ -27,12 +29,18 @@ public class FeaturesDemo implements Game {
 	Mouse m;
 	boolean oldClick = false;
 	int newSurf;
+	private int[][] mapData = new int[][]{
+			new int[] {0,1,0,0,0,0,2,6},
+			new int[] {2,4,0,5,0,0,0,13},
+			new int[] {4,0,0,2,0,1,3,0},
+			new int[] {0,3,0,0,4,5,0,0}
+	};
 	
     public void init(final Sys sys) 
     {
         this.sys = sys;
         font = new TextDrawerFixed(sys, 1, 8, 8, 6);
-        
+        mapDrawer = new MapDrawer(sys, 8, 8, 7, mapData );
         setupSurf(sys);
     }
 
@@ -62,6 +70,9 @@ public class FeaturesDemo implements Game {
     {
     	sys.clear(bgColor);
     	
+    	font.print("Maps:", 140, 91);
+    	mapDrawer.draw(3, 140, 100, 0, 0, 8, 4);
+    	
     	// keyboard controlled sprite
         sys.draw(2, x, y, 0, 32, 16, 16,0,dir);
         
@@ -81,7 +92,7 @@ public class FeaturesDemo implements Game {
         sys.draw(newSurf, 10, 60, 0,0, 64, 16, 0, 0);
         
         
-        testRot(140, 10);
+        testRot(140, 2);
     	
         testTrans(10,100);
         
