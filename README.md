@@ -10,9 +10,9 @@ Features:
 4. Plaform independent API
 5. Customizable resolution
 
-![Hello Wolrd example](https://i.imgur.com/VYVhZtv.png)
+![Feature Demo example](https://i.imgur.com/VYVhZtv.png)
 
-Hello Wolrd example
+Feature Demo example
 
 
 ![A screenshot from the demo](https://i.imgur.com/esxGpDW.png)
@@ -21,7 +21,7 @@ A screenshot from the demo game, Alien Buster
 
 ![Doors of Doom](https://i.imgur.com/GoCecbG.png)
 
-A videogame developed with Omicron.
+A videogame developed with Omicron, **Doors of Doom**, available on [Play Store](https://play.google.com/store/apps/details?id=org.github.msx80.doorsofdoom.DoorsOfDoom)
 
 
 How can I try it?
