@@ -1,8 +1,6 @@
 package org.github.msx80.omicron;
 
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -28,9 +26,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.NonBleedingSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -38,7 +37,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys {
 	
 	FPSLogger fps = new FPSLogger();
-	SpriteBatch batch;
+	NonBleedingSpriteBatch batch;
 	OrthographicCamera cam=new OrthographicCamera();
 	
 	// a stack of all currently running Game
@@ -56,8 +55,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	Texture pixel;
 	private int lastPixel;
 		
-	//Rectangle scissor = new Rectangle();
-
+	Rectangle scissors = new Rectangle();
+	Rectangle clipBounds = new Rectangle();
 	
 	
 	
@@ -74,6 +73,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	Vector3 proj = new Vector3();
 	private Preferences prefs = null;
+	private KeyboardListener keyboardListener = null;
 
 	@Override
 	public void create () {
@@ -85,7 +85,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		lastPixel = Colors.WHITE;
 		
 		
-		batch = new SpriteBatch();
+		batch = new NonBleedingSpriteBatch();
 		//batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
 		//batch.enableBlending();
 		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
@@ -129,6 +129,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	{
 		System.out.println("Resize to "+winwidth+" "+winheight);
 		r.screenInfo.handleResize(winwidth, winheight, cam);
+		batch.setProjectionMatrix(cam.combined);
 	}
 
 	
@@ -144,25 +145,43 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		batch.setColor(red, green, blue, alpha);
 	}
 
+	@Override
+	public void clip(int x, int y, int w, int h)
+	{
+		batch.flush(); // important, otherwise things stay in the buffer and get clipped at the wrong time
+		if(w == 0 && h == 0 && x==0 && y ==0)
+		{
+			clipBounds.set(0,0,current.screenInfo.requiredSysConfig.width, current.screenInfo.requiredSysConfig.height);
+		}
+		else
+		{
+			clipBounds.set(x, y ,w,h);
+		}
+		
+		ScissorStack.calculateScissors(cam, batch.getTransformMatrix(), clipBounds, scissors);
+		if (!ScissorStack.setScissors(scissors)) {
+		    throw new RuntimeException("No scissors, check your clip() dimensions");
+		}
+	}
 	
-
 	
 	@Override
 	public void render () {
 		fps.log();
 		offset(0,0); // reset offset
-			
-		current.game.update(); 
 		
-		batch.setProjectionMatrix(cam.combined);
-	
+		current.game.update(); 
+
+		// reset current color to white
 		this.colorf(1, 1, 1, 1);
+		
+		// clear the screen to black, including portions outside the scissor area
 		Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
 		this.clear(Colors.BLACK);
 		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 			
 		current.screenInfo.applyGlClipping();
-		
+
 		batch.begin();
 		try
 		{
@@ -172,6 +191,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		{
 			batch.end();
 		}
+		
 	}
 
 
@@ -200,7 +220,6 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	private void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h)
 	{
 		// uploadDirtyTexture();
-		
 		TextureRegion r = current.getSheet(sheetNum);
 		if(r == null) throw new RuntimeException("Trying to draw sheet "+sheetNum+" but was not found");
 		r.setRegion(srcx, srcy, w, h);
@@ -230,6 +249,9 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			int angle = rotate * 90;
 			
 			TextureRegion r = current.getSheet(sheetNum);
+			if(r == null) throw new RuntimeException("No sheet "+sheetNum+" found.");
+			//batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w-0.001f,h-0.001f,1,1,angle, srcx, srcy, w, h, false != flipx, true != flipy);
+
 			batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w,h,1,1,angle, srcx, srcy, w, h, false != flipx, true != flipy);
 		}
 		
@@ -318,14 +340,16 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 	@Override
 	public void offset(int x, int y) {
-		ox = x;
-		oy  = y;
+		ox += x;
+		oy  += y;
 		
 	}
 	
 	
 	public class MyInputProcessor implements InputProcessor {
 		   public boolean keyDown (int keycode) {
+			   if(keyboardListener!=null) return keyboardListener.keyDown(keycode);
+			   
 			   Controller c = controllers[0];
 			   switch (keycode) {
 					case Input.Keys.UP: c.up=true; break;
@@ -343,6 +367,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		   }
 
 		   public boolean keyUp (int keycode) {
+			   if(keyboardListener!=null) return keyboardListener.keyUp(keycode);
 			   Controller c = controllers[0];
 			   switch (keycode) {
 					case Input.Keys.UP: c.up=false; break;
@@ -360,6 +385,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		   }
 
 		   public boolean keyTyped (char character) {
+			   if(keyboardListener!=null) return keyboardListener.keyTyped(character);
 		      return true;
 		   }
 
@@ -520,6 +546,11 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		old = null;
 		x = null;
 		System.gc();
+	}
+
+	@Override
+	public void activateKeyboardInput(KeyboardListener listener) {
+		this.keyboardListener  = listener;
 	}
 	
 }

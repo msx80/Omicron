@@ -7,7 +7,8 @@ import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import org.github.msx80.omicron.basicutils.Colors;
 
-public class HelloWorld implements Game {
+public class HelloWorld implements Game 
+{
 	
 	private Sys sys;
 	

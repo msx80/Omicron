@@ -9,5 +9,7 @@ public interface TextDrawer {
 	void print(String text, int x, int y);
 
 	int width(String text);
+	
+	int height();
 
 }

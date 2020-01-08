@@ -61,4 +61,16 @@ public class TextDrawerFixed implements TextDrawer {
 	{
 		return text.length() * stepping;
 	}
+	@Override
+	public int height() {
+		return charHeight;
+	}
+	public int getCharHeight() {
+		return charHeight;
+	}
+	public int getStepping() {
+		return stepping;
+	}
+	
+	
 }

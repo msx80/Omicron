@@ -105,7 +105,7 @@ public interface Sys
 	 * @param pitch
 	 */
 	void sound(int soundNum, float volume, float pitch);
-	
+		
 	/**
 	 * Play a music
 	 * @param musicNum
@@ -119,4 +119,15 @@ public interface Sys
 	 */
 	void stopMusic();
 	String hardware(String module, String command, String param);
+	
+	/**
+	 * Set the current clip of the screen, that is the area that will be drawn onto.
+	 * Anything drawn outside of the clip area will not be drawn.
+	 * Set all parameters to 0 to reset the clipping area
+	 * @param x the rectangle area to clip
+	 * @param y the rectangle area to clip
+	 * @param w the rectangle area to clip
+	 * @param h the rectangle area to clip
+	 */
+	void clip(int x, int y, int w, int h);
 }

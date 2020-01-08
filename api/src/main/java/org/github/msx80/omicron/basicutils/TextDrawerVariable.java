@@ -140,4 +140,8 @@ public class TextDrawerVariable implements TextDrawer {
 		}
 		return w;
 	}
+	@Override
+	public int height() {
+		return charHeight;
+	}	
 }

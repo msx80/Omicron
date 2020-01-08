@@ -9,12 +9,20 @@ import org.github.msx80.omicron.api.Sys;
 /**
  * This is an advanced version of Sys that offer some methods for chaining Games, so
  * that a Game can run a second Game (and so on). Each parent can get a result from the child Game when it
- * terminates.
+ * terminates. It's mainly useful to implement mega Game like a proper fantasy console
  * Resources (sheet, sounds, musics, etc) are separated and read from Game class resources, so that the
  * appropriate Classloader will be used
  *
  */
 public interface AdvancedSys extends Sys {
+
+	public interface KeyboardListener 
+	{
+		   public boolean keyDown (int keycode);
+		   public boolean keyUp (int keycode);
+		   public boolean keyTyped (char character);
+	}
+
 
 	/**
 	 * Starts and pass control to another Game.
@@ -34,4 +42,10 @@ public interface AdvancedSys extends Sys {
 	 * @param result
 	 */
 	void quit(String result);
+	
+	/**
+	 * 
+	 * @param listener
+	 */
+	void activateKeyboardInput(KeyboardListener listener);
 }

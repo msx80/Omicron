@@ -6,16 +6,6 @@ public class Zoomer {
 	
 	/**
 	 * Copy a portion of image from srcSurf to destSurf scaling it by scale factor. Each src pixel will be a scale*scale block on dest.
-	 * @param sys
-	 * @param srcSurf
-	 * @param destSurf
-	 * @param srcx
-	 * @param srcy
-	 * @param destx
-	 * @param desty
-	 * @param w
-	 * @param h
-	 * @param scale
 	 */
 	public static void zoom(Sys sys, int srcSurf, int destSurf, int srcx, int srcy, int destx, int desty, int w, int h, int scale)
 	{
