@@ -5,13 +5,13 @@ import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.ShapeDrawer;
 import org.github.msx80.omicron.basicutils.TextDrawer;
 
-public class Label2 extends Widget {
+public class Button extends Widget {
 
 	private String text;
 	private TextDrawer font;
 	private Sys sys;
 
-	public Label2(Sys sys, String text, TextDrawer font, int x, int y, Padding padding)
+	public Button(Sys sys, String text, TextDrawer font, int x, int y, Padding padding)
 	{
 		super(x, y, font.width(text) + padding.leftRight(), font.height() + padding.topBottom(), padding);
 		this.text = text;
