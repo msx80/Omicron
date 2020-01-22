@@ -29,9 +29,10 @@ How can I try it?
 
 1. Build the omicron-api project (`mvn clean install`)
 2. Build the omicron-engine project (`mvn clean install`)
-3. Build the helloworld demo project (`mvn clean install`)
-4. Build the helloworld-desktop project (`mvn clean install assembly:single`)
-5. Run the output jar (`java -jar target/hello-world-desktop-0.0.1-jar-with-dependencies.jar`)
+3. Build the omicron-desktop project (`mvn clean install`)
+4. Build the helloworld demo project (`mvn clean install`)
+5. Build the helloworld-desktop project (`mvn clean install assembly:single`)
+6. Run the output jar (`java -jar target/hello-world-desktop-0.0.1-jar-with-dependencies.jar`)
 
 For android:
 

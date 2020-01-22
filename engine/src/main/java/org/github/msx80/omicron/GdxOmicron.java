@@ -313,7 +313,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void fill(int sheetNum, int x, int y, int w, int h, int color) {
 		if(sheetNum==0)
 		{
-			if(lastPixel != color)
+			// drawing on screen
+			if(lastPixel != color) // caching our pixel texture
 			{
 				boolean a = batch.isDrawing();
 				if(a)batch.end();

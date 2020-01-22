@@ -4,7 +4,7 @@ public interface Sys
 {
 	/**
 	 * Draws a portion of an image into the screen. The current color is applied to the image.
-	 * @param sheetNum the sheet from which to copy the image. References the file "sheet<num>.png" from Resources folder.
+	 * @param surfNum the surface from which to copy the image. References the file "surface<num>.png" from Resources folder.
 	 * @param x
 	 * @param y
 	 * @param srcx
@@ -14,33 +14,33 @@ public interface Sys
 	 * @param rotate
 	 * @param flip
 	 */
-    void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip);
+    void draw(int surfaceNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip);
     /**
-     * Create a new surface with the specified dimension. Result can be used as sheetNum in all context.
+     * Create a new surface with the specified dimension. Result can be used as surfNum in all context.
      * @param w
      * @param h
      * @return
      */
     int newSurface(int w, int h);
     /**
-     * Return the color of a pixel in a specific sheet.
-     * @param sheetNum 0 for screen
+     * Return the color of a pixel in a specific surface.
+     * @param surface 0 for screen
      * @param x
      * @param y
      * @return
      */
-    int getPix(int sheetNum, int x, int y);
+    int getPix(int surfaceNum, int x, int y);
     
     /**
      * Fill an area of a surface with an uniform color.
-     * @param sheetNum 0 for screen, or any sheet number
+     * @param surfaceNum 0 for screen, or any surface number
      * @param x
      * @param y
      * @param w
      * @param h
      * @param color
      */
-    void fill(int sheetNum, int x, int y, int w, int h, int color);
+    void fill(int surfaceNum, int x, int y, int w, int h, int color);
     
     /**
      * move the origin (0,0) by the specified offset.

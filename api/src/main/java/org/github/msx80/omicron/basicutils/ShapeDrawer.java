@@ -18,6 +18,13 @@ public class ShapeDrawer
 		sys.fill(sheet, x, y+h-1, w, 1, color);
 		
 	}
+
+	public static void rect(Sys sys, int x, int y, int w, int h, int sheet, int color)
+	{
+	
+		sys.fill(sheet, x, y, w, h, color);
+		
+	}
 	
 	
 	public static void line(final Sys sys, int x1, int y1, int x2, int y2, final int sheet, final int color) {

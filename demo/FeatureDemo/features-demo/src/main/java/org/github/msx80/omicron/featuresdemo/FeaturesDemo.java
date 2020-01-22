@@ -68,6 +68,7 @@ public class FeaturesDemo implements Game {
     
     public void render() 
     {
+  
     	sys.clear(bgColor);
     	
     	font.print("Maps:", 140, 91);
@@ -83,7 +84,7 @@ public class FeaturesDemo implements Game {
         font.print("FPS: "+sys.fps(), 10, 20);
         
         sys.color(Colors.WHITE);
-        
+   
         
         font.print("Mouse: "+m.x+" "+m.y+" "+m.btn[0], 10, 30);
               
@@ -95,6 +96,8 @@ public class FeaturesDemo implements Game {
         testRot(140, 2);
     	
         testTrans(10,100);
+        
+        
         
         // mouse pointer
         sys.draw(2, m.x,m.y,64,0,8,8,0,0);
