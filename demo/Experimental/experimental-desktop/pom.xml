@@ -13,7 +13,7 @@
 </dependency>
     <dependency>
     <groupId>org.github.msx80.omicron</groupId>
-    <artifactId>desktop</artifactId>
+    <artifactId>omicron-desktop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
   
