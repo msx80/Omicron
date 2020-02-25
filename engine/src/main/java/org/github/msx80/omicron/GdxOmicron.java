@@ -1,6 +1,8 @@
 package org.github.msx80.omicron;
 
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -13,6 +15,7 @@ import org.github.msx80.omicron.basicutils.Colors;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
@@ -58,17 +61,21 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	Rectangle scissors = new Rectangle();
 	Rectangle clipBounds = new Rectangle();
 	
-	
-	
 	Music currentMusic = null;
 	private HardwareInterface hw;
+	private GdxOmicronOptions options;
 	
-	public GdxOmicron(Game game, HardwareInterface hw) {
+	public GdxOmicron(Game game, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
 		this.hw = hw;
-		GameRun gr = new GameRun(game, new ScreenInfo(), null);
+		this.options = options;
+		GameRun gr = new GameRun(game, new ScreenInfo(options.getRenderingToTexture()), null);
 		this.gameStack.push(gr);
 		current = gr;
+	}
+	
+	public GdxOmicron(Game game, HardwareInterface hw) {
+		this(game, hw, new GdxOmicronOptions());
 	}
 	
 	Vector3 proj = new Vector3();
@@ -128,7 +135,16 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	private void setUpCam(GameRun r, int winwidth, int winheight) 
 	{
 		System.out.println("Resize to "+winwidth+" "+winheight);
-		r.screenInfo.handleResize(winwidth, winheight, cam);
+		if(options.getRenderingToTexture())
+		{
+			//System.out.println("Ignoring, rendering to texture");
+			// even if the window resized, the texture we are rendering to is unchanged.
+			r.screenInfo.handleResize(r.screenInfo.requiredSysConfig.width, r.screenInfo.requiredSysConfig.height, cam);
+		}
+		else
+		{
+			r.screenInfo.handleResize(winwidth, winheight, cam);
+		}
 		batch.setProjectionMatrix(cam.combined);
 	}
 
@@ -176,11 +192,14 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		this.colorf(1, 1, 1, 1);
 		
 		// clear the screen to black, including portions outside the scissor area
-		Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
-		this.clear(Colors.BLACK);
-		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
-			
+		if(!options.getRenderingToTexture())
+		{
+			Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
+			this.clear(Colors.BLACK);
+			Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
+		}	
 		current.screenInfo.applyGlClipping();
+		batch.setProjectionMatrix(cam.combined);
 
 		batch.begin();
 		try
@@ -349,7 +368,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	public class MyInputProcessor implements InputProcessor {
 		   public boolean keyDown (int keycode) {
-			   if(keyboardListener!=null) return keyboardListener.keyDown(keycode);
+			   if(keyboardListener!=null) 
+			   {
+				   if(keyboardListener.keyDown(keycode)) return true;
+			   }
 			   
 			   Controller c = controllers[0];
 			   switch (keycode) {
@@ -360,6 +382,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		
 					case Input.Keys.Z: c.btn[0]=true; break;
 					case Input.Keys.X: c.btn[1]=true; break;
+					
+					case Input.Keys.F : 
+						FullscreenToggler.toggleFullscreen();
+				        break;
 			
 			default:
 				break;
@@ -368,7 +394,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		   }
 
 		   public boolean keyUp (int keycode) {
-			   if(keyboardListener!=null) return keyboardListener.keyUp(keycode);
+			   if(keyboardListener!=null) 
+			   {
+				   if(keyboardListener.keyUp(keycode)) return true;
+			   }
 			   Controller c = controllers[0];
 			   switch (keycode) {
 					case Input.Keys.UP: c.up=false; break;
@@ -386,7 +415,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		   }
 
 		   public boolean keyTyped (char character) {
-			   if(keyboardListener!=null) return keyboardListener.keyTyped(character);
+			   if(keyboardListener!=null) 
+			   {
+				   if(keyboardListener.keyTyped(character)) return true;
+			   }
 		      return true;
 		   }
 
@@ -467,8 +499,15 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	}
 
 	@Override
-	public String mem(String key) {
-		return getPrefs().getString(key);
+	public String mem(final String key) {
+		
+		return AccessController.doPrivileged( new PrivilegedAction<String>() {
+
+			@Override
+			public String run() {
+				return getPrefs().getString(key);
+			}
+		} );
 		
 	}
 
@@ -481,10 +520,15 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	}
 
 	@Override
-	public void mem(String key, String value) {
-		
-			getPrefs().putString(key, value).flush();
-		
+	public void mem(final String key, final String value) {
+
+		AccessController.doPrivileged( new PrivilegedAction<Void>() {
+			@Override
+			public Void run() {
+				getPrefs().putString(key, value).flush();
+				return null;
+			}
+		} );
 	}
 
 	@Override
@@ -516,7 +560,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	@Override
 	public void execute(Game game, Consumer<String> onResult) {
-		GameRun gr = new GameRun(game, new ScreenInfo(), onResult);
+		GameRun gr = new GameRun(game, new ScreenInfo(options.getRenderingToTexture()), onResult);
 		gameStack.push(gr);
 		current = gr;
 		initOrResumeGameRun(gr);
@@ -553,5 +597,6 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void activateKeyboardInput(KeyboardListener listener) {
 		this.keyboardListener  = listener;
 	}
+
 	
 }
