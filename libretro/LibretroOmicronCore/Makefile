@@ -37,7 +37,7 @@ ifeq ($(platform), unix)
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
    GL_LIB := -lGL
-   CFLAGS += -I"/usr/lib/jvm/java-8-openjdk/include/" -I"/usr/lib/jvm/java-8-openjdk/include/linux/" 
+   CFLAGS += -I"/usr/lib/jvm/java-1.11.0-openjdk-amd64/include/" -I"/usr/lib/jvm/java-1.11.0-openjdk-amd64/include/linux/" 
    LIBS += -ldl
 else ifneq (,$(findstring osx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro.dylib

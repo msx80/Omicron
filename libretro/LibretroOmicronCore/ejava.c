@@ -149,15 +149,15 @@ int loadJavaLib()
 
     return 0;
 #else
-/*
+
 	int s = locateJavaDLL(dllpath, 1024, "libjvm.so");
 	if(s<0) {
-		logError("Unable to calculate java so path \n");
+		log_cb(RETRO_LOG_ERROR, "Unable to calculate java so path \n");
 		return -1;
 	}
 
-*/
-	handle = dlopen("/usr/lib/jvm/java-13-openjdk/lib/server/libjvm.so", RTLD_NOW); // or RTLD_LAZY, no difference.
+
+	handle = dlopen(dllpath, RTLD_NOW); // or RTLD_LAZY, no difference.
 	if (!handle){
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Unable to load jvm.so\n");
 		return -1;
@@ -167,6 +167,14 @@ int loadJavaLib()
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Unable to find mydynJNI_CreateJavaVM\n");
 		return -1;
 	}
+    mydynJNI_GetCreatedJavaVMs = dlsym(handle, "JNI_GetCreatedJavaVMs");
+        if (NULL == mydynJNI_GetCreatedJavaVMs)
+    {
+        log_cb(RETRO_LOG_ERROR, "[JAVA] Unable to locate function JNI_GetCreatedJavaVMs\n");
+        return -1;
+    }
+
+
 	/*mydynJNI_DestroyJavaVM = (dynJNI_DestroyJavaVM)dlsym(handle, "JNI_DestroyJavaVM");
 	if (NULL == mydynJNI_DestroyJavaVM) 
     {
