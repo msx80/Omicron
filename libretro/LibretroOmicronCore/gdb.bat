@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Dev-Cpp\MinGW64\bin\gdb.exe" --args c:\Users\xxx\AppData\Roaming\RetroArch\retroarch_debug.exe -L omicron_libretro.dll c:\Users\xxx\dev\Omicron\demo\FeatureDemo\features-demo-gradle\FeaturesDemo.omicron
