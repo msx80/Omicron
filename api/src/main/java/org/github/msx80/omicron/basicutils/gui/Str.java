@@ -7,7 +7,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Deprecated
 public class Str {
+
 	/**
 	 * Metodo di utilita' per verificare se una stringa e' vuota
 	 * 

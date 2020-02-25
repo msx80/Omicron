@@ -39,5 +39,11 @@ public final class SysConfig {
 		this.code = code;
 		this.mode = mode;
 	}
+
+	@Override
+	public String toString() {
+		return "SysConfig [width=" + width + ", height=" + height + ", title=" + title + ", code=" + code + ", mode="
+				+ mode + "]";
+	}
 	
 }

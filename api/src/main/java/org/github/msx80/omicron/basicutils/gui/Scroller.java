@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.github.msx80.omicron.api.Sys;
-import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.ShapeDrawer;
 import org.github.msx80.omicron.basicutils.palette.Tic80;
 
@@ -65,7 +64,7 @@ public class Scroller extends ParentWidget {
 	}
 	
 	public static int SCROLL_BAR_WIDTH = 8;
-	final List<Widget> children = new ArrayList<Widget>();
+	final List<Widget> children = new ArrayList<Widget>(1);
 	final Widget child;
 	
 	ScrollBar scrollX = new ScrollBar();
@@ -134,7 +133,7 @@ public class Scroller extends ParentWidget {
 		// first ensure the lower-right corner
 		scrollX.ensureVisible(this.w-SCROLL_BAR_WIDTH, x+w);
 		scrollY.ensureVisible(this.h-SCROLL_BAR_WIDTH, y+h);
-		// then ensure the top-left corner
+		// then ensure the top-left corner, which is more important
 		scrollX.ensureVisible(this.w-SCROLL_BAR_WIDTH, x);
 		scrollY.ensureVisible(this.h-SCROLL_BAR_WIDTH, y);
 		

@@ -4,6 +4,14 @@ import java.util.List;
 
 import org.github.msx80.omicron.api.Sys;
 
+
+/**
+ * A widget that has some child widgets.
+ * It should draw the widget accordingly, handle the "pick" picking, etc.
+ * Note that there's no add() method to add children as this is an implementation specific operation that
+ * different parents can implement differently 
+ *
+ */
 public abstract class ParentWidget extends Widget {
 
 	protected Sys sys;
