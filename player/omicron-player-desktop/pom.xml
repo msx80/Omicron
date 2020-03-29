@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+   <artifactId>omicron-player-desktop</artifactId>
+   <parent>
+ 	<groupId>org.github.msx80.omicron</groupId>
+ 	<artifactId>omicron-parent</artifactId>
+ 	<version>0.0.1</version>
+ </parent>  
+  <dependencies>
+
+  <dependency>
+  <groupId>org.github.msx80.omicron</groupId>
+  <artifactId>omicron-player</artifactId>
+  <version>0.0.1</version>
+  
+</dependency>
+    <dependency>
+    <groupId>org.github.msx80.omicron</groupId>
+    <artifactId>omicron-desktop</artifactId>
+    <version>0.0.1</version>
+</dependency>
+  
+</dependencies>
+<!--
+<build>  
+<plugins>
+ <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>org.github.msx80.omicron.player.OmicronPlayerMain</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
+</plugins>      
+</build>  -->
+
+ <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+			  <createDependencyReducedPom>false</createDependencyReducedPom>
+			  <outputDirectory>..</outputDirectory>
+			  <finalName>OmicronPlayer</finalName>
+			  <shadedArtifactAttached>true</shadedArtifactAttached>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.github.msx80.omicron.player.OmicronPlayerMain</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>   
+</project>
