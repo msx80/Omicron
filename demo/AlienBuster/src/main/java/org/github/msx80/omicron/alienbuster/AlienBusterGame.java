@@ -110,7 +110,7 @@ public class AlienBusterGame implements Game {
 			
     	switch (status) {
 		case INTRO:
-			if(m.btn[0])
+			//if(m.btn[0])
 			{
 				initgame();
 				status = Status.GAME; 
