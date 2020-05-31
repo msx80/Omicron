@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.ShapeDrawer;
+import org.github.msx80.omicron.basicutils.gui.drawers.IScrollbarDrawer;
 import org.github.msx80.omicron.basicutils.palette.Tic80;
 
 public class Scroller extends ParentWidget {
@@ -18,8 +19,10 @@ public class Scroller extends ParentWidget {
 			scroll =0; curPos = 0; curLength = 0;
 		}
 		
-		public void calc(int clientSize, int childSize)
+		public void calc(int clientSize, int childSize, int border)
 		{
+			clientSize -= 2*border;
+			
 			// calculate curPos and curLength given the size of the two widgets (and scroll);
 			int maxScroll = childSize-clientSize;
 			if(scroll> maxScroll)
@@ -41,12 +44,13 @@ public class Scroller extends ParentWidget {
 			{
 				// scroller is only showing a portion				
 				
-				float visibleArea = clientSize / (float)childSize;
+				double visibleArea = clientSize / (double)childSize;
 				curLength = (int) (visibleArea * clientSize);
-				float pos = scroll/(float)(maxScroll);
+				double pos = scroll/(double)(maxScroll);
 				curPos = (int) (pos * (clientSize-curLength));
 			}
 			
+			curPos+=border;
 			
 		}
 		
@@ -61,18 +65,27 @@ public class Scroller extends ParentWidget {
 			}
 			
 		}
+
+		public void scroll(int i) {
+			scroll += i;
+			
+		}
 	}
 	
-	public static int SCROLL_BAR_WIDTH = 8;
+	//public static int SCROLL_BAR_WIDTH = 8;
 	final List<Widget> children = new ArrayList<Widget>(1);
 	final Widget child;
 	
 	ScrollBar scrollX = new ScrollBar();
 	ScrollBar scrollY = new ScrollBar();
+	private IScrollbarDrawer drawerV;
+	private IScrollbarDrawer drawerH;
 	
-	public Scroller(Sys sys, int x, int y, int w, int h, Widget child) 
+	public Scroller(Sys sys, int x, int y, int w, int h, Widget child, IScrollbarDrawer drawerV, IScrollbarDrawer drawerH) 
 	{
-		super(sys, x, y, w, h, Padding.of(0, SCROLL_BAR_WIDTH, 0, SCROLL_BAR_WIDTH));
+		super(sys, x, y, w, h, Padding.of(0, drawerH.getThickness(), 0, drawerV.getThickness()));
+		this.drawerV = drawerV;
+		this.drawerH = drawerH;
 		this.child = child;
 		children.add(child);
 		child.setParent(this);
@@ -82,15 +95,15 @@ public class Scroller extends ParentWidget {
 	@Override
 	public void childInvalidated(Widget widget) {
 		// child changed size, recalc scrollbars
-		scrollX.calc(w-SCROLL_BAR_WIDTH, child.w);
-		scrollY.calc(h-SCROLL_BAR_WIDTH, child.h);
+		scrollX.calc(w-drawerV.getThickness(), child.w, drawerH.getBorder());
+		scrollY.calc(h-drawerH.getThickness(), child.h, drawerV.getBorder());
 	}
 
 	
 	
 	@Override
 	public void draw() {
-		sys.clip(this.getAbsoluteX(), this.getAbsoluteY(), this.w-SCROLL_BAR_WIDTH, this.h-SCROLL_BAR_WIDTH);
+		sys.clip(this.getAbsoluteX(), this.getAbsoluteY(), this.w-drawerV.getThickness(), this.h-drawerH.getThickness());
 		
 		sys.offset(-scrollX.scroll, -scrollY.scroll);
 		
@@ -99,13 +112,13 @@ public class Scroller extends ParentWidget {
 		
 		sys.offset(scrollX.scroll, scrollY.scroll);
 
-		drawVerticalScrollbar(w-SCROLL_BAR_WIDTH, 0, SCROLL_BAR_WIDTH,  h-SCROLL_BAR_WIDTH, scrollY.curPos, scrollY.curLength);
+		drawerV.drawVerticalScrollbar(sys, w-drawerV.getThickness(), 0,  h-drawerH.getThickness(), scrollY.curPos, scrollY.curLength);
 
-		drawHorizontalScrollbar(0, h-SCROLL_BAR_WIDTH, w-SCROLL_BAR_WIDTH, SCROLL_BAR_WIDTH, scrollX.curPos, scrollX.curLength);
+		drawerH.drawHorizontalScrollbar(sys, 0, h-drawerH.getThickness(), w-drawerV.getThickness(), scrollX.curPos, scrollX.curLength);
 		
 		
 	}
-
+/*
 	private void drawHorizontalScrollbar(int sx, int sy, int sw, int sh, int curPos, int curLen) {
 		sys.fill(0, sx+curPos, sy, curLen, sh, Tic80.RED);
 		ShapeDrawer.outline(sys, sx, sy,sw, sh, 0, Tic80.DARK_RED);
@@ -115,12 +128,8 @@ public class Scroller extends ParentWidget {
 		sys.fill(0, sx, sy+curPos, sw, curLen, Tic80.RED);
 		ShapeDrawer.outline(sys,sx, sy, sw, sh, 0, Tic80.DARK_RED);
 	}
-
-	@Override
-	protected void click(int px, int py) {
-		
-	}
-
+*/
+	
 	@Override
 	public List<Widget> children() {
 		return children;
@@ -131,14 +140,23 @@ public class Scroller extends ParentWidget {
 	@Override
 	public void ensureVisible(Widget child, int x, int y, int w, int h) {
 		// first ensure the lower-right corner
-		scrollX.ensureVisible(this.w-SCROLL_BAR_WIDTH, x+w);
-		scrollY.ensureVisible(this.h-SCROLL_BAR_WIDTH, y+h);
+		scrollX.ensureVisible(this.w-drawerV.getThickness(), x+w);
+		scrollY.ensureVisible(this.h-drawerH.getThickness(), y+h);
 		// then ensure the top-left corner, which is more important
-		scrollX.ensureVisible(this.w-SCROLL_BAR_WIDTH, x);
-		scrollY.ensureVisible(this.h-SCROLL_BAR_WIDTH, y);
+		scrollX.ensureVisible(this.w-drawerV.getThickness(), x);
+		scrollY.ensureVisible(this.h-drawerH.getThickness(), y);
 		
-		scrollX.calc(this.w-SCROLL_BAR_WIDTH, child.w);
-		scrollY.calc(this.h-SCROLL_BAR_WIDTH, child.h);
+		scrollX.calc(this.w-drawerV.getThickness(), child.w, drawerH.getBorder());
+		scrollY.calc(this.h-drawerH.getThickness(), child.h, drawerV.getBorder());
+	}
+
+	public void scrollVert(int i) {
+		scrollY.scroll(i);
+		scrollY.calc(this.h-drawerH.getThickness(), child.h, drawerV.getBorder());
+	}
+	public void scrollHoriz(int i) {
+		scrollX.scroll(i);
+		scrollX.calc(this.w-drawerV.getThickness(), child.w, drawerH.getBorder());
 	}
 
 

@@ -29,12 +29,6 @@ public class Label extends Widget {
 		sys.color(Colors.WHITE);
 	}
 
-	@Override
-	protected void click(int px, int py) {
-		System.out.println("clicked label "+text+" at "+px+","+py);
-		
-	}
-
 	public void setText(String string) {
 		this.text = string;
 		

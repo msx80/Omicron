@@ -18,21 +18,16 @@ public class WidgetManager extends ManagedParentWidget {
 		Widget w = pick(px, py);
 		if(w!=null)
 		{
-			w.click(px-w.x, py-w.y);
+			if (w instanceof Clickable)	((Clickable) w).click(px-w.x, py-w.y);
 		}
 	}
 	
-	protected void click(int px, int py)
-	{
-		System.out.println("Clicked manager");
-	}
-
 	@Override
 	public void ensureVisible(Widget child, int x, int y, int w, int h) {
 		// nothing to do here
 		
 	}
 
-
+	
 
 }

@@ -5,7 +5,7 @@ import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.ShapeDrawer;
 import org.github.msx80.omicron.basicutils.TextDrawer;
 
-public class Button extends Widget {
+public class Button extends Widget implements Clickable {
 
 	private String text;
 	private TextDrawer font;
@@ -27,8 +27,8 @@ public class Button extends Widget {
 	}
 
 	@Override
-	protected void click(int px, int py) {
-		System.out.println("clicked label "+text+" at "+px+","+py);
+	public void click(int px, int py) {
+		System.out.println("clicked button "+text+" at "+px+","+py);
 		
 	}
 	

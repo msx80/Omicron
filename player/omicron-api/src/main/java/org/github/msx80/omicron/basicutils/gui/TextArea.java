@@ -112,11 +112,6 @@ public class TextArea extends Widget implements KeyboardListener {
 	}
 
 	@Override
-	protected void click(int px, int py) {
-
-	}
-
-	@Override
 	public boolean keyDown(int keycode) {
 		if(keycode == 21)
 		{

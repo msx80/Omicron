@@ -43,11 +43,6 @@ public class Container extends ManagedParentWidget {
 		invalidate();
 	}
 
-	@Override
-	protected void click(int px, int py) {
-		System.out.println("Clicked container ");
-		
-	}
 
 
 

@@ -59,7 +59,7 @@ public abstract class Widget
 		return Geometry.inRect(px, py, x, y, w, h);
 	}
 
-	protected abstract void click(int px, int py);
+	
 	
 	
 	/**
