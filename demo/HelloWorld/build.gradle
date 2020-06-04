@@ -49,6 +49,15 @@ repositories {
 
 dependencies {
     implementation group: 'org.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
+	// to add dependencies from properties 
+	if(omicron.dep) {
+		def deps = omicron.dep.split(";")
+		for (d in deps) {
+		    println "Extra dependency: "+d
+			implementation d
+	   }
+	}
+	
 }
 
 jar {
@@ -60,6 +69,10 @@ jar {
                    'Implementation-Version': omicron.version,
                    'Omicron-Cartridge': 'true'
     }
+/*	from {
+		println configurations.compileClasspath
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }*/
 	destinationDir = file("$rootDir")
     archiveName omicron.main+'.omicron'
 }

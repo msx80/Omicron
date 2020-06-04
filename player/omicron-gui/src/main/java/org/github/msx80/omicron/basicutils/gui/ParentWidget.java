@@ -16,19 +16,19 @@ public abstract class ParentWidget extends Widget {
 
 	protected Sys sys;
 	
-	public ParentWidget(Sys sys, int x, int y, int w, int h, Padding padding) {
-		super(x, y, w, h, padding);
+	public ParentWidget(Sys sys, int x, int y, int w, int h) {
+		super(x, y, w, h);
 		this.sys = sys;
 	}
 
 	public void drawChildren() {
-		sys.offset(padding.top, padding.left);
+		//sys.offset(padding.top, padding.left);
 		for (Widget w : children()) {
 			sys.offset(w.x, w.y);
 			w.draw();
 			sys.offset(-w.x, -w.y);
 		}
-		sys.offset(-padding.top, -padding.left);
+		//sys.offset(-padding.top, -padding.left);
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public abstract class ParentWidget extends Widget {
 			{
 				if(w instanceof ParentWidget)
 				{
-					return ((ParentWidget) w).pick(px-w.x-w.padding.top, py-w.y-w.padding.bottom);
+					return ((ParentWidget) w).pick(px-w.x, py-w.y);
 				}
 				else
 				{
@@ -64,7 +64,7 @@ public abstract class ParentWidget extends Widget {
 	 */
 	public void ensureVisible(Widget child, int x, int y, int w, int h) {
 
-		parent.ensureVisible(this, child.x+x+padding.top, child.y+y+padding.left, w, h);
+		parent.ensureVisible(this, child.x+x, child.y+y, w, h);
 		
 	}
 

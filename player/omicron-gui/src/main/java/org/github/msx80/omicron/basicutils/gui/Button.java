@@ -11,9 +11,9 @@ public class Button extends Widget implements Clickable {
 	private TextDrawer font;
 	private Sys sys;
 
-	public Button(Sys sys, String text, TextDrawer font, int x, int y, Padding padding)
+	public Button(Sys sys, String text, TextDrawer font, int x, int y)
 	{
-		super(x, y, font.width(text) + padding.leftRight(), font.height() + padding.topBottom(), padding);
+		super(x, y, font.width(text), font.height());
 		this.text = text;
 		this.font = font;
 		this.sys = sys;
@@ -23,7 +23,7 @@ public class Button extends Widget implements Clickable {
 	public void draw() {
 		sys.fill(0, 0, 0, w, h, Colors.BLUE);
 		ShapeDrawer.outline(sys, 0, 0, w, h, 0, Colors.GREEN);
-		font.print(text, padding.top, padding.bottom);
+		font.print(text, 0,0);
 	}
 
 	@Override

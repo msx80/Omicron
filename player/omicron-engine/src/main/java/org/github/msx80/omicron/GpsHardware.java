@@ -3,18 +3,15 @@ package org.github.msx80.omicron;
 import org.github.msx80.omicron.api.Sys;
 
 public class GpsHardware implements HardwarePlugin {
-
-	
 	
 	@Override
-	public String exec(String command, String params) {
+	public String exec(String command, Object params) {
 		
 		return null;
 	}
 
 	@Override
 	public String name() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -3,13 +3,13 @@ package org.github.msx80.omicron.basicutils.gui.drawers;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.ShapeDrawer;
 
-public class ScrollbarDrawer implements IScrollbarDrawer {
+public class StandardScrollbarDrawer implements ScrollbarDrawer {
 
 	int width;
 	int curColor;
 	int outlineColor;
 	
-	public ScrollbarDrawer(int width, int curColor, int outlineColor) {
+	public StandardScrollbarDrawer(int width, int curColor, int outlineColor) {
 		this.width = width;
 		this.curColor = curColor;
 		this.outlineColor = outlineColor;

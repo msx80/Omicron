@@ -3,10 +3,8 @@ package org.github.msx80.omicron.fantasyconsole.crazyclassloader.bytesloader;
 import java.io.File;
 import java.io.IOException;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.AggressiveClassLoader;
-import org.github.msx80.omicron.fantasyconsole.utils.FileUtil;
+import org.github.msx80.omicron.fantasyconsole.crazyclassloader.SClassLoader;
 
 public interface BytesLoader {
 	
@@ -15,7 +13,7 @@ public interface BytesLoader {
 	
 	default byte[] loadClass(String className)
 	{
-		String filePath = AggressiveClassLoader.toFilePath(className);
+		String filePath = SClassLoader.toFilePath(className);
 		return loadFile(filePath);
 	}
 	

@@ -1,14 +1,9 @@
 package org.github.msx80.omicron.basicutils.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.github.msx80.omicron.api.Sys;
-import org.github.msx80.omicron.basicutils.ShapeDrawer;
-import org.github.msx80.omicron.basicutils.gui.drawers.IScrollbarDrawer;
-import org.github.msx80.omicron.basicutils.palette.Tic80;
+import org.github.msx80.omicron.basicutils.gui.drawers.ScrollbarDrawer;
 
-public class Scroller extends ParentWidget {
+public class Scroller extends OnlyChildParent {
 	
 	static class ScrollBar {
 		int scroll;
@@ -21,8 +16,6 @@ public class Scroller extends ParentWidget {
 		
 		public void calc(int clientSize, int childSize, int border)
 		{
-			clientSize -= 2*border;
-			
 			// calculate curPos and curLength given the size of the two widgets (and scroll);
 			int maxScroll = childSize-clientSize;
 			if(scroll> maxScroll)
@@ -33,25 +26,23 @@ public class Scroller extends ParentWidget {
 			{
 				scroll = 0;
 			}
-			
+			int scrollBarCursorArea = clientSize-2*border;
 			if(childSize<=clientSize)
 			{
 				// scroller contains the whole child, show full scrollbars
-				curPos = 0;
-				curLength = clientSize;
+				curPos = border;
+				curLength = scrollBarCursorArea;
 			}
 			else
 			{
 				// scroller is only showing a portion				
 				
 				double visibleArea = clientSize / (double)childSize;
-				curLength = (int) (visibleArea * clientSize);
+				curLength = (int) (visibleArea * scrollBarCursorArea);
 				double pos = scroll/(double)(maxScroll);
-				curPos = (int) (pos * (clientSize-curLength));
+				curPos = border + (int) (pos * (scrollBarCursorArea-curLength));
 			}
-			
-			curPos+=border;
-			
+					
 		}
 		
 		public void ensureVisible(int clientArea, int x)
@@ -71,39 +62,31 @@ public class Scroller extends ParentWidget {
 			
 		}
 	}
-	
-	//public static int SCROLL_BAR_WIDTH = 8;
-	final List<Widget> children = new ArrayList<Widget>(1);
-	final Widget child;
-	
+		
 	ScrollBar scrollX = new ScrollBar();
 	ScrollBar scrollY = new ScrollBar();
-	private IScrollbarDrawer drawerV;
-	private IScrollbarDrawer drawerH;
+	private ScrollbarDrawer drawerV;
+	private ScrollbarDrawer drawerH;
 	
-	public Scroller(Sys sys, int x, int y, int w, int h, Widget child, IScrollbarDrawer drawerV, IScrollbarDrawer drawerH) 
+	public Scroller(Sys sys, int x, int y, int w, int h, Widget child, ScrollbarDrawer drawerV, ScrollbarDrawer drawerH) 
 	{
-		super(sys, x, y, w, h, Padding.of(0, drawerH.getThickness(), 0, drawerV.getThickness()));
+		super(sys, child, x, y, w, h);
 		this.drawerV = drawerV;
 		this.drawerH = drawerH;
-		this.child = child;
-		children.add(child);
-		child.setParent(this);
 		childInvalidated(child);
 	}
 
 	@Override
 	public void childInvalidated(Widget widget) {
-		// child changed size, recalc scrollbars
-		scrollX.calc(w-drawerV.getThickness(), child.w, drawerH.getBorder());
-		scrollY.calc(h-drawerH.getThickness(), child.h, drawerV.getBorder());
+		recalcScrollX();
+		recalcScrollY();
 	}
 
 	
 	
 	@Override
 	public void draw() {
-		sys.clip(this.getAbsoluteX(), this.getAbsoluteY(), this.w-drawerV.getThickness(), this.h-drawerH.getThickness());
+		sys.clip(this.getAbsoluteX(), this.getAbsoluteY(), this.w-drawerV.getThickness(), getClientAreaHeight());
 		
 		sys.offset(-scrollX.scroll, -scrollY.scroll);
 		
@@ -129,34 +112,46 @@ public class Scroller extends ParentWidget {
 		ShapeDrawer.outline(sys,sx, sy, sw, sh, 0, Tic80.DARK_RED);
 	}
 */
-	
-	@Override
-	public List<Widget> children() {
-		return children;
-	}
 
-	
+	protected int getClientAreaWidth()
+	{
+		return this.w-drawerV.getThickness();
+	}
 	
 	@Override
 	public void ensureVisible(Widget child, int x, int y, int w, int h) {
 		// first ensure the lower-right corner
-		scrollX.ensureVisible(this.w-drawerV.getThickness(), x+w);
-		scrollY.ensureVisible(this.h-drawerH.getThickness(), y+h);
-		// then ensure the top-left corner, which is more important
-		scrollX.ensureVisible(this.w-drawerV.getThickness(), x);
-		scrollY.ensureVisible(this.h-drawerH.getThickness(), y);
+		if(w != 0) scrollX.ensureVisible(getClientAreaWidth(), x+w-1);
+		if(h != 0) scrollY.ensureVisible(getClientAreaHeight(), y+h-1);
 		
-		scrollX.calc(this.w-drawerV.getThickness(), child.w, drawerH.getBorder());
-		scrollY.calc(this.h-drawerH.getThickness(), child.h, drawerV.getBorder());
+		// then ensure the top-left corner, which is more important
+		scrollX.ensureVisible(getClientAreaWidth(), x);
+		scrollY.ensureVisible(getClientAreaHeight(), y);
+		
+		// recalculate cursors
+		recalcScrollX();
+		recalcScrollY();
 	}
 
-	public void scrollVert(int i) {
-		scrollY.scroll(i);
-		scrollY.calc(this.h-drawerH.getThickness(), child.h, drawerV.getBorder());
+	private int getClientAreaHeight() {
+		return this.h-drawerH.getThickness();
 	}
-	public void scrollHoriz(int i) {
+
+	public void scrollVertical(int i) {
+		scrollY.scroll(i);
+		recalcScrollY();
+	}
+
+	public void scrollHorizontal(int i) {
 		scrollX.scroll(i);
-		scrollX.calc(this.w-drawerV.getThickness(), child.w, drawerH.getBorder());
+		recalcScrollX();
+	}
+
+	private void recalcScrollY() {
+		scrollY.calc(getClientAreaHeight(), child.h, drawerV.getBorder());
+	}
+	private void recalcScrollX() {
+		scrollX.calc(getClientAreaWidth(), child.w, drawerH.getBorder());
 	}
 
 

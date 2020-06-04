@@ -11,8 +11,8 @@ import org.github.msx80.omicron.api.Sys;
  */
 public abstract class ManagedParentWidget extends ParentWidget {
 
-	public ManagedParentWidget(Sys sys, int x, int y, int w, int h, Padding padding) {
-		super(sys, x, y, w, h, padding);
+	public ManagedParentWidget(Sys sys, int x, int y, int w, int h) {
+		super(sys, x, y, w, h);
 	}
 
 	List<Widget> children = new ArrayList<Widget>();

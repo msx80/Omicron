@@ -1,10 +1,11 @@
 package org.github.msx80.omicron.api;
 
-public class Controller 
+public interface Controller 
 {
-	public boolean up = false;
-	public boolean down = false;
-	public boolean left = false;
-	public boolean right = false;
-	public boolean[] btn = new boolean[] {false, false, false, false};
+	boolean up();
+	boolean down();
+	boolean left();
+	boolean right();
+	public boolean btn(int n);
+	public boolean btnp(int n);
 }

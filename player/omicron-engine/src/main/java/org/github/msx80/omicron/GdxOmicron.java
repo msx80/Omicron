@@ -15,7 +15,6 @@ import org.github.msx80.omicron.basicutils.Colors;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
@@ -43,7 +42,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	NonBleedingSpriteBatch batch;
 	OrthographicCamera cam=new OrthographicCamera();
 	
-	// a stack of all currently running Game
+	// a stack of all currently running Game s
 	Stack<GameRun> gameStack = new Stack<GameRun>();
 	
 	GameRun current; // top of the stack
@@ -97,7 +96,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		//batch.enableBlending();
 		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
 	
-		controllers = new Controller[] {new Controller()}; // first is keyboard, TODO use joypad etc.
+		controllers = new Controller[] {new ControllerImpl()}; // first is keyboard, TODO use joypad etc.
 		
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
@@ -186,7 +185,13 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		fps.log();
 		offset(0,0); // reset offset
 		
+		
+		
 		current.game.update(); 
+		for (Controller controller : controllers) {
+			ControllerImpl c = (ControllerImpl) controller;
+			c.copyOld();
+		}
 
 		// reset current color to white
 		this.colorf(1, 1, 1, 1);
@@ -301,6 +306,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		else
 		{
 			TextureRegion r = current.getSheet(sheetNum);
+			if(r==null) throw new RuntimeException("Sheet "+sheetNum+" not found!");
 			PixmapTextureData d = (PixmapTextureData) r.getTexture().getTextureData();
 			
 			return d.consumePixmap().getPixel(x, y);
@@ -373,7 +379,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 				   if(keyboardListener.keyDown(keycode)) return true;
 			   }
 			   
-			   Controller c = controllers[0];
+			   ControllerImpl c = (ControllerImpl)controllers[0];
 			   switch (keycode) {
 					case Input.Keys.UP: c.up=true; break;
 					case Input.Keys.DOWN: c.down=true; break;
@@ -382,6 +388,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		
 					case Input.Keys.Z: c.btn[0]=true; break;
 					case Input.Keys.X: c.btn[1]=true; break;
+					case Input.Keys.A: c.btn[2]=true; break;
+					case Input.Keys.S: c.btn[3]=true; break;
 					
 					case Input.Keys.F : 
 						FullscreenToggler.toggleFullscreen();
@@ -398,7 +406,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   {
 				   if(keyboardListener.keyUp(keycode)) return true;
 			   }
-			   Controller c = controllers[0];
+			   ControllerImpl c = (ControllerImpl) controllers[0];
 			   switch (keycode) {
 					case Input.Keys.UP: c.up=false; break;
 					case Input.Keys.DOWN: c.down=false; break;
@@ -407,6 +415,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		
 					case Input.Keys.Z: c.btn[0]=false; break;
 					case Input.Keys.X: c.btn[1]=false; break;
+					case Input.Keys.A: c.btn[2]=false; break;
+					case Input.Keys.S: c.btn[3]=false; break;
 			
 			default:
 				break;
@@ -428,7 +438,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   cam.unproject(proj);
 			   mouse.x = (int) proj.x;
 			   mouse.y = (int) proj.y;
-			  mouse.btn[0] = true;
+			   //mouse.num = pointer;
+			  mouse.btn[button] = true;
 		      return true;
 		   }
 
@@ -438,7 +449,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   cam.unproject(proj);
 			   mouse.x = (int) proj.x;
 			   mouse.y = (int) proj.y;
-			   mouse.btn[0] = false;
+			   //mouse.num = pointer;
+			   mouse.btn[button] = false;
 		      return true;
 		   }
 
@@ -448,6 +460,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   cam.unproject(proj);
 			   mouse.x = (int) proj.x;
 			   mouse.y = (int) proj.y;
+			   //mouse.num = pointer;
 		      return true;
 		   }
 
@@ -458,6 +471,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   cam.unproject(proj);
 			   mouse.x = (int) proj.x;
 			   mouse.y = (int) proj.y;
+			   //mouse.num = -1;
 		      return true;
 		   }
 
@@ -532,21 +546,32 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	}
 
 	@Override
-	public String hardware(String module, String command, String param) {
+	public Object hardware(String module, String command, Object param) {
 		HardwarePlugin e = current.plugins.get(module);
 		return e == null ? null : e.exec(command, param);
 	}
 
 	@Override
-	public void music(int musicNum, float volume, boolean loop) {
-		if (currentMusic != null) {
-			currentMusic.stop();
-		}
-		currentMusic = current.getMusic(musicNum);
-		if(currentMusic == null) throw new RuntimeException("Trying to play music "+musicNum+" but was not found");
-		currentMusic.setVolume(volume);
-		currentMusic.setLooping(loop);
-		currentMusic.play();
+	public void music(final int musicNum, final float volume, final boolean loop) {
+		
+		// inside class SynthesisFilter there's a file loaded from resources
+		// without privileged access it doesn't work
+		AccessController.doPrivileged( new PrivilegedAction<Void>() {
+			
+			@Override
+			public Void run() {
+
+				if (currentMusic != null) {
+					currentMusic.stop();
+				}
+				currentMusic = current.getMusic(musicNum);
+				if(currentMusic == null) throw new RuntimeException("Trying to play music "+musicNum+" but was not found");
+				currentMusic.setVolume(volume);
+				currentMusic.setLooping(loop);
+				currentMusic.play();
+				return null;
+			}});
+		
 		
 	}
 
@@ -596,6 +621,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	@Override
 	public void activateKeyboardInput(KeyboardListener listener) {
 		this.keyboardListener  = listener;
+	}
+
+	@Override
+	public byte[] binfile(int numFile) {
+		
+		return current.loadBinfile(numFile);
 	}
 
 	

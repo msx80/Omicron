@@ -9,9 +9,9 @@ public class Container extends ManagedParentWidget {
 
 	private Sys sys;
 	
-	public Container(Sys sys, int x, int y, Padding padding)
+	public Container(Sys sys, int x, int y)
 	{
-		super(sys, x, y, 0, 0, padding);
+		super(sys, x, y, 0, 0);
 		this.sys = sys;
 	}
 	
@@ -38,8 +38,8 @@ public class Container extends ManagedParentWidget {
 				mh = cy;
 			}
 		}
-		this.w = mw+padding.top+padding.bottom;
-		this.h = mh+padding.left+padding.right;
+		this.w = mw;
+		this.h = mh;
 		invalidate();
 	}
 

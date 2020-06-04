@@ -9,11 +9,18 @@
  </parent>
     
 <dependencies>
+
 <dependency>
     <groupId>org.github.msx80.omicron</groupId>
     <artifactId>omicron-api</artifactId>
     <version>0.0.1</version>
-</dependency><dependency>
+</dependency>
+<dependency>
+    <groupId>org.github.msx80.omicron</groupId>
+    <artifactId>omicron-gui</artifactId>
+    <version>0.0.1</version>
+</dependency>
+<dependency>
     <groupId>org.github.msx80.omicron</groupId>
     <artifactId>omicron-loader</artifactId>
     <version>0.0.1</version>

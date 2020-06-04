@@ -65,6 +65,10 @@ public class FeaturesDemo implements Game {
 		//sys.draw(2, 10,10, 32,32, 16, 16);
 	}
     
+	private String b(boolean b) {
+		return b ? "+":"-";
+	}
+	
     public void render() 
     {
   
@@ -85,7 +89,9 @@ public class FeaturesDemo implements Game {
         sys.color(Colors.WHITE);
    
         
-        font.print("Mouse: "+m.x+" "+m.y+" "+m.btn[0], 10, 30);
+        font.print("Mouse: "+m.x+" "+m.y+" "+b(m.btn[0]), 10, 30);
+        Controller c = sys.controllers()[0];
+        font.print("Btns: "+b(c.btn(0))+" "+b(c.btn(1))+" "+b(c.btn(2))+" "+b(c.btn(3)), 10, 37);
               
         
         font.print("New surf:", 10, 50);
@@ -128,10 +134,10 @@ public class FeaturesDemo implements Game {
 	public boolean update() {
 			
         Controller c = sys.controllers()[0];
-        if (c.up) y--;
-        if (c.down) y++;
-        if (c.left) { x--; dir  = 1; }
-        if (c.right) { x++; dir = 0; }
+        if (c.up()) y--;
+        if (c.down()) y++;
+        if (c.left()) { x--; dir  = 1; }
+        if (c.right()) { x++; dir = 0; }
         
         
         m = sys.mouse();

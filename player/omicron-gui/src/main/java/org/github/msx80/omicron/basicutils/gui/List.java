@@ -8,8 +8,8 @@ public class List<T> extends Widget {
 	private java.util.List<T> items;
 	private TextDrawer td;
 	
-	public List(java.util.List<T> items, TextDrawer td, int x, int y, int w, Padding padding) {
-		super(x, y, w, items.size() * (td.height()+1), padding);
+	public List(java.util.List<T> items, TextDrawer td, int x, int y, int w) {
+		super(x, y, w, items.size() * (td.height()+1));
 		this.items = items;
 		this.td = td;
 	}

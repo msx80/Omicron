@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 public class DebugPlugin implements HardwarePlugin {
 
 	@Override
-	public String exec(String command, String params) {
+	public Object exec(String command, Object params) {
 		
 		return "RES: "+Gdx.graphics.getWidth()+"x"+Gdx.graphics.getHeight();
 	}

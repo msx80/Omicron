@@ -3,8 +3,6 @@ package org.github.msx80.omicron.basicutils.gui;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.TextDrawer;
-import org.github.msx80.omicron.basicutils.gui.drawers.Style;
-import org.github.msx80.omicron.basicutils.gui.drawers.WidgetDrawer;
 
 public class Label extends Widget {
 
@@ -13,9 +11,9 @@ public class Label extends Widget {
 	private Sys sys;	
 	private int color;
 
-	public Label(String text, int x, int y, int color, Style drawer)
+	public Label(String text, int x, int y, int color, TextDrawer font, Sys sys)
 	{
-		super(x, y, drawer.td.width(text), drawer.td.height(), Padding.ZERO);
+		super(x, y, font.width(text), font.height());
 		this.text = text;
 		this.font = font;
 		this.sys = sys;

@@ -15,11 +15,11 @@ public class UrlOpenerPlugin implements HardwarePlugin {
 	}
 
 	@Override
-	public String exec(String command, String params) {
+	public Object exec(String command, Object params) {
 		if("OPEN".equals(command))
 		{
 			try {
-				hw.openUrl(params);
+				hw.openUrl((String)params);
 				return "OK";
 			} catch (Exception e) {
 				return "ERR: "+e.getMessage();

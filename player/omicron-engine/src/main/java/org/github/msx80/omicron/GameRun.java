@@ -60,13 +60,6 @@ public class GameRun {
         }
         return b;
     }
-	private Music loadMusic(int n) 
-	{
-		String fn = "/music"+n+".mp3";
-		FileHandle fh = loadResource(fn);
-		if(fh== null) return null;
-		return Gdx.audio.newMusic(fh);
-	}
 
 	private FileHandle loadResource(String fn) {
 		
@@ -133,7 +126,27 @@ public class GameRun {
 	        }
 	        return b;
 	    }
-	  
+		private Music loadMusic(int n) 
+		{
+			String fn = "/music"+n+".mp3";
+			FileHandle fh = loadResource(fn);
+			System.out.println("Loading music: "+fh);
+			if(fh== null) return null;
+			return Gdx.audio.newMusic(fh);
+		}
+		private TextureRegion loadSheet(int n) {
+			FileHandle r = loadResource("/sheet"+n+".png");
+			
+			if (r==null) return null;
+			
+			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
+			p.setBlending(Blending.None);
+			Texture tt = new Texture(p, false);
+				
+			TextureRegion img = new TextureRegion(tt);
+			img.flip(false, true);
+			return img;
+		}	  
 		private Sound loadSound(int n) {
 			String fn = "/sound"+n+".wav";
 			FileHandle fh = loadResource(fn);
@@ -152,20 +165,15 @@ public class GameRun {
 	        }
 	        return b;
 	    }
-		private TextureRegion loadSheet(int n) {
-			FileHandle r = loadResource("/sheet"+n+".png");
+
+		public byte[] loadBinfile(int n) {
+			FileHandle r = loadResource("/file"+n+".bin");
 			
 			if (r==null) return null;
 			
-			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
-			p.setBlending(Blending.None);
-			Texture tt = new Texture(p, false);
-				
-			TextureRegion img = new TextureRegion(tt);
-			img.flip(false, true);
-			return img;
+			return r.readBytes();
 		}
-	
+		
 		
 		@SuppressWarnings("unused")
 		private TextureRegion loadSheetCustom(int n) {

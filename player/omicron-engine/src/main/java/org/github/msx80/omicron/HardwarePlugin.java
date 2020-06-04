@@ -5,6 +5,6 @@ import org.github.msx80.omicron.api.Sys;
 // experimental
 public interface HardwarePlugin {
 	void init(Sys sys, HardwareInterface hw);
-	String exec(String command, String params);
+	Object exec(String command, Object params);
 	String name();
 }

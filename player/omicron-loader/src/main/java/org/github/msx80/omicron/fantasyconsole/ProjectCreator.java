@@ -39,7 +39,7 @@ public class ProjectCreator {
 
 		Path src = f.resolve("src/main/java").resolve(pkg.replace('.', '/'));
 		Files.createDirectories(src);
-		copyFile(src, "HelloWorld.java", subs, folderAndClassName+".java");
+		copyFile(src, "HelloWorld.jav", subs, folderAndClassName+".java");
 		
 		Path resources = f.resolve("src/main/resources");
 		Files.createDirectories(resources);
@@ -80,6 +80,6 @@ public class ProjectCreator {
 	*/
 	public static void main(String[] args) throws IOException
 	{
-		createProject(Paths.get("c:\\nicola"), "Test Game", "bla.ciao.prova", "AwesomeGameMain");
+		createProject(Paths.get("c:\\nicola"), "Airplane", "org.github.msx80.airplane", "Airplane");
 	}
 }

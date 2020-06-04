@@ -8,7 +8,6 @@ import org.github.msx80.omicron.basicutils.Geometry;
  * Architecture:
  *  each Widget controls his dimensions and position (relative to the parent)
  *   
- *   padding: internal spacing, indicate how distant is the content from the edges of the rectangle. 
  *   x,y: position *relative to the parent*, to be added to the parent padding when drawing. (so if x=3 and parent padding = 2, then it will be drawn at 5)
  *   w,h: width and height.
  *   
@@ -27,14 +26,12 @@ public abstract class Widget
 	protected int y;
 	protected int w;
 	protected int h;
-	protected Padding padding;
 	
-	public Widget(int x, int y, int w, int h, Padding padding) {
+	public Widget(int x, int y, int w, int h) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		this.padding = padding;
 	}
 
 	/**
@@ -68,7 +65,7 @@ public abstract class Widget
 	 */
 	public int getAbsoluteX()
 	{
-		return x+(parent == null ? 0 : (parent.getPadding().left+ parent.getAbsoluteX()));
+		return x+(parent == null ? 0 : parent.getAbsoluteX());
 	}
 	
 	/**
@@ -77,12 +74,25 @@ public abstract class Widget
 	 */
 	public int getAbsoluteY()
 	{
-		return y+(parent == null ? 0 : (parent.getPadding().top + parent.getAbsoluteY()));
+		return y+(parent == null ? 0 : parent.getAbsoluteY());
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getW() {
+		return w;
+	}
+
+	public int getH() {
+		return h;
 	}
 	
-	public Padding getPadding()
-	{
-		return padding;
-	}
+	
 	
 }

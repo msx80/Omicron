@@ -8,6 +8,7 @@
       <modules>
         <module>omicron-player-desktop</module>
 		<module>omicron-api</module>
+		<module>omicron-gui</module>
         <module>omicron-engine</module>
         <module>omicron-desktop</module>
         <module>omicron-player</module>

@@ -2,7 +2,7 @@ package org.github.msx80.omicron.basicutils.gui.drawers;
 
 import org.github.msx80.omicron.api.Sys;
 
-public class NoScrollbarDrawer implements IScrollbarDrawer {
+public class NoScrollbarDrawer implements ScrollbarDrawer {
 
 	@Override
 	public int getThickness() {

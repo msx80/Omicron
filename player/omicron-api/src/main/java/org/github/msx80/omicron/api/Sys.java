@@ -105,6 +105,8 @@ public interface Sys
 	 * @param pitch
 	 */
 	void sound(int soundNum, float volume, float pitch);
+	
+	byte[] binfile(int fileNum);
 		
 	/**
 	 * Play a music
@@ -118,7 +120,8 @@ public interface Sys
 	 * Stop currently playing music 
 	 */
 	void stopMusic();
-	String hardware(String module, String command, String param);
+	
+	Object hardware(String module, String command, Object param);
 	
 	/**
 	 * Set the current clip of the screen, that is the area that will be drawn onto.
