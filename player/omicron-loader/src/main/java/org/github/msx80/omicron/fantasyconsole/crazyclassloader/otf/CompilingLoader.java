@@ -14,14 +14,14 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.bytesloader.BytesLoader;
+import org.github.msx80.omicron.fantasyconsole.cartridges.BytesLoader2;
 
 /**
  * A BytesLoader that tries to compile a set of java sources, compiled on the fly, to provide the required bytecode. 
  * 
  *
  */
-public class CompilingLoader implements BytesLoader {
+public class CompilingLoader implements BytesLoader2 {
 
 	Map<String, byte[]> classes = null;
 	JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -45,7 +45,6 @@ public class CompilingLoader implements BytesLoader {
 		return files.get(filePath);
 	}
 
-	@Override
 	public byte[] loadClass(String className) {
 		
 		try {
@@ -72,7 +71,6 @@ public class CompilingLoader implements BytesLoader {
 		                 
          Collection<JavaFileObject> compilationUnits = javaFileObjects.values();
         
-         
          StandardJavaFileManager s_standardJavaFileManager = compiler.getStandardFileManager(null, null, null);
          MyJavaFileManager s_fileManager = new MyJavaFileManager(s_standardJavaFileManager);
          
@@ -95,12 +93,5 @@ public class CompilingLoader implements BytesLoader {
         return result;
     }
 
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
-		
-	
 	
 }

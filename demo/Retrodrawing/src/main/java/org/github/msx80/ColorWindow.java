@@ -35,10 +35,10 @@ public class ColorWindow extends Window {
 
 	public boolean update(Mouse m)
 	{
-		if (m.btn[0])
+		if (m.btn(0))
 		{
-			int dx = m.x - ax;
-			int dy = m.y - ay;
+			int dx = m.x() - ax;
+			int dy = m.y() - ay;
 			if(dx > 0 && dy > 0 && dx<boxWidth-1 && dy <boxHeight-1)
 			{
 				// choose a color

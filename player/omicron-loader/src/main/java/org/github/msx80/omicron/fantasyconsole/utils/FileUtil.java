@@ -1,5 +1,6 @@
 package org.github.msx80.omicron.fantasyconsole.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -8,9 +9,16 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Properties;
 
 public class FileUtil {
-
+	
+	
+	public static  Properties loadProps(byte[] prop) throws IOException {
+		Properties p = new Properties();
+		p.load(new ByteArrayInputStream(prop));
+		return p;
+	}
 	
 	public static void copy(InputStream in, OutputStream out)
 			   throws IOException

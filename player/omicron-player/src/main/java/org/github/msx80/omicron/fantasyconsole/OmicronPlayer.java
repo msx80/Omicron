@@ -8,14 +8,13 @@ import java.util.Arrays;
 import java.util.Random;
 
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import org.github.msx80.omicron.api.adv.AdvancedSys;
 import org.github.msx80.omicron.api.adv.AdvancedSys.KeyboardListener;
+import org.github.msx80.omicron.api.adv.Cartridge;
 import org.github.msx80.omicron.basicutils.Colors;
-import org.github.msx80.omicron.basicutils.MomentaryMouse;
 import org.github.msx80.omicron.basicutils.TextDrawer.Align;
 import org.github.msx80.omicron.basicutils.TextDrawerFixed;
 import org.github.msx80.omicron.basicutils.gui.Scroller;
@@ -37,9 +36,8 @@ public class OmicronPlayer implements Game {
 	private Sys sys;
 	private TextDrawerFixed font = null;
 	private TextDrawerFixed font2 = null;
-	Mouse m;
 	
-	Game running = null;
+	Cartridge running = null;
 
 	private String jarToLaunch = null;
 	
@@ -49,11 +47,12 @@ public class OmicronPlayer implements Game {
 	Scroller s = null;
 	Windimation<?> l = null;
 	
-	public OmicronPlayer(String[] args) {
+	public OmicronPlayer() {
+		/*
 		if(args.length == 1)
 		{
 			this.jarToLaunch  = args[0];
-		}
+		}*/
 	}
 
 
@@ -90,9 +89,10 @@ public class OmicronPlayer implements Game {
         getIntroWidgets(sys);
         
        
-        if(jarToLaunch!=null)
+        String[] args = (String[]) sys.hardware("ARGS", "GET", null);
+        if(args.length==1)
         {
-        	runJar(jarToLaunch);
+        	runJar(args[0]);
         }
     }
 
@@ -193,17 +193,19 @@ public class OmicronPlayer implements Game {
     {
     	//Game gg =  GameLoadingUtils.loadGameFromJar(new File("C:\\Users\\niclugat\\dev\\LibretroOmicron\\LibretroOmicron\\DoorsOfDoom.omicron"));
     	//Game gg =  GameLoadingUtils.loadGameFromJar(new File("C:\\Users\\niclugat\\dev\\LibretroOmicron\\LibretroOmicron\\doors-of-doom-malvagio.jar"));
-		Game gg =  GameLoadingUtils.loadGameFromJar(new File(jarToLaunch2));		
-		running = new SubGame(gg);
-    	((AdvancedSys)sys).execute(running, s -> {
+		
+		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2));		
+		running = gg;
+    	((AdvancedSys)sys).execute(gg, s -> {
+    		running.close();
     		System.out.println("Result: "+s);
+    		
     		running = null;
     	});
     }
     
  	public boolean update() {
 		
-        m = MomentaryMouse.get(sys.mouse());
         
         wm.update();
        

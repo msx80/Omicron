@@ -126,12 +126,12 @@ public class RetroDrawer implements Game, Ctx {
 		
 		if(cooldownMouse)
 		{
-			cooldownMouse = m.btn[0];
+			cooldownMouse = m.btn(0);
 			return true;
 		}
 		
 		
-		if(m.x<SURFWIDTH)
+		if(m.x()<SURFWIDTH)
 		{
 			if(w!=null) {
 				if (!w.update(m)) 
@@ -145,16 +145,16 @@ public class RetroDrawer implements Game, Ctx {
 				tool.update(this, m);
 			}
 		}
-		else if (w == null && m.btn[0] && !wasDown )
+		else if (w == null && m.btn(0) && !wasDown )
 		{
-			if(m.y<20)
+			if(m.y()<20)
 			{
 				w = new ColorWindow(i -> {cur = i; cooldownMouse = true;});
 			}
 			else
 			{
 				
-				int tn = ((m.y-20) / 20);
+				int tn = ((m.y()-20) / 20);
 				if(tn<tools.length)
 				{
 					try {
@@ -175,7 +175,7 @@ public class RetroDrawer implements Game, Ctx {
 			}
 			cooldownMouse = true;
 		}
-		wasDown = m.btn[0];
+		wasDown = m.btn(0);
         return true;
     }
 

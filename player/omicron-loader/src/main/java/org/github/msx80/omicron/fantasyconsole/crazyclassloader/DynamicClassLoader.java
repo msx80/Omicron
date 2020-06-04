@@ -4,22 +4,29 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.bytesloader.BytesLoader;
+import org.github.msx80.omicron.fantasyconsole.cartridges.BytesLoader2;
 
 public class DynamicClassLoader extends NonAggressiveClassLoader {
-	BytesLoader[] loaders;
+	BytesLoader2[] loaders;
 	
 
-	public DynamicClassLoader(BytesLoader... loaders) {
+	public DynamicClassLoader(BytesLoader2... loaders) {
 		this.loaders = loaders;
 	}
 
+	public byte[] loadClassBytes(BytesLoader2 b, String className) throws Exception
+	{
+		String filePath = SClassLoader.toFilePath(className);
+		return b.loadFile(filePath);
+	}
+
+	
 	@Override
-	protected byte[] loadNewClass(String name) {
+	protected byte[] loadNewClass(String name) throws Exception {
 		System.out.println("Loading class " + name);
 		
-		for (BytesLoader loader : loaders) {
-			byte[] data = loader.loadClass(name);
+		for (BytesLoader2 loader : loaders) {
+			byte[] data = loadClassBytes(loader, name);
 			if (data!= null) {
 				return data;
 			}
@@ -27,13 +34,13 @@ public class DynamicClassLoader extends NonAggressiveClassLoader {
 		return null;
 	}
 
-	/*
+	
 	@Override
 	protected void finalize() throws Throwable {
 		System.out.println("Finalizing classloader!");
 		super.finalize();
 	}
-	*/
+	
 	
 	@Override
 	public URL getResource(String name) {
@@ -41,8 +48,13 @@ public class DynamicClassLoader extends NonAggressiveClassLoader {
 	}
 
 	public InputStream getResourceAsStream(String name) {
-		  for (BytesLoader loader : loaders) {
-				byte[] data = loader.loadFile(name);
+		  for (BytesLoader2 loader : loaders) {
+				byte[] data;
+				try {
+					data = loader.loadFile(name);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 				if (data!= null) {
 					return new ByteArrayInputStream(data);
 				}

@@ -43,19 +43,19 @@ public class Fill implements Tool {
 
 	@Override
 	public void update(Ctx ctx, Mouse m) {
-		if(m.btn[0]) 
+		if(m.btn(0)) 
 		{
-			if(m.x<RetroDrawer.SURFWIDTH)
+			if(m.x()<RetroDrawer.SURFWIDTH)
 			{
 				if(!wasDown)
 				{
-					int origColor = ctx.getSys().getPix(ctx.getSurface(), m.x, m.y);
+					int origColor = ctx.getSys().getPix(ctx.getSurface(), m.x(), m.y());
 					int newColor = Palette.P[ctx.currentColor()];
 					if(newColor!=origColor)
 					{
 						ctx.recordUndo();
 						List<Pair<Integer, Integer>> a = new ArrayList<Pair<Integer,Integer>>();
-						a.add(Pair.of(m.x,  m.y));
+						a.add(Pair.of(m.x(),  m.y()));
 						fill(origColor, newColor, a, ctx.getSys(), ctx.getSurface());
 					}
 				}

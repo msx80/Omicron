@@ -1,12 +1,11 @@
 package org.github.msx80.omicron.fantasyconsole.crazyclassloader.bytesloader;
 
-import static org.github.msx80.omicron.fantasyconsole.crazyclassloader.bytesloader.BytesLoader.findFile;
-
 import java.io.File;
 
+import org.github.msx80.omicron.fantasyconsole.cartridges.BytesLoader2;
 import org.github.msx80.omicron.fantasyconsole.utils.FileUtil;
 
-public class DirectoryBytesLoader implements BytesLoader {
+public class DirectoryBytesLoader implements BytesLoader2 {
 
 
 		private File dir;
@@ -15,6 +14,12 @@ public class DirectoryBytesLoader implements BytesLoader {
 			this.dir = dir;
 		}
 
+		static File findFile(String filePath, File classPath) {
+			File file = new File(classPath, filePath);
+			return file.exists() ? file : null;
+		}
+
+		
 		@Override
 		public byte[] loadFile(String filePath) {
 			File file = findFile(filePath, dir);
@@ -25,10 +30,5 @@ public class DirectoryBytesLoader implements BytesLoader {
 			return FileUtil.readFileToBytes(file);
 		}
 		
-		@Override
-		public void close() {
-			
-			
-		}
 
 }

@@ -63,20 +63,20 @@ public class SlowFill implements Tool {
 			fill(origColor, newColor, sys, surface);
 			return;
 		}
-		if(m.btn[0]) 
+		if(m.btn(0)) 
 		{
-			if(m.x<RetroDrawer.SURFWIDTH)
+			if(m.x()<RetroDrawer.SURFWIDTH)
 			{
 				if(!wasDown)
 				{
 					
-					origColor = sys.getPix( surface, m.x, m.y);
+					origColor = sys.getPix( surface, m.x(), m.y());
 					newColor = Palette.P[ctx.currentColor()];
 					if(newColor!=origColor)
 					{
 						ctx.recordUndo();
 						z = new ArrayList<Pair<Integer,Integer>>();
-						z.add(Pair.of(m.x,  m.y));
+						z.add(Pair.of(m.x(),  m.y()));
 						fill(origColor, newColor,  sys, surface);
 					}
 				}

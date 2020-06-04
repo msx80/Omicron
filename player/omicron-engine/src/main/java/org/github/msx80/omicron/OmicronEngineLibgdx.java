@@ -1,6 +1,6 @@
 package org.github.msx80.omicron;
 
-import org.github.msx80.omicron.api.Game;
+import org.github.msx80.omicron.api.adv.Cartridge;
 
 import com.badlogic.gdx.ApplicationListener;
 
@@ -11,9 +11,9 @@ public class OmicronEngineLibgdx {
 	 * @param game
 	 * @return
 	 */
-	public static ApplicationListener getApplicationForLibgdx(Game game, HardwareInterface hardwareInterface)
+	public static ApplicationListener getApplicationForLibgdx(Cartridge cartridge, HardwareInterface hardwareInterface)
 	{
-		return new GdxOmicron(game, hardwareInterface);		
+		return new GdxOmicron(cartridge, hardwareInterface);		
 	}
 	
 }

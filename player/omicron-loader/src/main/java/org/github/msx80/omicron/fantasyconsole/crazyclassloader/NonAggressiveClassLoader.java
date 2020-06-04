@@ -27,7 +27,12 @@ public abstract class NonAggressiveClassLoader extends SClassLoader {
 		try {
 			a = parent.loadClass(name);
 		} catch (ClassNotFoundException e) {
-			byte[] newClassData = loadNewClass(name);
+			byte[] newClassData;
+			try {
+				newClassData = loadNewClass(name);
+			} catch (Exception e1) {
+				throw new RuntimeException(e1);
+			}
 			if (newClassData != null) {
 				loadedClasses.add(name);
 				return define(newClassData, name);
@@ -41,7 +46,7 @@ public abstract class NonAggressiveClassLoader extends SClassLoader {
 	}
 
 
-	protected abstract byte[] loadNewClass(String name);
+	protected abstract byte[] loadNewClass(String name) throws Exception;
 
 	private Class<?> define(byte[] classData, String name) {
 		Class<?> clazz = defineClass(name, classData, 0, classData.length);

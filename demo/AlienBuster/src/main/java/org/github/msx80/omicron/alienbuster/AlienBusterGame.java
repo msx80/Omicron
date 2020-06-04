@@ -11,7 +11,6 @@ import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
-import org.github.msx80.omicron.basicutils.MomentaryMouse;
 import org.github.msx80.omicron.basicutils.TextDrawerFixed;
 
 public class AlienBusterGame implements Game {
@@ -101,12 +100,12 @@ public class AlienBusterGame implements Game {
         }
         
         // crossair
-        sys.draw(2, sys.mouse().x-8,sys.mouse().y-8,80,0,16,16, 0, 0);
+        sys.draw(2, sys.mouse().x()-8,sys.mouse().y()-8,80,0,16,16, 0, 0);
 	}
 
 
     public boolean update() {
-    	Mouse m = MomentaryMouse.get(sys.mouse());
+    	Mouse m = sys.mouse();
 			
     	switch (status) {
 		case INTRO:
@@ -121,7 +120,7 @@ public class AlienBusterGame implements Game {
 			
 			break;
 		case GAMEOVER:
-			if(m.btn[0])
+			if(m.btnp(0))
 			{
 				status = Status.INTRO; 
 			}
@@ -166,17 +165,17 @@ public class AlienBusterGame implements Game {
 			}
 		}
         
-        if(m.btn[0])
+        if(m.btnp(0))
         {
         	sys.sound(1,1f,1f);
         	if(shots>0)
         	{
 	        	shots--;
-	        	checkAlien(m.x,m.y);
+	        	checkAlien(m.x(),m.y());
         	}
         	else
         	{
-        		if (m.x>208 && m.y<32) {
+        		if (m.x()>208 && m.y()<32) {
 					shots = 5;
 				}
         	}

@@ -1,7 +1,5 @@
 package org.github.msx80.omicron;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,7 +7,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.adv.CustomResourceGame;
+import org.github.msx80.omicron.api.adv.Cartridge;
+import org.github.msx80.omicron.plugins.ArgsPlugin;
 import org.github.msx80.omicron.plugins.UrlOpenerPlugin;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -35,16 +34,25 @@ public class GameRun {
 	private Set<Integer> textureToReload = null;	
 	
 	Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
+	private Cartridge cartridge;
 	
-	public GameRun(Game game, ScreenInfo screenInfo, Consumer<String> onResult) {
-		this.game = game;
-		this.screenInfo = screenInfo;
-		this.onResult = onResult;
+	public GameRun(Cartridge cartridge, ScreenInfo screenInfo, Consumer<String> onResult) {
+		try {
+			this.cartridge = cartridge;
+			this.game = cartridge.getGameObject();
+			this.screenInfo = screenInfo;
+			this.onResult = onResult;
+			
+			HardwarePlugin pp = new DebugPlugin();
+			UrlOpenerPlugin up = new UrlOpenerPlugin();
+			ArgsPlugin ap = new ArgsPlugin();
+			plugins.put(pp.name(), pp);
+			plugins.put(up.name(), up);
+			plugins.put(ap.name(), ap);
 		
-		HardwarePlugin pp = new DebugPlugin();
-		UrlOpenerPlugin up = new UrlOpenerPlugin();
-		plugins.put(pp.name(), pp);
-		plugins.put(up.name(), up);
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to start cartridge: "+e.getMessage(), e );
+		}
 		
 	}
 	
@@ -66,47 +74,25 @@ public class GameRun {
 		if(Gdx.app.getType() == ApplicationType.Android)
 		{
 			// no way to load from stream :( unload on the local disk and load from there.
-			InputStream is;
-			if(game instanceof CustomResourceGame)
-			{
-				is = ((CustomResourceGame) game).getResourceAsStream(fn);
-			}
-			else
-			{
-				is = game.getClass().getResourceAsStream(fn);
-			}
+			byte[] is = cartridge.loadFile(fn);
 			if(is == null) return null; // no such resource
 			
 			FileHandle ff = Gdx.files.local(fn);
 			
-			long av;
-			try {
-				av = is.available();
-			} catch (IOException e) {
-				throw new RuntimeException("available() failed: "+e.getMessage(), e);
-			}
-			if(ff.exists() && (ff.length() == av))
+			if(ff.exists() && (ff.length() == is.length))
 			{
 				// already cached, resuse the same file
 			}
 			else
 			{
-				ff.write(is, false);
+				ff.writeBytes(is, false);
 			}
 			return ff;
 		}
 		else
 		{
 			
-			ResourceFileHandle res;
-			if(game instanceof CustomResourceGame)
-			{
-				res = new ResourceFileHandle(fn, (CustomResourceGame)game);
-			}
-			else
-			{
-				res = new ResourceFileHandle(fn, game.getClass());
-			}
+			CartridgeFileHandle res = new CartridgeFileHandle(cartridge, fn);
 			if (!res.exists()) return null;
 			return res;
 		}
@@ -185,13 +171,13 @@ public class GameRun {
 		
 			//System.out.println(game.getClass());
 			//System.out.println(game.getClass().getPackage().getName());
-			ResourceFileHandle r = new ResourceFileHandle("/sheet"+n+".png", x.getClass());
+			FileHandle r = new CartridgeFileHandle(cartridge, "/sheet"+n+".png");
 			if(!r.exists()) return null;
 			if(r.read() == null)
 			{
 				String resourceName = "/"+x.getClass().getPackage().getName().replace('.', '/')+"/sheet"+n+".png";
 				System.out.println("trying "+resourceName);
-				r = new ResourceFileHandle(resourceName, x.getClass());
+				r = new CartridgeFileHandle(cartridge, resourceName);
 			}
 			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
 			p.setBlending(Blending.None);

@@ -1,23 +1,19 @@
 package org.github.msx80.omicron.fantasyconsole;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Map;
-import java.util.Properties;
 
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.DynamicClassLoader;
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.bytesloader.BytesLoader;
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.otf.CompilationError;
-import org.github.msx80.omicron.fantasyconsole.crazyclassloader.otf.CompilingLoader;
+import org.github.msx80.omicron.api.adv.Cartridge;
+import org.github.msx80.omicron.fantasyconsole.cartridges.JarCartridge;
 
-public class GameLoadingUtils {
+public class CartridgeLoadingUtils {
 
 	public static Game compileGameOnTheFly(String className, Map<String, String> sources, Map<String, byte[]> files) {
 		
-		
+
+		// this works, just need refactoring
+		/*
 		try {
 			CompilingLoader cl = new CompilingLoader(sources, files);
 			Class<?> userClass = new DynamicClassLoader(cl).loadClass(className);
@@ -29,6 +25,8 @@ public class GameLoadingUtils {
 		}catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		*/
+		return null;
 	}
 	
 
@@ -76,23 +74,14 @@ public static Game loadGameFromJar(File jarFile) {
 */
 
 
-	public static Game loadGameFromJar(File jarFile) {
+	public static Cartridge fromOmicronFile(File jarFile) {
 		
-	try {
-		BytesLoader bl = BytesLoader.fileLoader(jarFile);
-		byte[] prop = bl.loadFile("omicron.properties");
-		if(prop== null) throw new RuntimeException("Zip does not contains omicron.properties file.");
-		Properties p = new Properties();
-		p.load(new ByteArrayInputStream(prop));
+		try {
+			return new JarCartridge(jarFile);
 		
-		
-		String className = p.getProperty("pkg")+"."+p.getProperty("main");
-		Class<?> userClass = new DynamicClassLoader(bl).loadClass(className);
-		return (Game) userClass.newInstance();
-	
-	} catch (Exception e) {
-		throw new RuntimeException("Unable to load Game from jar: "+e.getMessage(), e);
-	}
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to load Game from jar: "+e.getMessage(), e);
+		}
 	}
 	
 	/*

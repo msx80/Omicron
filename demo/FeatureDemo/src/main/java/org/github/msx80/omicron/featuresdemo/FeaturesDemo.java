@@ -26,7 +26,6 @@ public class FeaturesDemo implements Game {
 	int y=10;
 	int dir = 0;
 	Mouse m;
-	boolean oldClick = false;
 	int newSurf;
 	private int[][] mapData = new int[][]{
 			new int[] {0,1,0,0,0,0,2,6},
@@ -89,7 +88,7 @@ public class FeaturesDemo implements Game {
         sys.color(Colors.WHITE);
    
         
-        font.print("Mouse: "+m.x+" "+m.y+" "+b(m.btn[0]), 10, 30);
+        font.print("Mouse: "+m.x()+" "+m.y()+" "+b(m.btn(0)), 10, 30);
         Controller c = sys.controllers()[0];
         font.print("Btns: "+b(c.btn(0))+" "+b(c.btn(1))+" "+b(c.btn(2))+" "+b(c.btn(3)), 10, 37);
               
@@ -105,7 +104,7 @@ public class FeaturesDemo implements Game {
         
         
         // mouse pointer
-        sys.draw(2, m.x,m.y,64,0,8,8,0,0);
+        sys.draw(2, m.x(),m.y(),64,0,8,8,0,0);
     }
 
     private void testTrans(int x, int y) {
@@ -141,11 +140,9 @@ public class FeaturesDemo implements Game {
         
         
         m = sys.mouse();
-        if(m.btn[0] && !oldClick) {
+        if(m.btnp(0)) {
         	sys.sound(1, 1f, r.nextFloat()*1.5f+0.5f);
         }
-        oldClick = m.btn[0];
-        
         return true;
     }
 

@@ -7,9 +7,9 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 import org.github.msx80.omicron.api.Controller;
-import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.adv.AdvancedSys;
+import org.github.msx80.omicron.api.adv.Cartridge;
 import org.github.msx80.omicron.basicutils.Colors;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -47,7 +47,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	GameRun current; // top of the stack
 	
-	Mouse mouse = new Mouse();
+	MouseImpl mouse = new MouseImpl();
 	Controller[] controllers;
 	
 	
@@ -64,17 +64,17 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	private HardwareInterface hw;
 	private GdxOmicronOptions options;
 	
-	public GdxOmicron(Game game, HardwareInterface hw, GdxOmicronOptions options) {
+	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
 		this.hw = hw;
 		this.options = options;
-		GameRun gr = new GameRun(game, new ScreenInfo(options.getRenderingToTexture()), null);
+		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), null);
 		this.gameStack.push(gr);
 		current = gr;
 	}
 	
-	public GdxOmicron(Game game, HardwareInterface hw) {
-		this(game, hw, new GdxOmicronOptions());
+	public GdxOmicron(Cartridge cartridge, HardwareInterface hw) {
+		this(cartridge, hw, new GdxOmicronOptions());
 	}
 	
 	Vector3 proj = new Vector3();
@@ -122,10 +122,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		}
 		if(!isResume) 
 		{
-			r.game.init(this);
 			for (HardwarePlugin hwp : r.plugins.values()) {
 				hwp.init(this, hw);
 			}
+			r.game.init(this);
 		}
 		if(r.screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(r.screenInfo.requiredSysConfig.title);
 		setUpCam(r, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
@@ -192,6 +192,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			ControllerImpl c = (ControllerImpl) controller;
 			c.copyOld();
 		}
+		mouse.copyOld();
 
 		// reset current color to white
 		this.colorf(1, 1, 1, 1);
@@ -436,8 +437,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   if(mouse == null) return true;
 			   proj.set(x,y,0);
 			   cam.unproject(proj);
-			   mouse.x = (int) proj.x;
-			   mouse.y = (int) proj.y;
+			   mouse.set((int) proj.x, (int) proj.y);
 			   //mouse.num = pointer;
 			  mouse.btn[button] = true;
 		      return true;
@@ -447,8 +447,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   if(mouse == null) return true;
 			   proj.set(x,y,0);
 			   cam.unproject(proj);
-			   mouse.x = (int) proj.x;
-			   mouse.y = (int) proj.y;
+			   mouse.set((int) proj.x, (int) proj.y);
 			   //mouse.num = pointer;
 			   mouse.btn[button] = false;
 		      return true;
@@ -458,8 +457,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   if(mouse == null) return true;
 			   proj.set(x,y,0);
 			   cam.unproject(proj);
-			   mouse.x = (int) proj.x;
-			   mouse.y = (int) proj.y;
+			   mouse.set((int) proj.x, (int) proj.y);
 			   //mouse.num = pointer;
 		      return true;
 		   }
@@ -469,8 +467,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   if(mouse == null) return true; 
 			   proj.set(x,y,0);
 			   cam.unproject(proj);
-			   mouse.x = (int) proj.x;
-			   mouse.y = (int) proj.y;
+			   mouse.set((int) proj.x, (int) proj.y);
 			   //mouse.num = -1;
 		      return true;
 		   }
@@ -584,8 +581,9 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	}
 	
 	@Override
-	public void execute(Game game, Consumer<String> onResult) {
-		GameRun gr = new GameRun(game, new ScreenInfo(options.getRenderingToTexture()), onResult);
+	public void execute(Cartridge cartridge, Consumer<String> onResult) {
+		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), onResult);
+		
 		gameStack.push(gr);
 		current = gr;
 		initOrResumeGameRun(gr);

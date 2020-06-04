@@ -1,7 +1,8 @@
 package org.github.msx80.omicron.api;
 
-public class Mouse {
-	public int x = 0;
-	public int y = 0;
-	public boolean[] btn = new boolean[] {false, false, false};
+public interface Mouse {
+	int x();
+	int y();
+	public boolean btn(int n);
+	public boolean btnp(int n);
 }

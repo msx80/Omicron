@@ -16,23 +16,23 @@ public abstract class Pen implements Tool {
 
 	@Override
 	public void update(Ctx ctx, Mouse m) {
-		if(m.btn[0]) 
+		if(m.btn(0)) 
 		{
-			if(m.x<RetroDrawer.SURFWIDTH)
+			if(m.x()<RetroDrawer.SURFWIDTH)
 			{
 				if(wasDown)
 				{
 					//ShapeDrawer.line(sys, m.x, m.y, ox, oy, surface, Palette.P[ctx.currentColor()]);
-					linePen(ctx, m.x, m.y, ox, oy);
+					linePen(ctx, m.x(), m.y(), ox, oy);
 				}
 				else
 				{
 					ctx.recordUndo();
-					dotPen(ctx, m.x,m.y);
+					dotPen(ctx, m.x(),m.y());
 					//sys.fill(surface, m.x, m.y, 1,1, Palette.P[ctx.currentColor()]);
 				}
-				ox = m.x;
-				oy = m.y;
+				ox = m.x();
+				oy = m.y();
 			}
 			wasDown = true;
 			
