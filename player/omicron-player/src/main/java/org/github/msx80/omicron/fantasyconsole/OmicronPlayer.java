@@ -38,8 +38,6 @@ public class OmicronPlayer implements Game {
 	private TextDrawerFixed font2 = null;
 	
 	Cartridge running = null;
-
-	private String jarToLaunch = null;
 	
 	// private FileList fileList;
 	
@@ -112,7 +110,15 @@ public class OmicronPlayer implements Game {
 	private void selectIntro(int idx, String name)
 	{
 		System.out.println(name);
-		getCartSelectWidgets(sys, Paths.get("."));
+		switch (name) {
+		case "Quit": ((AdvancedSys)sys).quit("ok");
+			break;
+		case "Load a cart":
+			getCartSelectWidgets(sys, Paths.get("").toAbsolutePath());
+			break;
+		default:
+			break;
+		}
 	}
 	private void selectCartridge(int idx, FileItem p)
 	{
@@ -128,6 +134,7 @@ public class OmicronPlayer implements Game {
 	}
 	
 	private void getCartSelectWidgets(final Sys sys, Path p) {
+		System.out.println("Path is: "+p);
 		FileList fileList;
 		 try {
 				fileList = new FileList(p);
@@ -166,15 +173,21 @@ public class OmicronPlayer implements Game {
 
 	
 	
-    public void render() 
+    public boolean loop() 
     {
+    	
+        wm.update();
+        
+        
+        
     	sys.clear(Colors.BLACK) ; //from(20, 80, 50, 255));
     	sys.color(Colors.GREEN);
     	font.print("OMICRON v1.0", WIDTH/2, 10, Align.CENTER);
+    	sys.color(Colors.from(100, 100, 100));
+    	font2.print("Z:select   X:back   Cursors:move   ALT-Enter:fullscreen", 10, HEIGHT-6);
     	sys.color(Colors.WHITE);
 
     	font.print("What do you want to do?", WIDTH/2, 20, Align.CENTER);
-    	
     	/*font.print("Click to start a cartridge!: ", 10, 20);
         font2.print(Paths.get(".").toAbsolutePath().toString() , 10, 30);
         int y = 40;
@@ -183,9 +196,14 @@ public class OmicronPlayer implements Game {
         	y+=10;
 		}
 		*/
+    	if(sys.controllers()[0].btnp(1))
+    	{
+    		getIntroWidgets(sys);
+    	}
     	
     	wm.draw();
         
+    	return true;
     }
 
 
@@ -201,23 +219,16 @@ public class OmicronPlayer implements Game {
     		System.out.println("Result: "+s);
     		
     		running = null;
+    	}, e -> {
+    		running.close();
+    		System.out.println("Exception: "+e);
+    		e.printStackTrace();
+    		
+    		running = null;
+    		
     	});
     }
     
- 	public boolean update() {
-		
-        
-        wm.update();
-       
-        /*
-        if(m.btn[0])
-        {
-        	runJar("C:\\nicola\\AwesomeGameMain\\AwesomeGameMain.omicron");
-        }
-        */
-        return true;
-    }
-
 	@Override
 	public SysConfig sysConfig() {
 		return new SysConfig(WIDTH, HEIGHT, VirtualScreenMode.STRETCH_FULL, "Omicron Computer", "experiments");

@@ -64,11 +64,13 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	private HardwareInterface hw;
 	private GdxOmicronOptions options;
 	
+	private Runnable afterLoop;
+	
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
 		this.hw = hw;
 		this.options = options;
-		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), null);
+		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), null, null);
 		this.gameStack.push(gr);
 		current = gr;
 	}
@@ -184,15 +186,6 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void render () {
 		fps.log();
 		offset(0,0); // reset offset
-		
-		
-		
-		current.game.update(); 
-		for (Controller controller : controllers) {
-			ControllerImpl c = (ControllerImpl) controller;
-			c.copyOld();
-		}
-		mouse.copyOld();
 
 		// reset current color to white
 		this.colorf(1, 1, 1, 1);
@@ -207,14 +200,38 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		current.screenInfo.applyGlClipping();
 		batch.setProjectionMatrix(cam.combined);
 
-		batch.begin();
+		
+		Throwable t = null;
+		batch.begin(); // TODO make it begin lazily at first draw so well behaved games will do the updates before
 		try
 		{
-			current.game.render();
+			try {
+				current.game.loop();
+			} catch (Throwable e) {
+				t = e;
+			}
 		}
 		finally
 		{
 			batch.end();
+		}
+		for (Controller controller : controllers) {
+			ControllerImpl c = (ControllerImpl) controller;
+			c.copyOld();
+		}
+		mouse.copyOld();
+		
+		if(t != null)
+		{
+			// game has launched an exception
+			afterLoop = null; // remove any quit or executed requested
+			handleQuitOrException(null, t);
+		}
+		if(afterLoop != null)
+		{
+			Runnable r = afterLoop;
+			afterLoop = null;
+			r.run();
 		}
 		
 	}
@@ -375,10 +392,18 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	public class MyInputProcessor implements InputProcessor {
 		   public boolean keyDown (int keycode) {
+			   if( Gdx.input.isKeyPressed(Input.Keys.ENTER) && Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT))
+			   {
+				   FullscreenToggler.toggleFullscreen();
+				   return true;
+			   }
+			   
+			   
 			   if(keyboardListener!=null) 
 			   {
 				   if(keyboardListener.keyDown(keycode)) return true;
 			   }
+			   
 			   
 			   ControllerImpl c = (ControllerImpl)controllers[0];
 			   switch (keycode) {
@@ -392,10 +417,6 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 					case Input.Keys.A: c.btn[2]=true; break;
 					case Input.Keys.S: c.btn[3]=true; break;
 					
-					case Input.Keys.F : 
-						FullscreenToggler.toggleFullscreen();
-				        break;
-			
 			default:
 				break;
 			}
@@ -581,39 +602,44 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	}
 	
 	@Override
-	public void execute(Cartridge cartridge, Consumer<String> onResult) {
-		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), onResult);
+	public void execute(final Cartridge cartridge, final Consumer<String> onResult, final Consumer<Throwable> onException) {
 		
-		gameStack.push(gr);
-		current = gr;
-		initOrResumeGameRun(gr);
-		// we clean mouse state so that clicking doesn't pass to child
-		for (int i = 0; i < mouse.btn.length; i++) {
-			mouse.btn[i] = false;
-		}
-		// need to run an update() becouse startChildGame is called in the parent game's update(), so the child will lose a loop and get render() called first, which is wrong
-		gr.game.update();
+		// schedule the start of a new cartridge at the end of the current cycle.
+		
+		afterLoop = new Runnable() {
+			
+			@Override
+			public void run() {
+
+
+				GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), onResult, onException);
+				
+				gameStack.push(gr);
+				current = gr;
+				initOrResumeGameRun(gr);
+				// we clean mouse state so that clicking doesn't pass to child
+				for (int i = 0; i < mouse.btn.length; i++) {
+					mouse.btn[i] = false;
+				}
+				
+			}
+		}; 
+				
 	}
 
 	@Override
-	public void quit(String result) {
-		GameRun old = gameStack.pop();
-		old.dispose();
-		Consumer<String> x = old.onResult;
-		current = gameStack.peek();
+	public void quit(final String result) {
+		afterLoop = new Runnable() {
+			
+			@Override
+			public void run() {
+
+				handleQuitOrException(result, null);				
+				
+			}
+		};
 		
-		// we clean mouse state so that clicking doesn't pass to parent
-		for (int i = 0; i < mouse.btn.length; i++) {
-			mouse.btn[i] = false;
-		}
-		
-		initOrResumeGameRun(current);
-		
-		if(x!=null) x.accept(result);
-		
-		old = null;
-		x = null;
-		System.gc();
+
 	}
 
 	@Override
@@ -625,6 +651,52 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public byte[] binfile(int numFile) {
 		
 		return current.loadBinfile(numFile);
+	}
+
+	private void handleQuitOrException(final String result, Throwable ex) {
+		GameRun old = gameStack.pop();
+		Consumer<String> onResult = old.onResult;
+		Consumer<Throwable> onException = old.onException;
+		old.dispose();
+		if(gameStack.isEmpty())
+		{
+			// the main cartridge had quit or excepted.
+			if(ex != null)
+			{
+				// if excepted, pop out the exception and crash the program
+				throw new RuntimeException("Main cartridge threw an exception", ex);
+			}
+			else
+			{
+				// if simple quit, idk just close the app i guess
+				Gdx.app.exit();
+			}
+		}
+		else
+		{
+			current = gameStack.peek();
+			
+			// we clean mouse state so that clicking doesn't pass to parent
+			for (int i = 0; i < mouse.btn.length; i++) {
+				mouse.btn[i] = false;
+			}
+			
+			initOrResumeGameRun(current);
+			
+			if(ex == null)
+			{
+				if(onResult!=null) onResult.accept(result);
+			}
+			else
+			{
+				if(onException!=null) onException.accept(ex);
+			}
+			
+			old = null;
+			onResult = null;
+			onException = null;			
+			System.gc();
+		}
 	}
 
 	

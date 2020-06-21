@@ -5,8 +5,6 @@ public interface Game {
     
     void init(Sys sys);
     
-    boolean update();
-    
-    void render();
+    boolean loop();
     
 }

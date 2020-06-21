@@ -104,17 +104,17 @@ public class AlienBusterGame implements Game {
 	}
 
 
-    public boolean update() {
+    public boolean loop() {
     	Mouse m = sys.mouse();
 			
     	switch (status) {
 		case INTRO:
-			//if(m.btn[0])
+			if(m.btn(0))
 			{
 				initgame();
 				status = Status.GAME; 
 			}
-			return true;
+			break;
 		case GAME:
 			updateGame(m);
 			
@@ -124,9 +124,10 @@ public class AlienBusterGame implements Game {
 			{
 				status = Status.INTRO; 
 			}
-			return true;
+			break;
 		}
     	        
+    	render();
         return true;
     }
 

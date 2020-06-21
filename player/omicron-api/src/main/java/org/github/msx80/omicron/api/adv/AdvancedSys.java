@@ -33,7 +33,7 @@ public interface AdvancedSys extends Sys {
 	 * @param cartridge
 	 * @param onResult
 	 */
-	void execute(Cartridge cartridge, Consumer<String> onResult);
+	void execute(Cartridge cartridge, Consumer<String> onResult, Consumer<Throwable> onException);
 	
 	/**
 	 * Terminate a running game, returning a value to parent game, if any.

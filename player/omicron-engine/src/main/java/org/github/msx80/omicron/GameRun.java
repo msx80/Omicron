@@ -26,6 +26,7 @@ public class GameRun {
 	public final Game game;
 	public final ScreenInfo screenInfo;
 	public final Consumer<String> onResult;
+	public final Consumer<Throwable> onException;
 	
 	public final Map<Integer, Sound> sounds = new HashMap<Integer, Sound>();
 	public final Map<Integer, Music> music = new HashMap<Integer, Music>();
@@ -36,12 +37,13 @@ public class GameRun {
 	Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
 	private Cartridge cartridge;
 	
-	public GameRun(Cartridge cartridge, ScreenInfo screenInfo, Consumer<String> onResult) {
+	public GameRun(Cartridge cartridge, ScreenInfo screenInfo, Consumer<String> onResult, Consumer<Throwable> onException) {
 		try {
 			this.cartridge = cartridge;
 			this.game = cartridge.getGameObject();
 			this.screenInfo = screenInfo;
 			this.onResult = onResult;
+			this.onException = onException;
 			
 			HardwarePlugin pp = new DebugPlugin();
 			UrlOpenerPlugin up = new UrlOpenerPlugin();
@@ -221,6 +223,9 @@ public class GameRun {
 			music.clear();
 			sheets.clear();
 			if(textureToReload != null)	textureToReload.clear();
+			
+			//  TODO move cartridge closure here ?
+			
 		}
 		
 }

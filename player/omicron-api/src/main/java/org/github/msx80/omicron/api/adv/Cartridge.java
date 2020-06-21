@@ -10,6 +10,11 @@ import org.github.msx80.omicron.api.Game;
  */
 public interface Cartridge {
 
+	public static final String PROP_MAIN = "main";
+	public static final String PROP_PKG = "pkg";
+	public  static final String PROP_NAME = "name";
+
+	
 	/**
 	 * Obtain the Game instance for this cartridge.
 	 * The same object is returned each time, to get a new one

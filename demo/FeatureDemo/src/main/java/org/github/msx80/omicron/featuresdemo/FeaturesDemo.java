@@ -130,7 +130,7 @@ public class FeaturesDemo implements Game {
 		
 	}
 
-	public boolean update() {
+	public boolean loop() {
 			
         Controller c = sys.controllers()[0];
         if (c.up()) y--;
@@ -143,6 +143,9 @@ public class FeaturesDemo implements Game {
         if(m.btnp(0)) {
         	sys.sound(1, 1f, r.nextFloat()*1.5f+0.5f);
         }
+        
+        render();
+        
         return true;
     }
 

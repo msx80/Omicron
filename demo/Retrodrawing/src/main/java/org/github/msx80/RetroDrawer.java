@@ -113,8 +113,6 @@ public class RetroDrawer implements Game, Ctx {
     	if(w!=null) w.draw(sys, 0);
     }
 
-
-
 	public boolean update() 
 	{
 		Mouse m = sys.mouse();
@@ -176,7 +174,17 @@ public class RetroDrawer implements Game, Ctx {
 			cooldownMouse = true;
 		}
 		wasDown = m.btn(0);
+		
+		
         return true;
+    }
+
+	public boolean loop() 
+	{
+		boolean res = update();
+		render();
+		
+        return res;
     }
 
 

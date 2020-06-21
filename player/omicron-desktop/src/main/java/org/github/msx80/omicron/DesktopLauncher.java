@@ -4,7 +4,9 @@ package org.github.msx80.omicron;
 
 import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.adv.Cartridge;
+import org.github.msx80.omicron.fantasyconsole.cartridges.ClasspathCartridge;
 
+import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -31,6 +33,12 @@ public class DesktopLauncher {
 	 */
 	public static void main(String[] args) throws Exception
 	{
+		int n = args[0].lastIndexOf('.');
+		String pkg = args[0].substring(0,  n);
+		String main = args[0].substring(n+1);
+		
+		ClasspathCartridge c = new ClasspathCartridge(args[0], pkg, main);
+		launch(c, false, args);
 		//Game g = (Game) Class.forName(args[0]).newInstance();
 		//launch(g, false);
 	}

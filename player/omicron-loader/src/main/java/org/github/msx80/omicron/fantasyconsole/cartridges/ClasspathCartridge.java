@@ -16,9 +16,9 @@ public class ClasspathCartridge implements Cartridge {
 	public ClasspathCartridge(String name, String pkg, String main)
 	{
 		props = new Properties();
-		props.put("name", name);
-		props.put("pkg", pkg);
-		props.put("main", main);
+		props.put(PROP_NAME, name);
+		props.put(PROP_PKG, pkg);
+		props.put(PROP_MAIN, main);
 	}
 	public ClasspathCartridge(Properties omicronProperties) {
 		this.props = omicronProperties;
@@ -27,7 +27,7 @@ public class ClasspathCartridge implements Cartridge {
 	@Override
 	public Game getGameObject(){
 		try {
-			String className = props.getProperty("pkg")+"."+props.getProperty("main");
+			String className = props.getProperty(PROP_PKG)+"."+props.getProperty(PROP_MAIN);
 			
 			game = (Game) Class.forName(className).newInstance();
 			return game;

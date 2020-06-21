@@ -17,16 +17,10 @@ public class HelloWorld implements Game
         this.sys = sys;
     }
 
-    public void render() 
-    {
-    	sys.clear(Colors.BLACK);
-    	
-    	sys.draw(1, 70,20,0, 0, 100, 50, 0, 0);
-    }
-
-
-	public boolean update() 
+	public boolean loop() 
 	{
+    	sys.clear(Colors.BLACK);
+    	sys.draw(1, 70,20,0, 0, 100, 50, 0, 0);
         return true;
     }
 

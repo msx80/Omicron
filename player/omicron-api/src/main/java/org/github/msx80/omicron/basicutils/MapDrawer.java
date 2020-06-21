@@ -11,14 +11,16 @@ public class MapDrawer {
 	public static interface MapData
 	{
 		int getTile(int tx, int ty) throws Exception;
+		int getWidth();
+		int getHeight();
 	}
 	
-	private final static class MapDataArray implements MapData
+	public final static class MapDataMatrix implements MapData
 	{
 		private int[][] mapData;
 		
 		
-		public MapDataArray(int[][] mapData) {
+		public MapDataMatrix(int[][] mapData) {
 			this.mapData = mapData;
 		}
 
@@ -26,6 +28,48 @@ public class MapDrawer {
 		public int getTile(int tx, int ty) throws Exception {
 			
 			return mapData[ty][tx];
+		}
+
+		@Override
+		public int getWidth() {
+			
+			return mapData[0].length;
+		}
+
+		@Override
+		public int getHeight() {
+			return mapData.length;
+		}
+		
+	}
+	
+	public final static class MapDataArray implements MapData
+	{
+		private int[] mapData;
+		private int width;
+		private int height;
+		
+		
+		
+		public MapDataArray(int[] mapData, int width) {
+			this.mapData = mapData;
+			this.width = width;
+			this.height = mapData.length / width;
+		}
+
+		@Override
+		public int getTile(int tx, int ty) throws Exception {
+			return mapData[tx+ ty*width];
+		}
+
+		@Override
+		public int getWidth() {
+			return width;
+		}
+
+		@Override
+		public int getHeight() {
+			return height;
 		}
 		
 	}
@@ -42,7 +86,7 @@ public class MapDrawer {
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.tilesPerRowOnSheet = tilesPerRowOnSheet;
-		this.map = new MapDataArray(mapData);
+		this.map = new MapDataMatrix(mapData);
 	}
 	
 	public MapDrawer(Sys sys, int tileWidth, int tileHeight, int tilesPerRowOnSheet, MapData mapData)
@@ -54,6 +98,16 @@ public class MapDrawer {
 		this.map = mapData;
 	}
 	
+	/**
+	 * draw a portion of the map with a specific tile sheet
+	 * @param tileSheetNum a sheet number to take the tilemap from
+	 * @param destx pixel coordinate where to put the map on screen
+	 * @param desty pixel coordinate where to put the map on screen
+	 * @param srctx tile coordinate to start from
+	 * @param srcty tile coordinate to start from
+	 * @param twidth width of the area to draw, in tiles
+	 * @param theight height of the area to draw, in tiles
+	 */
 	public void draw(int tileSheetNum, int destx, int desty, int srctx, int srcty, int twidth, int theight)
 	{
 		try {
