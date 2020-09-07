@@ -1,0 +1,38 @@
+
+apply plugin: 'java'
+apply plugin: "maven-publish"
+
+dependencies {
+    implementation "org.github.msx80.omicron:omicron-api:0.0.1"
+}
+
+sourceCompatibility = 1.8
+
+// version = 0.0.1
+
+repositories {
+    mavenLocal()
+}
+
+
+ publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = "org.github.msx80.omicron"
+                artifactId = "omicron-basics"
+                version = "0.0.1"
+
+                from components.java
+			}
+        }
+  }
+
+build.finalizedBy publishToMavenLocal
+
+tasks.publishToMavenLocal.doLast(){
+        println ''
+		println "Basics published to maven local as: fillme" 
+		println ''
+    }
+
+

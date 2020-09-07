@@ -1,0 +1,35 @@
+plugins {
+    id 'java-library'        
+}
+apply plugin: "maven-publish"
+
+def aGroupId = "org.github.msx80.omicron"
+def aArtifactId = "omicron-engine"
+def aVersion = "0.0.1"
+
+dependencies {
+	api project(':omicron-loader')
+    api project(':omicron-api')
+	api group: 'com.badlogicgames.gdx', name: 'gdx', version: '1.9.10'
+}
+
+
+ publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = aGroupId
+                artifactId = aArtifactId
+                version = aVersion
+
+                from components.java
+			}
+        }
+  }
+
+build.finalizedBy publishToMavenLocal
+
+tasks.publishToMavenLocal.doLast(){
+        println ''
+		println "Engine published to maven local as: $aGroupId:$aArtifactId:$aVersion" 
+		println ''
+    }

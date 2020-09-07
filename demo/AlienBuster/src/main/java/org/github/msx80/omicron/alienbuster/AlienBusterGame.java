@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Random;
 
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.Mouse;
+import org.github.msx80.omicron.api.Pointer;
+import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
-import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.TextDrawerFixed;
 
@@ -34,10 +34,13 @@ public class AlienBusterGame implements Game {
 	
 	Random r = new Random(System.currentTimeMillis());
 	
+	Pointer m;
+	
     public void init(final Sys sys) 
     {
         this.sys = sys;
         td = new TextDrawerFixed(sys, 1, 6, 6, 6);
+        m = sys.pointers()[0];
     }
 
     public void render() 
@@ -100,12 +103,12 @@ public class AlienBusterGame implements Game {
         }
         
         // crossair
-        sys.draw(2, sys.mouse().x()-8,sys.mouse().y()-8,80,0,16,16, 0, 0);
+        sys.draw(2, m.x()-8,m.y()-8,80,0,16,16, 0, 0);
 	}
 
 
     public boolean loop() {
-    	Mouse m = sys.mouse();
+    	
 			
     	switch (status) {
 		case INTRO:
@@ -139,7 +142,7 @@ public class AlienBusterGame implements Game {
 		aliens = new ArrayList<Alien>();		
 	}
 
-	private void updateGame(Mouse m) {
+	private void updateGame(Pointer m) {
 		timeToNext --;
         
         if (timeToNext == 0) {

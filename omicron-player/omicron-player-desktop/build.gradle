@@ -1,0 +1,40 @@
+plugins {
+    id 'java-library'        
+}
+
+project.ext.mainClassName = "org.github.msx80.omicron.player.OmicronPlayerMain"
+
+dependencies {
+    api project(':omicron-api')
+	api project(':omicron-player') 
+    api project(':omicron-desktop') 
+	api project(':omicron-loader') 
+}
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = new File(".")
+    ignoreExitValue = true
+}
+
+task dist(type: Jar) {
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+dist.dependsOn classes
+
+
+task copyJar(type: Copy) {
+    from jar // here it automatically reads jar file produced from jar task
+    into '..'
+	rename { name -> "OmicronPlayer.jar" }
+}
+
+dist.finalizedBy copyJar

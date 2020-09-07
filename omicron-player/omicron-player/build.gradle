@@ -1,0 +1,10 @@
+plugins {
+    id 'java'        /*this is java and not java-library to be able to export resources into the final jar*/
+}
+
+
+dependencies {
+    implementation project(':omicron-api')
+    implementation project(':omicron-basics')
+    implementation project(':omicron-loader')
+}

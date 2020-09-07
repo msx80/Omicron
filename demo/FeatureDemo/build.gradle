@@ -47,19 +47,45 @@ repositories {
     mavenLocal()
 }
 
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+
 dependencies {
     implementation group: 'org.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
+	// to add dependencies from properties 
+	if(omicron.dep) {
+		def deps = omicron.dep.split(";")
+		for (d in deps) {
+		    println "Extra dependency: "+d
+			// compileOnly becouse classes in dependencies will be packed in the cartridge (see jar.from)
+			compileOnly d
+			extraLibs d
+	   }
+	}
+	
 }
 
 jar {
 	from('.') {
       include 'omicron.properties'
+      
+   }
+   from {
+    // we want to package extra dependencies but NOT the api, since it will already be included as dependency in the pom and present in the
+	// runtime
+   	configurations.extraLibs.collect { it.getName().equals("omicron-api-0.0.1.jar")? null :( it.isDirectory() ? it : zipTree(it)) }
    }
     manifest {
         attributes 'Implementation-Title': omicron.name,
                    'Implementation-Version': omicron.version,
                    'Omicron-Cartridge': 'true'
     }
+/*	from {
+		println configurations.compileClasspath
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }*/
 	destinationDir = file("$rootDir")
     archiveName omicron.main+'.omicron'
 }

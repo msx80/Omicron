@@ -1,6 +1,6 @@
 package org.github.msx80;
 
-import org.github.msx80.omicron.api.Mouse;
+import org.github.msx80.omicron.api.Pointer;
 
 public abstract class Pen implements Tool {
 
@@ -15,7 +15,7 @@ public abstract class Pen implements Tool {
 
 
 	@Override
-	public void update(Ctx ctx, Mouse m) {
+	public void update(Ctx ctx, Pointer m) {
 		if(m.btn(0)) 
 		{
 			if(m.x()<RetroDrawer.SURFWIDTH)
@@ -29,7 +29,6 @@ public abstract class Pen implements Tool {
 				{
 					ctx.recordUndo();
 					dotPen(ctx, m.x(),m.y());
-					//sys.fill(surface, m.x, m.y, 1,1, Palette.P[ctx.currentColor()]);
 				}
 				ox = m.x();
 				oy = m.y();

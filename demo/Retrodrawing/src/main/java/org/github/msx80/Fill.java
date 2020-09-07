@@ -3,7 +3,7 @@ package org.github.msx80;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.github.msx80.omicron.api.Mouse;
+import org.github.msx80.omicron.api.Pointer;
 import org.github.msx80.omicron.api.Sys;
 
 public class Fill implements Tool {
@@ -42,7 +42,7 @@ public class Fill implements Tool {
 	}
 
 	@Override
-	public void update(Ctx ctx, Mouse m) {
+	public void update(Ctx ctx, Pointer m) {
 		if(m.btn(0)) 
 		{
 			if(m.x()<RetroDrawer.SURFWIDTH)

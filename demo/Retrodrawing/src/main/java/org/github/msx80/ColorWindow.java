@@ -2,7 +2,7 @@ package org.github.msx80;
 
 import java.util.function.Consumer;
 
-import org.github.msx80.omicron.api.Mouse;
+import org.github.msx80.omicron.api.Pointer;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.Colors;
 
@@ -33,7 +33,7 @@ public class ColorWindow extends Window {
 		}
 	}
 
-	public boolean update(Mouse m)
+	public boolean update(Pointer m)
 	{
 		if (m.btn(0))
 		{

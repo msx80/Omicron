@@ -3,7 +3,7 @@ package org.github.msx80;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.github.msx80.omicron.api.Mouse;
+import org.github.msx80.omicron.api.Pointer;
 import org.github.msx80.omicron.api.Sys;
 
 public class SlowFill implements Tool {
@@ -55,7 +55,7 @@ public class SlowFill implements Tool {
 	}
 
 	@Override
-	public void update(Ctx ctx, Mouse m) {
+	public void update(Ctx ctx, Pointer m) {
 		Sys sys = ctx.getSys();
 		int surface = ctx.getSurface();
 		if(z!=null)

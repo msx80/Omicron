@@ -21,19 +21,25 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-		ext.omicron = new Properties()
-		ext.omicron.load(file("../omicron.properties").newReader())
 		
-		println ext.omicron
-        applicationId ext.omicron.appid
+		
+		println rootProject.ext.omicron
+        
+		
+		//File f = 
+		println new java.io.File(rootProject.ext.omicron.cartridge)
+		println "ciao"
+		
+		
+		applicationId rootProject.ext.omicron.pkg
         //minSdkVersion 24
         //targetSdkVersion 27
         minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "gameClass", "\""+ext.omicron.main+"\""
-		manifestPlaceholders = [appname:ext.omicron.appname, orientation:ext.omicron.orientation]
+        buildConfigField "String", "gameClass", "\""+rootProject.ext.omicron.pkg+"."+rootProject.ext.omicron.main+"\""
+		manifestPlaceholders = [appname:rootProject.ext.omicron.name, orientation:rootProject.ext.omicron.orientation]
     }
     buildTypes {
         release {
@@ -50,6 +56,10 @@ android {
 	  }	
 }
 
+task unpackCartridge(type: Copy) {
+    from zipTree(rootProject.ext.omicron.cartridge)
+    into "$buildDir/resources"
+}
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
@@ -87,8 +97,6 @@ tasks.whenTaskAdded { packageTask ->
 }
 
 task run(type: Exec) {
-	ext.omicron = new Properties()
-	ext.omicron.load(file("../omicron.properties").newReader())
 
     def path
     def localProperties = project.file("../local.properties")
@@ -108,5 +116,5 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', ext.omicron.appid+'/org.github.msx80.omicron.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', rootProject.ext.omicron.pkg+'/org.github.msx80.omicron.AndroidLauncher'
 }

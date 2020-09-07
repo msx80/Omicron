@@ -16,12 +16,42 @@ buildscript {
     }
 }
 
+ext.loadProps = {  ->
+    Properties p  = new Properties()
+	p.load(file("./omicron.properties").newReader())
+	String s = p.get("cartridge")
+	File f = zipTree(s).filter{ it.getName().equals("omicron.properties")}.getSingleFile()
+	Properties pc  = new Properties()
+	pc.load(f.newReader())
+	// put all cartridge properties into current properties
+	p.putAll(pc)
+	// calculate dependency
+	//String dp = pc.get("pkg")+":"+pc.get("main")+":"+pc.get("version")
+	//println "Dependency is "+dp
+	//p.put("dependency", dp);
+	
+	
+	copy {
+                from p.get("cartridge")
+                into "$buildDir"
+				rename p.get("main")+".omicron", "cartridge.jar"
+    }
+	println "Cartridge copied to "+"$buildDir/cartridge.jar"
+			
+			
+	return p;
+}
+
 allprojects {
 
     version = '1.0'
     ext {
-        gdxVersion = '1.9.9'
+        gdxVersion = '1.9.10'
+		omicron = loadProps()
+
     }
+	//ext.omicron = new Properties()
+	//ext.omicron.put("prova", "pippo")
 
     repositories {
         mavenLocal()
@@ -39,15 +69,12 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-	
-		ext.omicron = new Properties()
-		ext.omicron.load(file("../omicron.properties").newReader())
 
-	
-        compile ext.omicron.dependency
+		compile files("../build/cartridge.jar")  // TODO reference via variable?
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "org.github.msx80.omicron:omicron-api:0.0.1"
 		compile "org.github.msx80.omicron:omicron-engine:0.0.1"
+		compile "org.github.msx80.omicron:omicron-loader:0.0.1"
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

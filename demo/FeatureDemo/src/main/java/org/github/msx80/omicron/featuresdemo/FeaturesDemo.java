@@ -5,7 +5,7 @@ import java.util.Random;
 
 import org.github.msx80.omicron.api.Controller;
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.Mouse;
+import org.github.msx80.omicron.api.Pointer;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.api.SysConfig;
 import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
@@ -25,7 +25,7 @@ public class FeaturesDemo implements Game {
 	int x=100;
 	int y=10;
 	int dir = 0;
-	Mouse m;
+	Pointer m;
 	int newSurf;
 	private int[][] mapData = new int[][]{
 			new int[] {0,1,0,0,0,0,2,6},
@@ -64,9 +64,7 @@ public class FeaturesDemo implements Game {
 		//sys.draw(2, 10,10, 32,32, 16, 16);
 	}
     
-	private String b(boolean b) {
-		return b ? "+":"-";
-	}
+
 	
     public void render() 
     {
@@ -80,21 +78,22 @@ public class FeaturesDemo implements Game {
         sys.draw(2, x, y, 0, 32, 16, 16,0,dir);
         
     	
-        font.print("Hello world!", 10, 10);
         
         sys.color(Colors.RED);
-        font.print("FPS: "+sys.fps(), 10, 20);
+        font.print("FPS: "+sys.fps(), 10, 10);
         
         sys.color(Colors.WHITE);
    
         
-        font.print("Mouse: "+m.x()+" "+m.y()+" "+b(m.btn(0)), 10, 30);
+        font.print("Pointer: ", 10, 20);
+        font.print(""+m, 10, 28);
         Controller c = sys.controllers()[0];
-        font.print("Btns: "+b(c.btn(0))+" "+b(c.btn(1))+" "+b(c.btn(2))+" "+b(c.btn(3)), 10, 37);
+        font.print("Controller: ", 10, 37);
+        font.print(""+c, 10, 37+8);
               
         
-        font.print("New surf:", 10, 50);
-        sys.draw(newSurf, 10, 60, 0,0, 64, 16, 0, 0);
+        font.print("New surf:", 10, 55);
+        sys.draw(newSurf, 10, 65, 0,0, 64, 16, 0, 0);
         
         
         testRot(140, 2);
@@ -105,6 +104,10 @@ public class FeaturesDemo implements Game {
         
         // mouse pointer
         sys.draw(2, m.x(),m.y(),64,0,8,8,0,0);
+        
+        
+        
+        
     }
 
     private void testTrans(int x, int y) {
@@ -139,7 +142,7 @@ public class FeaturesDemo implements Game {
         if (c.right()) { x++; dir = 0; }
         
         
-        m = sys.mouse();
+        m = sys.pointers()[0];
         if(m.btnp(0)) {
         	sys.sound(1, 1f, r.nextFloat()*1.5f+0.5f);
         }

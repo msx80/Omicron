@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'        
+}
+
+
+dependencies {
+    api project(':omicron-engine') 
+    api project(':omicron-api')
+    api project(':omicron-basics')
+    api group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version: '1.9.10'
+	api "com.badlogicgames.gdx:gdx-platform:1.9.10:natives-desktop"
+}
