@@ -15,7 +15,7 @@ public class MapDrawer {
 		int getHeight();
 	}
 	
-	public final static class MapDataMatrix implements MapData
+	public static class MapDataMatrix implements MapData
 	{
 		private int[][] mapData;
 		
@@ -30,6 +30,11 @@ public class MapDrawer {
 			return mapData[ty][tx];
 		}
 
+		public void setTile(int tx, int ty, int tile){
+			mapData[ty][tx] = tile;
+		}
+
+		
 		@Override
 		public int getWidth() {
 			
@@ -43,13 +48,18 @@ public class MapDrawer {
 		
 	}
 	
-	public final static class MapDataArray implements MapData
+	public static class MapDataArray implements MapData
 	{
 		private int[] mapData;
 		private int width;
 		private int height;
 		
-		
+		public MapDataArray(int width, int height) {
+			this.mapData = new int[width*height];
+			this.width = width;
+			this.height = height;
+		}
+
 		
 		public MapDataArray(int[] mapData, int width) {
 			this.mapData = mapData;
@@ -60,6 +70,10 @@ public class MapDrawer {
 		@Override
 		public int getTile(int tx, int ty){
 			return mapData[tx+ ty*width];
+		}
+		
+		public void setTile(int tx, int ty, int tile){
+			mapData[tx+ ty*width] = tile;
 		}
 
 		@Override
