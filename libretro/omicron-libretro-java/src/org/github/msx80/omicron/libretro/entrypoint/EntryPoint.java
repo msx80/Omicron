@@ -2,14 +2,14 @@ package org.github.msx80.omicron.libretro.entrypoint;
 
 import java.io.File;
 
+import org.github.msx80.omicron.ControllerImpl;
 import org.github.msx80.omicron.GdxOmicron;
 import org.github.msx80.omicron.GdxOmicronOptions;
-import org.github.msx80.omicron.HardwareInterface;
-import org.github.msx80.omicron.api.Controller;
+import org.github.msx80.omicron.MouseImpl;
 import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.Mouse;
 import org.github.msx80.omicron.api.SysConfig;
-import org.github.msx80.omicron.fantasyconsole.GameLoadingUtils;
+import org.github.msx80.omicron.api.adv.Cartridge;
+import org.github.msx80.omicron.fantasyconsole.CartridgeLoadingUtils;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.Configuration;
@@ -84,7 +84,7 @@ public class EntryPoint{
 	}
 	
 	static String gameToLoad = null;
-	static Game game = null;
+	static Cartridge game = null;
 	
 	public static void callLoop(int ctrlStat, int mx, int my) {
 		// this is the main loop function. The parameters are the controllers and mouse status
@@ -114,7 +114,7 @@ public class EntryPoint{
 		// TODO the following is all shortcuts working only for Omicron
 		// to be working more generically with libgdx, a gdx Input class should be defined and attached to Gdx.input
 		
-		Controller c = engine.controllers()[0];
+		ControllerImpl c = (ControllerImpl) engine.controllers()[0];
 		c.down = (ctrlStat & J_DOWN) != 0;
 		c.up = (ctrlStat & J_UP) != 0;
 		c.left = (ctrlStat & J_LEFT) != 0;
@@ -125,7 +125,7 @@ public class EntryPoint{
 		c.btn[2] = (ctrlStat & J_X) != 0;
 		c.btn[3] = (ctrlStat & J_Y) != 0;
 		
-		Mouse m = engine.mouse();
+		MouseImpl m = (MouseImpl) engine.pointers()[0];
 		m.x = mx;
 		m.y = my;
 		m.btn[0] = (ctrlStat & M_0) != 0;
@@ -156,10 +156,8 @@ public class EntryPoint{
 		// simply store the cartridge file to load
 		gameToLoad = filename;
 		System.out.println("Loading game: "+filename);
-		game = GameLoadingUtils.loadGameFromJar(new File(gameToLoad));
-		// obtain desired system configuration from cartridge.
-		s = game.sysConfig();
-
+		game = CartridgeLoadingUtils.fromOmicronFile(new File(gameToLoad));
+		s = game.getGameObject().sysConfig();
 	}
 	public static void callSetup() {
 		try
@@ -175,7 +173,9 @@ public class EntryPoint{
 			 
 			System.out.println("Game loaded, initializing engine");
 			engine = new GdxOmicron(game, new NullHardwareInterface(), new GdxOmicronOptions().setRenderingToTexture(true));
-			
+			// obtain desired system configuration from cartridge.
+			// s = engine.current.game.sysConfig();
+
 			new LibretroApplication(engine); // stores itself as Gdx.app
 			
 	

@@ -10,4 +10,9 @@ public class NullHardwareInterface implements HardwareInterface {
 
 	}
 
+	@Override
+	public String[] startupArgs() {
+		return new String[0];
+	}
+
 }

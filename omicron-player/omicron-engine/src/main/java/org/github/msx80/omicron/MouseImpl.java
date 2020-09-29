@@ -6,15 +6,15 @@ import org.github.msx80.omicron.api.Pointer;
 
 public class MouseImpl implements Pointer {
 
-	private int x = 0;
-	private int y = 0;
+	public int x = 0;
+	public int y = 0;
 	
 	// button 3 and 4 are for the scrollwheel
-	protected boolean[] btn = new boolean[] {false, false, false, false, false};
-	protected boolean[] oldbtn = new boolean[] {false, false, false, false, false};
+	public boolean[] btn = new boolean[] {false, false, false, false, false};
+	public boolean[] oldbtn = new boolean[] {false, false, false, false, false};
 	
 	
-	void set(int ax, int ay)
+	public void set(int ax, int ay)
 	{
 		x = ax;
 		y = ay;

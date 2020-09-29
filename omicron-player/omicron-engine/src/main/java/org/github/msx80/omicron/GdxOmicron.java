@@ -45,7 +45,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	// a stack of all currently running Game s
 	Stack<GameRun> gameStack = new Stack<GameRun>();
 	
-	GameRun current; // top of the stack
+	public GameRun current; // top of the stack
 	
 	Pointer[] pointers;
 	Controller[] controllers;
@@ -100,7 +100,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 		controllers = new Controller[] {new ControllerImpl()}; // first is keyboard, TODO use joypad etc.
 		
-		pointers = new Pointer[Math.min(Gdx.input.getMaxPointers(),MAX_SUPPORTED_TOUCHES)];
+		pointers = new Pointer[Math.max(1, Math.min(Gdx.input.getMaxPointers(),MAX_SUPPORTED_TOUCHES))];
 		for (int i = 0; i < pointers.length; i++) {
 			pointers[i] = new MouseImpl();
 			
