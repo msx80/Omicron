@@ -6,9 +6,9 @@ Features:
 
 1. Super simple API, just a couple of methods for drawing, playing sound, handling input, etc.
 2. No resource management: just refer to the thing you want to draw or play by it's number.
-3. Work on desktop and android
+3. Work on desktop and android (there's also an experimental libretro core)
 4. Plaform independent API
-5. Customizable resolution
+5. Customizable resolution and scaling
 
 ![Feature Demo example](https://i.imgur.com/VYVhZtv.png)
 
