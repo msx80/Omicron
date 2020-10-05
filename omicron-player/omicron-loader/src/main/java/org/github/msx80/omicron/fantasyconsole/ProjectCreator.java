@@ -41,9 +41,10 @@ public class ProjectCreator {
 		Files.createDirectories(src);
 		copyFile(src, "HelloWorld.jav", subs, folderAndClassName+".java");
 		
-		Path resources = f.resolve("src/main/resources");
+		Path resources = f.resolve("src/main/resources").resolve(pkg.replace('.', '/'));
 		Files.createDirectories(resources);
 		copyFile(resources, "sheet1.png", Collections.EMPTY_MAP, null);
+		copyFile(resources, "sheet2.png", Collections.EMPTY_MAP, null);
 		
 		
 	
@@ -80,6 +81,6 @@ public class ProjectCreator {
 	*/
 	public static void main(String[] args) throws IOException
 	{
-		createProject(Paths.get("c:\\nicola"), "Airplane", "org.github.msx80.airplane", "Airplane");
+		createProject(Paths.get("c:\\nicola"), "Creator", "org.github.msx80.airplane", "Creator");
 	}
 }
