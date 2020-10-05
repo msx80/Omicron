@@ -28,7 +28,10 @@ class Point {
 	};
 }
 
-
+/*
+ * Code by msx80 twitter@msx80
+ * Graphics by Stavros twitter@eliacoan
+ */
 public class SnakeMain implements Game 
 {
 	
