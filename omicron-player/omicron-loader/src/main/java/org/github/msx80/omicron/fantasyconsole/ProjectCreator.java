@@ -11,20 +11,55 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.lang.model.SourceVersion;
+
+import java.util.Objects;
+
 import org.github.msx80.omicron.fantasyconsole.utils.FileUtil;
 import org.github.msx80.omicron.fantasyconsole.utils.ReplacingInputStream;
 
 public class ProjectCreator {
 
 	static Charset cs = Charset.forName("ASCII");
-	public static void createProject(Path dest, String name, String pkg, String folderAndClassName) throws IOException
+	public static Path createProject(Path dest, String name, String pkg, String folderAndClassName) throws IOException
 	{
+		Objects.requireNonNull(dest, "dest is null");
+		Objects.requireNonNull(name, "name is null");
+		Objects.requireNonNull(pkg, "pkg is null");
+		Objects.requireNonNull(folderAndClassName, "main is null");
+		
+		if(name.equals("")) throw new RuntimeException("Name is empty");
+		if(folderAndClassName.equals("")) throw new RuntimeException("main is empty");
+		if(pkg.equals("")) throw new RuntimeException("Package is empty");
+		if(!pkg.contains(".")) throw new RuntimeException("Package should have at least two portions (ie: com.something)");
+		
+		if(!folderAndClassName.matches("[A-Za-z0-9]+")) throw new RuntimeException("Class name is not alphanumeric");
+		
+		if(!dest.isAbsolute())
+		{
+			throw new RuntimeException("Dest is not an absolute path");
+		}
+		
+		if(SourceVersion.isIdentifier(folderAndClassName) && !SourceVersion.isKeyword(folderAndClassName))
+		{
+			// ok
+		}
+		else
+		{
+			throw new RuntimeException("Class name is invalid.");
+		}
+		
+		Path f = dest.resolve(folderAndClassName);
+		if(Files.exists(f))
+		{
+			throw new RuntimeException("Path already exists.");
+		}
+		
 		Map<byte[], byte[]> subs = new HashMap<>();
 		subs.put("%%NAME%%".getBytes(cs), name.getBytes(cs));
 		subs.put("%%PKG%%".getBytes(cs), pkg.getBytes(cs));
 		subs.put("%%MAIN%%".getBytes(cs), folderAndClassName.getBytes(cs));
 		
-		Path f = dest.resolve(folderAndClassName);
 		Files.createDirectories(f);
 		copyFile(f, "build.gradle", Collections.EMPTY_MAP, null);
 		copyFile(f, "gradlew", Collections.EMPTY_MAP, null);
@@ -46,7 +81,7 @@ public class ProjectCreator {
 		copyFile(resources, "sheet1.png", Collections.EMPTY_MAP, null);
 		copyFile(resources, "sheet2.png", Collections.EMPTY_MAP, null);
 		
-		
+		return f;
 	
 	}
 

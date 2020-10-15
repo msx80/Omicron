@@ -10,6 +10,8 @@ def aVersion = "0.0.1"
 
 dependencies {
     implementation project(':omicron-api')
+	compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
+    
 }
 
 
