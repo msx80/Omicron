@@ -113,6 +113,9 @@ public class OmicronPlayer implements Game {
 		switch (name) {
 		case "Quit": ((AdvancedSys)sys).quit("ok");
 			break;
+		case "Create new cart":
+			ProjectCreatorWindow.main(null);
+			break;
 		case "Load a cart":
 			getCartSelectWidgets(sys, Paths.get("").toAbsolutePath());
 			break;
