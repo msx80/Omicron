@@ -33,3 +33,8 @@ jobs:
         cd demo/HelloWorld
         chmod +x gradlew
         ./gradlew build
+    - name: Build Android Player
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew clean android:assembleDebug
