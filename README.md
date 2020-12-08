@@ -1,5 +1,7 @@
 Omicron
 ======
+![Build](https://github.com/msx80/Omicron/workflows/Build/badge.svg)
+
 Omicron is an open source Game Engine for Java based on LibGDX, inspired by Fantasy Consoles. Write your retro games with the simplest possible API and either package it as a cartridge, or include the runtime in your own distribution!
 
 Features:
