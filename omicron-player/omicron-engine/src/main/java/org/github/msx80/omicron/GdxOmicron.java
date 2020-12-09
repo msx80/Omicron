@@ -66,6 +66,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	private Runnable afterLoop;
 	
+	private byte[] currentScreenCache = null; // cache for getPix, cleared any time a modification is made.
+	
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
 		this.hw = hw;
@@ -207,7 +209,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 		
 		Throwable t = null;
-		batch.begin(); // TODO make it begin lazily at first draw so well behaved games will do the updates before
+		// batch.begin(); // TODO make it begin lazily at first draw so well behaved games will do the updates before
 		boolean continuous = true;
 		try
 		{
@@ -219,7 +221,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		}
 		finally
 		{
-			batch.end();
+			if(batch.isDrawing()) batch.end();
 		}
 		for (Controller controller : controllers) {
 			ControllerImpl c = (ControllerImpl) controller;
@@ -279,6 +281,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		if(r == null) throw new RuntimeException("Trying to draw sheet "+sheetNum+" but was not found");
 		r.setRegion(srcx, srcy, w, h);
 		r.flip(false, true);
+		if(!batch.isDrawing()) batch.begin();
 		batch.draw(r, x+ox, y+oy);
 		// batch.draw(r.getTexture(), x,y,srcx,srcy,w,h);
 	}
@@ -286,6 +289,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	@Override
 	public void draw(int sheetNum, int x, int y, int srcx, int srcy, int w, int h, int rotate, int flip)
 	{
+		screenChanged();
 		current.uploadDirtyTexture();
 		if(rotate == 0 && flip == 0)
 		{
@@ -307,6 +311,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			if(r == null) throw new RuntimeException("No sheet "+sheetNum+" found.");
 			//batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w-0.001f,h-0.001f,1,1,angle, srcx, srcy, w, h, false != flipx, true != flipy);
 
+			if(!batch.isDrawing()) batch.begin();
 			batch.draw(r.getTexture(), x+ox, y+oy,w/2f,h/2f,w,h,1,1,angle, srcx, srcy, w, h, false != flipx, true != flipy);
 		}
 		
@@ -323,16 +328,24 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 				batch.end();
 			}
 			
-			
-			// not working yet
-			proj.set(x,y,0);
-			cam.project(proj);
-			
-			byte[] b = ScreenUtils.getFrameBufferPixels(Math.round(proj.x), Math.round(proj.y), 1, 1, false);
-			
-			if(is) batch.begin();
-			
-			return ColorsCopy.from(0xFF & b[0], 0xFF & b[1], 0xFF &  b[2], 0xFF & b[3]);
+			if(currentScreenCache == null)
+			{
+				/*
+				// not working yet
+				proj.set(x,y,0);
+				cam.project(proj);*/
+				
+				// byte[] b = ScreenUtils.getFrameBufferPixels(Math.round(proj.x), Math.round(proj.y), 1, 1, false);
+				
+				// for performances reason, we just download all of the screen fron the graphic memory and store it in an array of bytes, currentScreenCache
+				// if the screen is updated by any call, the currentScreenCache is cleared so next call to getPix will recalculate it (correctly).
+				// this improves A LOT the common use case of user wanting to pick a good portion of the screen into a buffer (repetedly calling getPix)
+				currentScreenCache = ScreenUtils.getFrameBufferPixels(0,0,current.screenInfo.requiredSysConfig.width, current.screenInfo.requiredSysConfig.height, false);
+			}
+			// if(is) batch.begin();
+			byte[] b = currentScreenCache;
+			int idx = (y*current.screenInfo.requiredSysConfig.width + x)*4;
+			return ColorsCopy.from(0xFF & b[idx], 0xFF & b[idx+1], 0xFF &  b[idx+2], 0xFF & b[idx+3]);
 		}
 		else
 		{
@@ -369,16 +382,16 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void fill(int sheetNum, int x, int y, int w, int h, int color) {
 		if(sheetNum==0)
 		{
+			screenChanged();
 			// drawing on screen
 			if(lastPixel != color) // caching our pixel texture
 			{
-				boolean a = batch.isDrawing();
-				if(a)batch.end();
+				if(batch.isDrawing())batch.end();
 				( (PixmapTextureData) pixel.getTextureData() ).consumePixmap().drawPixel(0, 0, color);
 				lastPixel = color;
 				pixel.load(pixel.getTextureData());
-				if(a)batch.begin();
 			}
+			if(!batch.isDrawing()) batch.begin();
 			batch.draw(pixel, x+ox, y+oy, w, h);
 		}
 		else
@@ -394,6 +407,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		}
 	}
 
+
+	private void screenChanged() {
+		currentScreenCache = null;
+	}
 
 	@Override
 	public void offset(int x, int y) {
