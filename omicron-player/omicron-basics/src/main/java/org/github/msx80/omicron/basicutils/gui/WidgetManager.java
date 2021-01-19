@@ -1,11 +1,18 @@
 package org.github.msx80.omicron.basicutils.gui;
 
+import org.github.msx80.omicron.api.Pointer;
 import org.github.msx80.omicron.api.Sys;
 
 public class WidgetManager extends ManagedParentWidget {
 
+	
+	Scrollable scrolling;   // widget currently being scrolled
+	int scrollpx;   		// scroll start position		  
+	int scrollpy; 
+	int scrollTotal;	 	// total amount scrolled, to decide wether to consider it a click or a scroll
+	
 	public WidgetManager(Sys sys) {
-		super(sys, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		super(sys, Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
 
 	@Override
@@ -13,23 +20,17 @@ public class WidgetManager extends ManagedParentWidget {
 		// nothing to do here
 	}
 	
-	public void propagateclick(int px, int py)
+	public void propagateclick(Widget from, int px, int py)
 	{
-		Widget w = pick(px, py);
-		// if we found any but it's not clickable,
-		// climb the hyerarchy until we find a clickable parent
-		while ( (w != null) && !(w instanceof Clickable))
-		{
-			w = w.parent;
-			px = px+w.x;
-			py = py+w.y;
-		}
+		Widget w = from.find(px, py, true, a -> a instanceof Clickable);
 
 		if(w!=null)
 		{
-			((Clickable) w).click(px-w.x, py-w.y);
+			
+			((Clickable) w).click(px-w.getAbsoluteX(), py-w.getAbsoluteY());
 		}
 	}
+	
 	
 	@Override
 	public void ensureVisible(Widget child, int x, int y, int w, int h) {
@@ -38,7 +39,54 @@ public class WidgetManager extends ManagedParentWidget {
 	}
 
 	public void update() {
-		// if clicked handle click
+		
+		Pointer mouse = sys.pointers()[0];
+		int mx = mouse.x();
+		int my = mouse.y();
+		
+		if(scrolling != null)
+		{
+			if(!mouse.btn(0))
+			{
+				scrolling.endScroll();
+				scrolling = null;
+				if(scrollTotal<4)
+				{
+					// scrolled too little, consider it a click instead
+					propagateclick(this, mx, my);
+				}
+			}
+			else
+			{
+				// still scrolling
+				int dx = mx - scrollpx;
+				int dy = my - scrollpy;
+				if(dx != 0 || dy != 0)
+				{
+					scrolling.doScroll(dx, dy);
+					scrollpx = mx;
+					scrollpy = my;
+					scrollTotal += Math.abs(dx) + Math.abs(dy);
+				}
+			}
+		}
+		else
+		{
+			if(mouse.btnp(0))
+			{
+				scrolling = (Scrollable) find(mx, my, false, w -> w instanceof Scrollable);
+				if(scrolling != null)
+				{
+					scrollpx = mx;
+					scrollpy = my;
+					scrollTotal = 0;
+				}
+				else
+				{
+					propagateclick(this, mx, my);
+				}
+			}
+		}
 		
 		handleControllables(this);
 		
@@ -57,7 +105,5 @@ public class WidgetManager extends ManagedParentWidget {
 		}
 		
 	}
-
-	
 
 }

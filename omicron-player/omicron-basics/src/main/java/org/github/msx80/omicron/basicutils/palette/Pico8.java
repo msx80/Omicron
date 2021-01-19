@@ -20,4 +20,7 @@ public class Pico8 {
 	 public static int PINK = Colors.from(255, 119, 168); // #FF77A8 
 	 public static int PEACH = Colors.from(255, 204, 170); // #FFCCAA 
 	
+	 public static final int[] P = {BLACK, DARK_BLUE, DARK_PURPLE, DARK_GREEN, BROWN,
+			 DARK_GRAY, LIGHT_GRAY, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE,
+			 INDIGO, PINK, PEACH };
 }

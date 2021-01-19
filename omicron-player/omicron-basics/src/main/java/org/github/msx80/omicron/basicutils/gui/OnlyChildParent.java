@@ -10,9 +10,9 @@ public abstract class OnlyChildParent extends ParentWidget {
 	final Widget child;
 	final private List<Widget> children;
 
-	public OnlyChildParent(Sys sys, Widget child, int x, int y, int w, int h) 
+	public OnlyChildParent(Sys sys, Widget child, int w, int h) 
 	{
-		super(sys, x, y, w, h);
+		super(sys, w, h);
 		this.child = child;
 		this.children = Arrays.asList(child);
 		this.child.parent = this;

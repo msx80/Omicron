@@ -8,8 +8,8 @@ public class TestArea extends Widget {
 
 	private Sys s;
 
-	public TestArea(Sys s, int x, int y, int w, int h) {
-		super(x, y, w, h);
+	public TestArea(Sys s, int w, int h) {
+		super(w, h);
 		this.s = s;
 	}
 

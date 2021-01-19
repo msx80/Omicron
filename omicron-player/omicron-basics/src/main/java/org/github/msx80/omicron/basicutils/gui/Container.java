@@ -1,17 +1,16 @@
 package org.github.msx80.omicron.basicutils.gui;
 
 import org.github.msx80.omicron.api.Sys;
-import org.github.msx80.omicron.basicutils.Colors;
 import org.github.msx80.omicron.basicutils.ShapeDrawer;
 import org.github.msx80.omicron.basicutils.palette.Tic80;
 
 public class Container extends ManagedParentWidget {
 
-	private Sys sys;
+	protected Sys sys;
 	
-	public Container(Sys sys, int x, int y)
+	public Container(Sys sys)
 	{
-		super(sys, x, y, 0, 0);
+		super(sys, 0, 0);
 		this.sys = sys;
 	}
 	
@@ -25,7 +24,7 @@ public class Container extends ManagedParentWidget {
 	}
 
 	@Override
-	public void childInvalidated(Widget widget) {
+	protected void childInvalidated(Widget widget) {
 		int mw = 0;
 		int mh = 0;
 		for (Widget w : children()) {

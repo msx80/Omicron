@@ -2,6 +2,7 @@ package org.github.msx80.omicron;
 
 import java.awt.Desktop;
 import java.net.URI;
+import java.util.function.Consumer;
 
 public class DesktopHardwareInterface implements HardwareInterface {
 
@@ -31,6 +32,11 @@ public class DesktopHardwareInterface implements HardwareInterface {
 	public String[] startupArgs() {
 		
 		return args;
+	}
+
+	@Override
+	public void saveFile(String mimeType, String filename, byte[] content, Consumer<String> result) {
+		result.accept("Not implemented");
 	}
 
 }

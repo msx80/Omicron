@@ -103,8 +103,8 @@ public class OmicronPlayer implements Game {
         				"Options",
         				"Credits",
         				"Quit"), this::selectIntro
-        		, sys, font, 80, 50, 120);
-        wm.add(l);
+        		, sys, font, 120);
+        wm.add(l, 80, 50);
 	}
 
 	private void selectIntro(int idx, String name)
@@ -162,15 +162,15 @@ public class OmicronPlayer implements Game {
                 	font.print(pp.name, x+12, y);
                 } ,(x,y) -> {
                 	sys.draw(2, x, y, 0,0,6,6,0,0);
-                }, 7, 0, 0, 200);
+                }, 7, 200);
    //     l = new ListWithSelection<>(fileList.files, font2, 0, 0, 100);
         
       
         //TestArea ta = new TestArea(sys, 0, 0, 300, 300);
         ScrollbarDrawer sv = new StandardScrollbarDrawer(3, Tic80.RED, Tic80.DARK_RED);
         ScrollbarDrawer sh = new NoScrollbarDrawer(); //new ScrollbarDrawer(8, Tic80.BLUE_GRAY, Tic80.DARK_BLUE);
-        s = new Scroller(sys, 40, 30, 200+sv.getThickness(), 100, l, sv, sh);
-        wm.add(s);
+        s = new Scroller(sys, 200+sv.getThickness(), 100, l, sv, sh);
+        wm.add(s, 40, 30);
 	}
 
 

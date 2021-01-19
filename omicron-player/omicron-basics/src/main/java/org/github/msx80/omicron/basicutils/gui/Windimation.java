@@ -33,8 +33,8 @@ public class Windimation<T> extends Widget implements Controllable {
 	private ItemDrawer<T> itemDrawer;
 	private int itemHeight;
 	
-	public Windimation(java.util.List<T> items, Selector<T> onSelect, Sys sys, final TextDrawer td, int x, int y, int w) {
-		super(x, y, w, items.size() * td.height());
+	public Windimation(java.util.List<T> items, Selector<T> onSelect, Sys sys, final TextDrawer td, int w) {
+		super( w, items.size() * td.height());
 		this.sys = sys;
 		this.items = items;
 		this.itemHeight = td.height();
@@ -48,8 +48,8 @@ public class Windimation<T> extends Widget implements Controllable {
 		};
  	}
 
-	public Windimation(java.util.List<T> items, Selector<T> onSelect, Sys sys, ItemDrawer<T> itemDrawer, CursorDrawer cursorDrawer, int itemHeight, int x, int y, int w) {
-		super(x, y, w, items.size() * itemHeight);
+	public Windimation(java.util.List<T> items, Selector<T> onSelect, Sys sys, ItemDrawer<T> itemDrawer, CursorDrawer cursorDrawer, int itemHeight, int w) {
+		super(w, items.size() * itemHeight);
 		this.sys = sys;
 		this.items = items;
 		this.itemHeight = itemHeight;

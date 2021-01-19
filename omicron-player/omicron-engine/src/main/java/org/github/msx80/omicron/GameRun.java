@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import org.github.msx80.omicron.api.Game;
 import org.github.msx80.omicron.api.adv.Cartridge;
 import org.github.msx80.omicron.plugins.ArgsPlugin;
+import org.github.msx80.omicron.plugins.SaveFilePlugin;
 import org.github.msx80.omicron.plugins.UrlOpenerPlugin;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -48,9 +49,11 @@ public class GameRun {
 			HardwarePlugin pp = new DebugPlugin();
 			UrlOpenerPlugin up = new UrlOpenerPlugin();
 			ArgsPlugin ap = new ArgsPlugin();
+			SaveFilePlugin sp = new SaveFilePlugin();
 			plugins.put(pp.name(), pp);
 			plugins.put(up.name(), up);
 			plugins.put(ap.name(), ap);
+			plugins.put(sp.name(), sp);
 		
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to start cartridge: "+e.getMessage(), e );

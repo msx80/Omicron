@@ -16,6 +16,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Net.HttpMethods;
+import com.badlogic.gdx.Net.HttpRequest;
+import com.badlogic.gdx.Net.HttpResponse;
+import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -66,7 +70,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	private Runnable afterLoop;
 	
-	private byte[] currentScreenCache = null; // cache for getPix, cleared any time a modification is made.
+	private int[] currentScreenCache = null; // cache for getPix, cleared any time a modification is made.
 	
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
@@ -327,28 +331,49 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			{
 				batch.end();
 			}
+			int w = current.screenInfo.requiredSysConfig.width;
+			int h = current.screenInfo.requiredSysConfig.height;
 			
 			if(currentScreenCache == null)
 			{
-				/*
-				// not working yet
-				proj.set(x,y,0);
-				cam.project(proj);*/
-				
-				// byte[] b = ScreenUtils.getFrameBufferPixels(Math.round(proj.x), Math.round(proj.y), 1, 1, false);
-				
 				// for performances reason, we just download all of the screen fron the graphic memory and store it in an array of bytes, currentScreenCache
 				// if the screen is updated by any call, the currentScreenCache is cleared so next call to getPix will recalculate it (correctly).
 				// this improves A LOT the common use case of user wanting to pick a good portion of the screen into a buffer (repetedly calling getPix)
-				currentScreenCache = ScreenUtils.getFrameBufferPixels(0,0,current.screenInfo.requiredSysConfig.width, current.screenInfo.requiredSysConfig.height, false);
+				
+
+
+				
+				proj.set(w,0,0);
+				cam.project(proj);
+				double ww = proj.x;
+				double hh = proj.y;
+				
+				// ratio between physical and virtual screen size.
+				double ratiox = (ww/(double)w);
+				double ratioy = (hh/(double)h);
+				
+				// b is in real display coordinates (like bigger than omicron width/height).
+				byte[] b = ScreenUtils.getFrameBufferPixels(0,0, (int) Math.round(ww), (int) Math.round(hh), false);
+				
+				// this is in virtual width/height
+				currentScreenCache = new int[w*h];
+				
+				// map physical coordinates to virtual. Y is inverted. Also group color bytes into a single color int.
+				for (int ay = 0; ay < h; ay++) {
+					for (int ax = 0; ax < w; ax++) {
+						double g = ((ay*ratioy*ww) + (ax*ratiox)) * 4;
+						int idx = (int) (g);
+						int c = ColorsCopy.from(0xFF & b[idx], 0xFF & b[idx+1], 0xFF &  b[idx+2], 0xFF & b[idx+3]);
+						currentScreenCache[(h-ay-1)*w+ax] = c;
+					}
+				}
+				
 			}
-			// if(is) batch.begin();
-			byte[] b = currentScreenCache;
-			int idx = (y*current.screenInfo.requiredSysConfig.width + x)*4;
-			return ColorsCopy.from(0xFF & b[idx], 0xFF & b[idx+1], 0xFF &  b[idx+2], 0xFF & b[idx+3]);
+			return currentScreenCache[y*w+x];
 		}
 		else
 		{
+			// current.uploadDirtyTexture(); // ensure surfaced are updated
 			TextureRegion r = current.getSheet(sheetNum);
 			if(r==null) throw new RuntimeException("Sheet "+sheetNum+" not found!");
 			PixmapTextureData d = (PixmapTextureData) r.getTexture().getTextureData();
@@ -616,8 +641,38 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 	@Override
 	public Object hardware(String module, String command, Object param) {
-		HardwarePlugin e = current.plugins.get(module);
-		return e == null ? null : e.exec(command, param);
+		
+		if("HTTP".equals(module))
+		{
+			HttpRequest r = new HttpRequest(HttpMethods.GET);
+			r.setUrl((String) param);
+			Gdx.net.sendHttpRequest(r, new HttpResponseListener() {
+				
+				@Override
+				public void handleHttpResponse(HttpResponse res) {
+					System.out.println(res.getResultAsString());
+					
+				}
+				
+				@Override
+				public void failed(Throwable t) {
+					t.printStackTrace();
+					
+				}
+				
+				@Override
+				public void cancelled() {
+					System.out.println("Cancelled");
+					
+				}
+			});
+			return null;
+		}
+		else
+		{
+			HardwarePlugin e = current.plugins.get(module);
+			return e == null ? null : e.exec(command, param);
+		}
 	}
 
 	@Override

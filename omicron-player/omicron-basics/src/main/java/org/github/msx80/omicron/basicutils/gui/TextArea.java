@@ -36,8 +36,8 @@ public class TextArea extends Widget implements KeyboardListener {
 	private Sys sys;
 	private TextDrawerFixed td;
 	
-	public TextArea(Sys sys, TextDrawerFixed td, int x, int y) {
-		super(x, y, Integer.MAX_VALUE, Integer.MIN_VALUE);
+	public TextArea(Sys sys, TextDrawerFixed td) {
+		super(Integer.MAX_VALUE, Integer.MIN_VALUE);
 		this.sys = sys;
 		this.td = td;
 		updateState();

@@ -11,9 +11,9 @@ public class Label extends Widget {
 	private Sys sys;	
 	private int color;
 
-	public Label(String text, int x, int y, int color, TextDrawer font, Sys sys)
+	public Label(String text, int color, TextDrawer font, Sys sys)
 	{
-		super(x, y, font.width(text), font.height());
+		super(font.width(text), font.height());
 		this.text = text;
 		this.font = font;
 		this.sys = sys;

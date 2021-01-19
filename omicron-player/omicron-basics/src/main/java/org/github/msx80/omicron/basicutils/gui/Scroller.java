@@ -3,7 +3,13 @@ package org.github.msx80.omicron.basicutils.gui;
 import org.github.msx80.omicron.api.Sys;
 import org.github.msx80.omicron.basicutils.gui.drawers.ScrollbarDrawer;
 
-public class Scroller extends OnlyChildParent {
+/**
+ * Parent of a single child that implements scrolling
+ * Can have scrollbars visible or invisible
+ * Works by moving child X and Y coordinates so that all
+ * calculation on relative child position still works
+ */
+public class Scroller extends OnlyChildParent implements Scrollable {
 	
 	static class ScrollBar {
 		int scroll;
@@ -68,11 +74,13 @@ public class Scroller extends OnlyChildParent {
 	private ScrollbarDrawer drawerV;
 	private ScrollbarDrawer drawerH;
 	
-	public Scroller(Sys sys, int x, int y, int w, int h, Widget child, ScrollbarDrawer drawerV, ScrollbarDrawer drawerH) 
+	public Scroller(Sys sys, int w, int h, Widget child, ScrollbarDrawer drawerV, ScrollbarDrawer drawerH) 
 	{
-		super(sys, child, x, y, w, h);
+		super(sys, child, w, h);
 		this.drawerV = drawerV;
 		this.drawerH = drawerH;
+		child.x = 0;
+		child.y = 0;
 		childInvalidated(child);
 	}
 
@@ -86,15 +94,32 @@ public class Scroller extends OnlyChildParent {
 	
 	@Override
 	public void draw() {
-		sys.clip(this.getAbsoluteX(), this.getAbsoluteY(), this.w-drawerV.getThickness(), getClientAreaHeight());
+		int areaWidth = getClientAreaWidth();
+		int areaHeight =  getClientAreaHeight();
+		sys.clip(this.getAbsoluteX(), this.getAbsoluteY(), areaWidth, areaHeight);
 		
-		sys.offset(-scrollX.scroll, -scrollY.scroll);
+
+		/*sys.offset(-scrollX.scroll, -scrollY.scroll);
 		
 		child.draw();
-		sys.clip(0,0,0,0);
 		
 		sys.offset(scrollX.scroll, scrollY.scroll);
+*/
+		sys.offset(child.x, child.y);
+		if(child instanceof PartialDrawable)
+		{
+			//throw new RuntimeException("Drawing of PartialDrawable not implemented yet");
+			((PartialDrawable) child).draw(-child.x, -child.y, areaWidth, areaHeight);
+		}
+		else
+		{
+			child.draw();
+		}
+		sys.offset(-child.x, -child.y);
 
+		
+		
+		sys.clip(0,0,0,0);
 		drawerV.drawVerticalScrollbar(sys, w-drawerV.getThickness(), 0,  h-drawerH.getThickness(), scrollY.curPos, scrollY.curLength);
 
 		drawerH.drawHorizontalScrollbar(sys, 0, h-drawerH.getThickness(), w-drawerV.getThickness(), scrollX.curPos, scrollX.curLength);
@@ -149,10 +174,50 @@ public class Scroller extends OnlyChildParent {
 
 	private void recalcScrollY() {
 		scrollY.calc(getClientAreaHeight(), child.h, drawerV.getBorder());
+		child.y = - scrollY.scroll;
 	}
 	private void recalcScrollX() {
 		scrollX.calc(getClientAreaWidth(), child.w, drawerH.getBorder());
+		child.x = - scrollX.scroll;
 	}
 
+	@Override
+	public void startScroll(int x, int y) {
+		
+	}
+
+	@Override
+	public void doScroll(int dx, int dy) {
+		//System.out.println("Dragged "+dx+" "+dy);
+		this.scrollHorizontal(-dx);
+		this.scrollVertical(-dy);
+	}
+
+	@Override
+	public void endScroll() {
+		
+	}
+//	
+//	public Widget find(int px, int py, boolean deep, Predicate<? super Widget> filter)
+//	{
+//		if( (!deep) && filter.test(this) ) return this;
+//		
+//		if(child.isInside(px, py))
+//		{
+//			
+//			return child.find(px-child.x-scrollX.scroll, py-child.y-scrollY.scroll, deep, filter);
+//			
+//		}
+//
+//		
+//		if( deep && filter.test(this) ) return this;
+//		
+//		return null;
+//	}
+
+	@Override
+	public Widget remove(Widget w) {
+		throw new RuntimeException("Can't remove child from scroller");
+	}
 
 }

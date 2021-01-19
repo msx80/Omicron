@@ -49,10 +49,10 @@ public class SurfUtils {
 	
 	
     private static final int readInt(InputStream in) throws IOException {
-        int ch1 = in.read();
-        int ch2 = in.read();
-        int ch3 = in.read();
-        int ch4 = in.read();
+        int ch1 = in.read()& 0xFF;
+        int ch2 = in.read()& 0xFF;
+        int ch3 = in.read()& 0xFF;
+        int ch4 = in.read()& 0xFF;
         if ((ch1 | ch2 | ch3 | ch4) < 0)
             throw new EOFException();
         return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
@@ -67,8 +67,8 @@ public class SurfUtils {
 	    }
 
 		public static void loadSurface(Sys sys, int surface, int sx, int sy, int w, int h, ByteArrayInputStream inp) throws IOException {
-			for (int y = sy; y < h; y++) {
-				for (int x = sx; x < w; x++) {
+			for (int y = sy; y < h+sy; y++) {
+				for (int x = sx; x < w+sx; x++) {
 					int c = readInt(inp);
 					sys.fill(surface, x, y, 1, 1, c);
 				}
@@ -77,8 +77,8 @@ public class SurfUtils {
 
 
 	public static void saveSurface(Sys sys, int surface, int sx, int sy, int w, int h, OutputStream out) throws IOException {
-		for (int y = sy; y < h; y++) {
-			for (int x = sx; x < w; x++) {
+		for (int y = sy; y < h+sy; y++) {
+			for (int x = sx; x < w+sx; x++) {
 				int c = sys.getPix(surface, x, y);
 				writeInt(out, c);
 			}

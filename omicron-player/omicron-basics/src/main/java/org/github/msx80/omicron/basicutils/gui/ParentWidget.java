@@ -1,6 +1,8 @@
 package org.github.msx80.omicron.basicutils.gui;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.github.msx80.omicron.api.Sys;
 
@@ -12,18 +14,18 @@ import org.github.msx80.omicron.api.Sys;
  * different parents can implement differently 
  *
  */
-public abstract class ParentWidget extends Widget {
+public abstract class ParentWidget extends Widget implements Iterable<Widget> {
 
 	protected Sys sys;
 	
-	public ParentWidget(Sys sys, int x, int y, int w, int h) {
-		super(x, y, w, h);
+	public ParentWidget(Sys sys, int w, int h) {
+		super(w, h);
 		this.sys = sys;
 	}
 
 	public void drawChildren() {
 		//sys.offset(padding.top, padding.left);
-		for (Widget w : children()) {
+		for (Widget w : this) {
 			sys.offset(w.x, w.y);
 			w.draw();
 			sys.offset(-w.x, -w.y);
@@ -36,10 +38,11 @@ public abstract class ParentWidget extends Widget {
 		drawChildren();
 	}
 	
-	public abstract void childInvalidated(Widget widget);
+	protected abstract void childInvalidated(Widget widget);
 
 	public abstract List<Widget> children();
-		
+	
+	/*
 	public Widget pick(int px, int py)
 	{
 		for (int i = children().size() -1 ; i >= 0 ; i--) {
@@ -57,7 +60,8 @@ public abstract class ParentWidget extends Widget {
 			}
 		}
 		return this;
-	}
+	}*/
+	
 
 	/**
 	 * For scrolling or partially visible parents, ensure the visible area of the child includes the specified area
@@ -67,6 +71,14 @@ public abstract class ParentWidget extends Widget {
 		parent.ensureVisible(this, child.x+x, child.y+y, w, h);
 		
 	}
+
+	@Override
+	public Iterator<Widget> iterator() {
+		
+		return children().iterator();
+	}
+
+	public abstract Widget remove(Widget w) ;
 
 	
 }

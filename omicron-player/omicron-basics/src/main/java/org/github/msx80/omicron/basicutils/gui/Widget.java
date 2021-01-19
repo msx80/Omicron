@@ -1,5 +1,8 @@
 package org.github.msx80.omicron.basicutils.gui;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 import org.github.msx80.omicron.basicutils.Geometry;
 
 
@@ -27,9 +30,9 @@ public abstract class Widget
 	protected int w;
 	protected int h;
 	
-	public Widget(int x, int y, int w, int h) {
-		this.x = x;
-		this.y = y;
+	public Widget(int w, int h) {
+		this.x = 0;
+		this.y = 0;
 		this.w = w;
 		this.h = h;
 	}
@@ -41,6 +44,10 @@ public abstract class Widget
 	 */
 	public abstract void draw();
 	
+	/**
+	 * called when the state of a widget is changed so that the parent may want to rearrange the layout.
+	 * it calls childInvalidated on the parent, if any.
+	 */
 	public void invalidate()
 	{
 		if(parent!=null) parent.childInvalidated(this);
@@ -93,6 +100,40 @@ public abstract class Widget
 		return h;
 	}
 	
+	public Widget setSize(int w, int h)
+	{
+		this.w = w;
+		this.h = h;
+		invalidate();
+		return this;
+	}
+	
+	public Widget find(int px, int py, boolean deep, Predicate<? super Widget> filter)
+	{
+		if( (!deep) && filter.test(this) ) return this;
+		
+		if(this instanceof ParentWidget)
+		{
+			List<Widget> x = ((ParentWidget) this).children();
+			// scan in reverse so that the last widget added is the first served
+			// importat for example for Modals, so they have a chance to capture
+			// all input.
+			for (int i = x.size()-1; i >= 0; i--) {
+				Widget child = x.get(i);
+				if(child.isInside(px, py))
+				{
+					
+					return child.find(px-child.x, py-child.y, deep, filter);
+					
+				}
+			}
+		}
+		if( deep && filter.test(this) ) return this;
+		
+		return null;
+	}
+
 	
 	
+
 }

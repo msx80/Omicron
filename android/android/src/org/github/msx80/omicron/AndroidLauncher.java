@@ -3,7 +3,11 @@ package org.github.msx80.omicron;
 import android.os.Bundle;
 import android.net.Uri;
 import android.content.Intent;
-
+import android.widget.Toast;
+import android.app.Activity;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.function.Consumer;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import org.github.msx80.omicron.GdxOmicron;
@@ -15,6 +19,12 @@ import org.github.msx80.omicron.fantasyconsole.cartridges.*;
 import android.content.pm.*;
 
 public class AndroidLauncher extends AndroidApplication implements HardwareInterface {
+	
+	private static final int SAVE_FILE = 3345993;
+	
+	private byte[] bytesToSave = null;
+	private Consumer<String> fileResult = null;
+	
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +57,55 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
       Intent intent = new Intent( Intent.ACTION_VIEW, uri );
       this.startActivity( intent );
    }
+   
+   	@Override
+	public void saveFile(String mimeType, String filename, byte[] content, Consumer<String> result) {
+		this.bytesToSave = content;
+		this.fileResult = result;
+		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType(mimeType); //not needed, but maybe usefull
+		intent.putExtra(Intent.EXTRA_TITLE, filename); //not needed, but maybe usefull
+		startActivityForResult(intent, SAVE_FILE);
+   }
+   
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  if(requestCode == SAVE_FILE ) {
+		  // clean stuff
+		  byte[] bytes = bytesToSave;
+		  bytesToSave = null;
+		  Consumer<String> onResult = fileResult;
+		  fileResult = null;
+		  
+		if (resultCode == Activity.RESULT_OK) {
+		Uri uri = data.getData();
+		Toast.makeText(this, "Info: "+uri, Toast.LENGTH_SHORT).show();
+		//just as an example, I am writing a String to the Uri I received from the user:
+		String error = null;
+		try {
+		  OutputStream output = getContext().getContentResolver().openOutputStream(uri);
+
+		  output.write(bytes);
+		  output.flush();
+		  output.close();
+		}
+		catch(Exception e) {
+		  Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+		  error = e.getMessage();
+		}
+		onResult.accept(error);
+		
+	  }
+	  else
+	  {
+		  Toast.makeText(this, "Not saved", Toast.LENGTH_SHORT).show();
+		  onResult.accept("dismissed");
+	  }
+	  }
+}
+   
+   
    @Override public String[] startupArgs()
    {
 	   return new String[0];
