@@ -1,4 +1,4 @@
-package org.github.msx80.omicron;
+package com.github.msx80.omicron;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

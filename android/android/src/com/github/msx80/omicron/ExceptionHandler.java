@@ -1,4 +1,4 @@
-package org.github.msx80.omicron;
+package com.github.msx80.omicron;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 

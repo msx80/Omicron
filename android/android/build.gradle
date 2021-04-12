@@ -116,5 +116,5 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', rootProject.ext.omicron.pkg+'/org.github.msx80.omicron.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', rootProject.ext.omicron.pkg+'/com.github.msx80.omicron.AndroidLauncher'
 }

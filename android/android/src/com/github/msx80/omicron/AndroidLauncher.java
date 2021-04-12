@@ -1,4 +1,4 @@
-package org.github.msx80.omicron;
+package com.github.msx80.omicron;
 
 import android.os.Bundle;
 import android.net.Uri;
@@ -10,11 +10,11 @@ import java.io.OutputStream;
 import java.util.function.Consumer;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import org.github.msx80.omicron.GdxOmicron;
-import org.github.msx80.omicron.HardwareInterface;
-import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.adv.*;
-import org.github.msx80.omicron.fantasyconsole.cartridges.*;
+import com.github.msx80.omicron.GdxOmicron;
+import com.github.msx80.omicron.HardwareInterface;
+import com.github.msx80.omicron.api.Game;
+import com.github.msx80.omicron.api.adv.*;
+import com.github.msx80.omicron.fantasyconsole.cartridges.*;
 
 import android.content.pm.*;
 

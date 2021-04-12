@@ -72,9 +72,9 @@ project(":android") {
 
 		compile files("../build/cartridge.jar")  // TODO reference via variable?
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "org.github.msx80.omicron:omicron-api:0.0.1"
-		compile "org.github.msx80.omicron:omicron-engine:0.0.1"
-		compile "org.github.msx80.omicron:omicron-loader:0.0.1"
+        compile "com.github.msx80.omicron:omicron-api:0.0.1"
+		compile "com.github.msx80.omicron:omicron-engine:0.0.1"
+		compile "com.github.msx80.omicron:omicron-loader:0.0.1"
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

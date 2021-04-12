@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.github.msx80.omicron" >
+    package="com.github.msx80.omicron" >
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:label="${appname}"
         android:theme="@style/GdxTheme" >
         <activity
-            android:name="org.github.msx80.omicron.AndroidLauncher"
+            android:name="com.github.msx80.omicron.AndroidLauncher"
             android:label="${appname}" 
             android:screenOrientation="${orientation}"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout">
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.github.msx80.omicron.CrashActivity"
+            android:name="com.github.msx80.omicron.CrashActivity"
             android:label="Crash report" >
 		</activity>
 
