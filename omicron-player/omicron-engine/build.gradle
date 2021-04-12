@@ -27,7 +27,7 @@ dependencies {
   }
 
 // automatically publish on maven local when building
-// build.finalizedBy publishToMavenLocal
+build.finalizedBy publishToMavenLocal
 
 tasks.publishToMavenLocal.doLast(){
         println ''
