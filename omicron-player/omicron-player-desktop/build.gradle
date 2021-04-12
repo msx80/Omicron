@@ -1,6 +1,11 @@
 plugins {
     id 'java-library'        
 }
+apply plugin: "maven-publish"
+
+def aGroupId = "com.github.msx80.omicron"
+def aArtifactId = "omicron-player-desktop"
+def aVersion = "0.0.1"
 
 project.ext.mainClassName = "com.github.msx80.omicron.player.OmicronPlayerMain"
 
@@ -38,3 +43,24 @@ task copyJar(type: Copy) {
 }
 
 dist.finalizedBy copyJar
+
+ publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = aGroupId
+                artifactId = aArtifactId
+                version = aVersion
+
+                from components.java
+			}
+        }
+  }
+
+// automatically publish on maven local when building
+build.finalizedBy publishToMavenLocal
+
+tasks.publishToMavenLocal.doLast(){
+        println ''
+		println "Player-desktop published to maven local as: $aGroupId:$aArtifactId:$aVersion" 
+		println ''
+    }

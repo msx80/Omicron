@@ -1,7 +1,11 @@
 plugins {
     id 'java-library'        
 }
+apply plugin: "maven-publish"
 
+def aGroupId = "com.github.msx80.omicron"
+def aArtifactId = "omicron-desktop"
+def aVersion = "0.0.1"
 
 dependencies {
     api project(':omicron-engine') 
@@ -10,3 +14,24 @@ dependencies {
     api group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version: '1.9.10'
 	api "com.badlogicgames.gdx:gdx-platform:1.9.10:natives-desktop"
 }
+
+ publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = aGroupId
+                artifactId = aArtifactId
+                version = aVersion
+
+                from components.java
+			}
+        }
+  }
+
+// automatically publish on maven local when building
+build.finalizedBy publishToMavenLocal
+
+tasks.publishToMavenLocal.doLast(){
+        println ''
+		println "Desktop published to maven local as: $aGroupId:$aArtifactId:$aVersion" 
+		println ''
+    }

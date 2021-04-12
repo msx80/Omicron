@@ -1,7 +1,7 @@
 /*
 
 Omicron cartridge build script
-ver 1.1
+ver 1.3
 
 Do not change this, they're equals for all games.
 Personalize your omicron.properties
@@ -45,6 +45,7 @@ version = omicron.version
 repositories {
     mavenCentral()
     mavenLocal()
+	maven { url 'https://jitpack.io' }
 }
 
 configurations {
@@ -54,6 +55,7 @@ configurations {
 
 dependencies {
     implementation group: 'com.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
+	runtimeOnly group: 'com.github.msx80.omicron', name: 'omicron-desktop', version: omicron.omicronVersion
 	// to add dependencies from properties 
 	if(omicron.dep) {
 		def deps = omicron.dep.split(";")
@@ -73,8 +75,8 @@ jar {
       
    }
    from {
-    // we want to package extra dependencies but NOT the api, since it will already be included as dependency in the pom and present in the
-	// runtime
+    // we want to package extra dependencies but NOT the api, since it will 
+    // already be included as dependency in the pom and present in the runtime
    	configurations.extraLibs.collect { it.getName().equals("omicron-api-0.0.1.jar")? null :( it.isDirectory() ? it : zipTree(it)) }
    }
     manifest {
@@ -101,6 +103,14 @@ jar {
 			}
         }
   }
+  
+task run(type: Exec) {
+    dependsOn build
+    group = "Execution"
+    description = "Run the main class with ExecTask"
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.github.msx80.omicron.DesktopLauncher", omicron.pkg+"."+omicron.main
+}  
+  
 def styler = 'black red green yellow blue magenta cyan white'
         .split().toList().withIndex(30)
         .collectEntries { key, val -> [(key) : { "\033[${val}m${it}\033[0m" }] }  

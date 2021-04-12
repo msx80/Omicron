@@ -23,6 +23,7 @@ public class DesktopLauncher {
 		config.width = physicalWidth;
 		config.height = physicalHeight;
 		config.fullscreen = fullScreen;
+		config.forceExit = false;
 		new LwjglApplication(OmicronEngineLibgdx.getApplicationForLibgdx(cartridge, new DesktopHardwareInterface(args)), config);
 	}
 	
