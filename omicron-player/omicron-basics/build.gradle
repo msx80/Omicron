@@ -27,11 +27,12 @@ repositories {
         }
   }
 
-build.finalizedBy publishToMavenLocal
+// automatically publish on maven local when building
+// build.finalizedBy publishToMavenLocal
 
 tasks.publishToMavenLocal.doLast(){
         println ''
-		println "Basics published to maven local as: fillme" 
+		println "Basics published to maven local" 
 		println ''
     }
 
