@@ -2,13 +2,10 @@ package com.github.msx80.omicron;
 
 
 
-import com.github.msx80.omicron.OmicronEngineLibgdx;
-import com.github.msx80.omicron.api.SysConfig;
-import com.github.msx80.omicron.api.adv.Cartridge;
-
-import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.github.msx80.omicron.api.SysConfig;
+import com.github.msx80.omicron.api.adv.Cartridge;
 import com.github.msx80.omicron.fantasyconsole.cartridges.ClasspathCartridge;
 
 public class DesktopLauncher {

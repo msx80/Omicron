@@ -56,6 +56,7 @@ configurations {
 dependencies {
     implementation group: 'com.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
 	runtimeOnly group: 'com.github.msx80.omicron', name: 'omicron-desktop', version: omicron.omicronVersion
+	// runtimeOnly "com.badlogicgames.gdx:gdx-platform:1.9.10:natives-desktop"
 	// to add dependencies from properties 
 	if(omicron.dep) {
 		def deps = omicron.dep.split(";")
