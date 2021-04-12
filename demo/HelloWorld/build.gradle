@@ -1,7 +1,7 @@
 /*
 
 Omicron cartridge build script
-ver 1.1
+ver 1.2
 
 Do not change this, they're equals for all games.
 Personalize your omicron.properties
@@ -45,6 +45,7 @@ version = omicron.version
 repositories {
     mavenCentral()
     mavenLocal()
+	maven { url 'https://jitpack.io' }
 }
 
 configurations {
@@ -53,7 +54,7 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'org.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
+    implementation group: 'com.github.msx80.omicron', name: 'omicron-api', version: omicron.omicronVersion
 	// to add dependencies from properties 
 	if(omicron.dep) {
 		def deps = omicron.dep.split(";")

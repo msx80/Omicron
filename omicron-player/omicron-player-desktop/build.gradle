@@ -2,7 +2,7 @@ plugins {
     id 'java-library'        
 }
 
-project.ext.mainClassName = "org.github.msx80.omicron.player.OmicronPlayerMain"
+project.ext.mainClassName = "com.github.msx80.omicron.player.OmicronPlayerMain"
 
 dependencies {
     api project(':omicron-api')

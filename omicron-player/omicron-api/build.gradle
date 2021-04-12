@@ -12,7 +12,7 @@ repositories {
  publishing {
         publications {
             maven(MavenPublication) {
-                groupId = "org.github.msx80.omicron"
+                groupId = "com.github.msx80.omicron"
                 artifactId = "omicron-api"
                 version = "0.0.1"
 

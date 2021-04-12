@@ -3,7 +3,7 @@ plugins {
 }
 apply plugin: "maven-publish"
 
-def aGroupId = "org.github.msx80.omicron"
+def aGroupId = "com.github.msx80.omicron"
 def aArtifactId = "omicron-engine"
 def aVersion = "0.0.1"
 

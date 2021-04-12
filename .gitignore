@@ -3,6 +3,22 @@
 
 Thumbs.db
 
+#custom
+
+demo/DoorsOfDoom/
+demo/ZombieShooter/
+omicron-player/OmicronPlayer.exe
+omicron-player/OmicronPlayer.jar
+omicron-player/launch4j.cfg.xml
+omicron-player/omicron-api/bin/
+omicron-player/omicron-api/new 2.txt
+omicron-player/omicron-basics/bin/
+omicron-player/omicron-desktop/bin/
+omicron-player/omicron-engine/bin/
+omicron-player/omicron-loader/bin/
+omicron-player/omicron-player-desktop/bin/
+omicron-player/omicron-player/bin/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 

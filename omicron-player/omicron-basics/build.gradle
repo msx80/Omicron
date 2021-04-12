@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply plugin: "maven-publish"
 
 dependencies {
-    implementation "org.github.msx80.omicron:omicron-api:0.0.1"
+    implementation "com.github.msx80.omicron:omicron-api:0.0.1"
 }
 
 sourceCompatibility = 1.8
@@ -18,7 +18,7 @@ repositories {
  publishing {
         publications {
             maven(MavenPublication) {
-                groupId = "org.github.msx80.omicron"
+                groupId = "com.github.msx80.omicron"
                 artifactId = "omicron-basics"
                 version = "0.0.1"
 

@@ -1,13 +1,13 @@
 package %%PKG%%;
 
 
-import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.Sys;
-import org.github.msx80.omicron.api.SysConfig;
-import org.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
-import org.github.msx80.omicron.basicutils.Colors;
-import org.github.msx80.omicron.basicutils.TextDrawerFixed;
-import org.github.msx80.omicron.basicutils.TextDrawer.Align;
+import com.github.msx80.omicron.api.Game;
+import com.github.msx80.omicron.api.Sys;
+import com.github.msx80.omicron.api.SysConfig;
+import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
+import com.github.msx80.omicron.basicutils.Colors;
+import com.github.msx80.omicron.basicutils.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.TextDrawer.Align;
 
 public class %%MAIN%% implements Game 
 {
