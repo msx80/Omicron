@@ -26,10 +26,10 @@ public interface AdvancedSys extends Sys {
 
 	/**
 	 * Starts and pass control to another cartridge.
-	 * This method returns immediately and should be called as the last instruction of the update() method.
-	 * No more update() or render() will be called for the current Game until the child one terminates, 
+	 * This method returns immediately and should be called as the last instruction of the loop() method.
+	 * No more loop() will be called for the current Game until the child one terminates, 
 	 * after that, the onResult callback is called with the result from child game, then the execution of parent
-	 * resumes (with a render() first)
+	 * resumes
 	 * @param cartridge
 	 * @param onResult
 	 */
