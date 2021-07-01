@@ -17,8 +17,6 @@ import com.github.msx80.omicron.basicutils.ShapeDrawer;
 import com.github.msx80.omicron.basicutils.text.TextDrawer.Align;
 import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 
-import omicron.demo.snake.testinvoke.TestInvoke;
-
 
 class Point {
 	public int x;
@@ -81,8 +79,6 @@ public class SnakeMain implements Game
     public void init(final Sys sys) 
     {
     	this.r = new Random(sys.millis());
-    	Runnable r = TestInvoke::hello;
-    	doRun(r);
         this.sys = sys;
         td = new TextDrawerFixed(sys, SHEET_FONT, 6, 6, 6);
         mapDrawer = new MapDrawer(sys, TILE_SIZE, TILE_SIZE, 8, map);
@@ -91,12 +87,6 @@ public class SnakeMain implements Game
         resetGame();
         sys.sound(3, 1, 1);
     }
-
-
-	private void doRun(Runnable r2) {
-		r2.run();
-	}
-
 
 	public void resetGame() {
 		// reset all game variables
