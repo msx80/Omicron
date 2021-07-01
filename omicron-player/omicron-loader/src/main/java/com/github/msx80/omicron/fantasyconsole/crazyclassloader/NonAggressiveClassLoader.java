@@ -23,6 +23,11 @@ public abstract class NonAggressiveClassLoader extends SClassLoader {
 	
     @Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
+    	System.out.println("Accessing class "+name);
+    	/*if("java.lang.invoke.LambdaMetafactory".equals(name))
+    	{
+    		throw new ClassNotFoundException("Eh no ciccio");
+    	}*/
     	Class<?> a;
 		try {
 			a = parent.loadClass(name);

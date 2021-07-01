@@ -4,6 +4,8 @@ plugins {
 }
 apply plugin: "maven-publish"
 
+sourceCompatibility = 1.8
+
 def aGroupId = "com.github.msx80.omicron"
 def aArtifactId = "omicron-loader"
 def aVersion = "0.0.1"
@@ -11,6 +13,7 @@ def aVersion = "0.0.1"
 dependencies {
     implementation project(':omicron-api')
 	compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
+	compile group: 'com.github.msx80', name: 'wiseloader', version: '1.0.1'
     
 }
 

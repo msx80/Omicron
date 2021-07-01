@@ -3,6 +3,8 @@ plugins {
 }
 apply plugin: "maven-publish"
 
+sourceCompatibility = 1.8
+
 def aGroupId = "com.github.msx80.omicron"
 def aArtifactId = "omicron-player"
 def aVersion = "0.0.1"

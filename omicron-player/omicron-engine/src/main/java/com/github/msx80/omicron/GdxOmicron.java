@@ -556,6 +556,22 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		      return true;
 		   }
 
+			public boolean scrolled(float amountX, float amountY) {
+			   if(pointers == null) return true;
+			   
+			   if(amountY == -1)
+			   {
+				   ((MouseImpl) pointers[0]).btn[3] = true;
+			   }
+			   else
+			   {
+				   ((MouseImpl) pointers[0]).btn[4] = true;
+			   }
+			   
+			   
+		      return false;
+			}
+		   
 		   public boolean scrolled (int amount) {
 			   if(pointers == null) return true;
 			   
@@ -571,6 +587,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			   
 		      return false;
 		   }
+
+		
 		}
 
 
@@ -806,6 +824,17 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			onException = null;			
 			System.gc();
 		}
+	}
+
+	@Override
+	public long millis() {
+		
+		return System.currentTimeMillis();
+	}
+
+	@Override
+	public void trace(String s) {
+		System.out.println("TRACE "+s);
 	}
 
 	

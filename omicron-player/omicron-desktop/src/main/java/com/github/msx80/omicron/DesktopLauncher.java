@@ -23,6 +23,8 @@ public class DesktopLauncher {
 		//config.set
 		//config.fullscreen = fullScreen;
 		//config.forceExit = false;
+		config.setWindowPosition(50, 50);
+
 		new Lwjgl3Application(OmicronEngineLibgdx.getApplicationForLibgdx(cartridge, new DesktopHardwareInterface(args)), config);
 
 		/*

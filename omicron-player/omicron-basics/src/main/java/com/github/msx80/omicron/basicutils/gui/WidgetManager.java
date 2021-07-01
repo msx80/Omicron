@@ -46,6 +46,7 @@ public class WidgetManager extends ManagedParentWidget {
 		
 		if(scrolling != null)
 		{
+			Widget ws = (Widget) scrolling;
 			if(!mouse.btn(0))
 			{
 				scrolling.endScroll();
@@ -63,7 +64,7 @@ public class WidgetManager extends ManagedParentWidget {
 				int dy = my - scrollpy;
 				if(dx != 0 || dy != 0)
 				{
-					scrolling.doScroll(dx, dy);
+					scrolling.doScroll(dx, dy, mx-ws.getAbsoluteX(), my-ws.getAbsoluteY());
 					scrollpx = mx;
 					scrollpy = my;
 					scrollTotal += Math.abs(dx) + Math.abs(dy);
@@ -77,9 +78,11 @@ public class WidgetManager extends ManagedParentWidget {
 				scrolling = (Scrollable) find(mx, my, false, w -> w instanceof Scrollable);
 				if(scrolling != null)
 				{
+					Widget ws = (Widget) scrolling;
 					scrollpx = mx;
 					scrollpy = my;
 					scrollTotal = 0;
+					scrolling.startScroll(mx-ws.getAbsoluteX(), my-ws.getAbsoluteY());
 				}
 				else
 				{

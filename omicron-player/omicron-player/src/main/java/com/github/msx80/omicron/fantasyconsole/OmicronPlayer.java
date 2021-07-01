@@ -15,8 +15,6 @@ import com.github.msx80.omicron.api.adv.AdvancedSys;
 import com.github.msx80.omicron.api.adv.AdvancedSys.KeyboardListener;
 import com.github.msx80.omicron.api.adv.Cartridge;
 import com.github.msx80.omicron.basicutils.Colors;
-import com.github.msx80.omicron.basicutils.TextDrawer.Align;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
 import com.github.msx80.omicron.basicutils.gui.Scroller;
 import com.github.msx80.omicron.basicutils.gui.WidgetManager;
 import com.github.msx80.omicron.basicutils.gui.Windimation;
@@ -24,6 +22,8 @@ import com.github.msx80.omicron.basicutils.gui.drawers.NoScrollbarDrawer;
 import com.github.msx80.omicron.basicutils.gui.drawers.ScrollbarDrawer;
 import com.github.msx80.omicron.basicutils.gui.drawers.StandardScrollbarDrawer;
 import com.github.msx80.omicron.basicutils.palette.Tic80;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawer.Align;
 
 public class OmicronPlayer implements Game {
 	

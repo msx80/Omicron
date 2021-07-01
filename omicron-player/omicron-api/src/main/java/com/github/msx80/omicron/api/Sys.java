@@ -146,4 +146,7 @@ public interface Sys
 	 * @param h the rectangle area to clip
 	 */
 	void clip(int x, int y, int w, int h);
+	
+	long millis();
+	void trace(String s);
 }

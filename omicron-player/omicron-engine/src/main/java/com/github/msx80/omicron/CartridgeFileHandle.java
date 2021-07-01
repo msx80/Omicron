@@ -10,7 +10,8 @@ public class CartridgeFileHandle extends FileHandleStream {
 
 	private byte[] data;
 	
-	public CartridgeFileHandle(Cartridge cartridge, String resourceName) {
+	public CartridgeFileHandle(Cartridge cartridge, String resourceName) 
+	{
 		super(resourceName);
 		this.data = cartridge.loadFile(resourceName);
 	}

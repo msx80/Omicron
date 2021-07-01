@@ -34,8 +34,7 @@ public abstract class ManagedParentWidget extends ParentWidget {
 	{
 		children.add(w);
 		w.setParent(this);
-		w.x = x;
-		w.y = y;
+		w.setPosition(x, y);
 		w.invalidate();
 		return w;
 	}

@@ -1,8 +1,9 @@
-package com.github.msx80.omicron.basicutils;
+package com.github.msx80.omicron.basicutils.text;
 
 import java.nio.charset.Charset;
 
 import com.github.msx80.omicron.api.Sys;
+import com.github.msx80.omicron.basicutils.Colors;
 
 /**
  * TextDrawer that automatically calculates bounding boxes to implement a variable-width font.

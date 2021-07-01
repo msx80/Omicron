@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.MapDrawer;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 
 import com.github.msx80.omicron.api.Controller;
 import com.github.msx80.omicron.api.Game;

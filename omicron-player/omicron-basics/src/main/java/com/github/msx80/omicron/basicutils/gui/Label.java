@@ -3,9 +3,9 @@ package com.github.msx80.omicron.basicutils.gui;
 import com.github.msx80.omicron.api.Sys;
 
 import com.github.msx80.omicron.basicutils.Colors;
-import com.github.msx80.omicron.basicutils.TextDrawer;
+import com.github.msx80.omicron.basicutils.text.TextDrawer;
 
-public class Label extends Widget {
+public class Label extends BaseWidget {
 
 	private String text;
 	private TextDrawer font;

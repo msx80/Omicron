@@ -4,10 +4,10 @@ import com.github.msx80.omicron.api.Sys;
 
 import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.ShapeDrawer;
-import com.github.msx80.omicron.basicutils.TextDrawer;
+import com.github.msx80.omicron.basicutils.text.TextDrawer;
 
-public class Button extends BasicButton {
-
+public class Button extends BasicButton 
+{
 	private int borderColor = Colors.GREEN;
 	private int backgroundColor = Colors.BLUE;
 	private String text;
@@ -28,8 +28,4 @@ public class Button extends BasicButton {
 		ShapeDrawer.outline(sys, 0, 0, w, h, 0, borderColor);
 		font.print(text, 2,2);
 	}
-
-
-	
-
 }

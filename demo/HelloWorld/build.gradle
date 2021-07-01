@@ -109,6 +109,9 @@ task run(type: Exec) {
     dependsOn build
     group = "Execution"
     description = "Run the main class with ExecTask"
+	println sourceSets.main.runtimeClasspath.getAsPath()
+	println "x"
+	println sourceSets.main.runtimeClasspath
     commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.github.msx80.omicron.DesktopLauncher", omicron.pkg+"."+omicron.main
 }  
   

@@ -29,8 +29,8 @@ public class Container extends ManagedParentWidget {
 		int mw = 0;
 		int mh = 0;
 		for (Widget w : children()) {
-			int cx = w.x + w.w;
-			int cy = w.y + w.h;
+			int cx = w.getX() + w.getW();
+			int cy = w.getY() + w.getH();
 			if (cx>mw) {
 				mw = cx;
 			}

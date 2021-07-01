@@ -1,8 +1,5 @@
 package com.github.msx80.omicron.basicutils.gui;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.github.msx80.omicron.basicutils.Geometry;
 
 
@@ -22,83 +19,123 @@ import com.github.msx80.omicron.basicutils.Geometry;
  * @author msx80
  *
  */
-public interface Widget 
+public abstract class BaseWidget implements Widget
 {
-
+	protected ParentWidget parent = null;
+	protected int x;
+	protected int y;
+	protected int w;
+	protected int h;
+	
+	public BaseWidget(int w, int h) {
+		this.x = 0;
+		this.y = 0;
+		this.w = w;
+		this.h = h;
+	}
 
 	/**
 	 * Draw the content of the widget. The view is already offsetted so that the top left corner is at 0,0, so a widget could
 	 * 1) draw the background filling 0,0,w,h
 	 * 2) draw the content at padding.left, padding,top (up to padding.right, padding.bottom) 
 	 */
-	public void draw();
+	public abstract void draw();
 	
 	/**
 	 * called when the state of a widget is changed so that the parent may want to rearrange the layout.
 	 * it calls childInvalidated on the parent, if any.
 	 */
-	default void invalidate()
+	public void invalidate()
 	{
-		ParentWidget parent = getParent();
 		if(parent!=null) parent.childInvalidated(this);
 	}
 	
-	public ParentWidget getParent();
-
-	public void setParent(ParentWidget parent);
-	
-	default boolean isInside(int px, int py)
+	public void setParent(ParentWidget parent)
 	{
-		return Geometry.inRect(px, py, getX(), getY(), getW(), getH());
+		this.parent = parent;
+	}
+	
+	public boolean isInside(int px, int py)
+	{
+		return Geometry.inRect(px, py, x, y, w, h);
 	}
 
-		
+	
+	
+	
 	/**
 	 * Return the coordinate X of the widget in screen space, walking back the parent hyerarchy, handling positions and paddings 
 	 * @return
 	 */
-	default int getAbsoluteX()
+	public int getAbsoluteX()
 	{
-		ParentWidget parent = getParent();
-		return getX()+(parent == null ? 0 : parent.getAbsoluteX());
+		return x+(parent == null ? 0 : parent.getAbsoluteX());
 	}
 	
 	/**
 	 * Return the coordinate Y of the widget in screen space, walking back the parent hyerarchy, handling positions and paddings 
 	 * @return
 	 */
-	default int getAbsoluteY()
+	public int getAbsoluteY()
 	{
-		ParentWidget parent = getParent();
-		return getY()+(parent == null ? 0 : parent.getAbsoluteY());
+		return y+(parent == null ? 0 : parent.getAbsoluteY());
 	}
 
-	int getX();
-	
-	int getY();
-	
-	int getW();
+	public int getX() {
+		return x;
+	}
 
-	int getH();
+	public int getY() {
+		return y;
+	}
+
+	public int getW() {
+		return w;
+	}
+
+	public int getH() {
+		return h;
+	}
 	
-	Widget setSize(int w, int h);
+	public BaseWidget setSize(int w, int h)
+	{
+		this.w = w;
+		this.h = h;
+		invalidate();
+		return this;
+	}
+
+	@Override
+	public ParentWidget getParent() {
+		
+		return parent;
+	}
+
+	@Override
+	public void setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+		
+	}
 	
-	default Widget find(int px, int py, boolean deep, Predicate<? super Widget> filter)
+	
+	
+/*	public BaseWidget find(int px, int py, boolean deep, Predicate<? super BaseWidget> filter)
 	{
 		if( (!deep) && filter.test(this) ) return this;
 		
 		if(this instanceof ParentWidget)
 		{
-			List<Widget> x = ((ParentWidget) this).children();
+			List<BaseWidget> x = ((ParentWidget) this).children();
 			// scan in reverse so that the last widget added is the first served
 			// importat for example for Modals, so they have a chance to capture
 			// all input.
 			for (int i = x.size()-1; i >= 0; i--) {
-				Widget child = x.get(i);
+				BaseWidget child = x.get(i);
 				if(child.isInside(px, py))
 				{
 					
-					return child.find(px-child.getX(), py-child.getY(), deep, filter);
+					return child.find(px-child.x, py-child.y, deep, filter);
 					
 				}
 			}
@@ -106,25 +143,7 @@ public interface Widget
 		if( deep && filter.test(this) ) return this;
 		
 		return null;
-	}
-
-	default Widget findChild(Predicate<? super Widget> filter)
-	{
-		if(filter.test(this)) return this;
-		if(this instanceof ParentWidget)
-		{
-			List<Widget> x = ((ParentWidget) this).children();
-			for (Widget widget : x) {
-				Widget res = widget.findChild(filter);
-				if (res!=null) {
-					return res;
-				}
-			}
-		}
-		return null;
-	}
-
-	public void setPosition(int x, int y);
+	}*/
 
 	
 	

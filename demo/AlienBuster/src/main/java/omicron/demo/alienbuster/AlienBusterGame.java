@@ -11,7 +11,7 @@ import com.github.msx80.omicron.api.Sys;
 import com.github.msx80.omicron.api.SysConfig;
 import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import com.github.msx80.omicron.basicutils.Colors;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 
 public class AlienBusterGame implements Game {
 	
@@ -32,13 +32,14 @@ public class AlienBusterGame implements Game {
 	
 	List<Alien> aliens;
 	
-	Random r = new Random(System.currentTimeMillis());
+	Random r;
 	
 	Pointer m;
 	
     public void init(final Sys sys) 
     {
         this.sys = sys;
+        r = new Random(sys.millis());
         td = new TextDrawerFixed(sys, 1, 6, 6, 6);
         m = sys.pointers()[0];
     }

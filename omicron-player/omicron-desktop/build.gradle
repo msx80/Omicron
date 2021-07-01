@@ -3,6 +3,8 @@ plugins {
 }
 apply plugin: "maven-publish"
 
+sourceCompatibility = 1.8
+
 def aGroupId = "com.github.msx80.omicron"
 def aArtifactId = "omicron-desktop"
 def aVersion = "0.0.1"
@@ -11,8 +13,8 @@ dependencies {
     api project(':omicron-engine') 
     api project(':omicron-api')
     api project(':omicron-basics')
-    api group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl3', version: '1.9.10'
-	api "com.badlogicgames.gdx:gdx-platform:1.9.10:natives-desktop"
+    api group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl3', version: '1.9.14'
+	api "com.badlogicgames.gdx:gdx-platform:1.9.14:natives-desktop"
 }
 
  publishing {

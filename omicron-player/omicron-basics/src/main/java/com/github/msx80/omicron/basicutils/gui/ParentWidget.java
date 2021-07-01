@@ -14,7 +14,7 @@ import com.github.msx80.omicron.api.Sys;
  * different parents can implement differently 
  *
  */
-public abstract class ParentWidget extends Widget implements Iterable<Widget> {
+public abstract class ParentWidget extends BaseWidget implements Iterable<Widget> {
 
 	protected Sys sys;
 	
@@ -26,9 +26,9 @@ public abstract class ParentWidget extends Widget implements Iterable<Widget> {
 	public void drawChildren() {
 		//sys.offset(padding.top, padding.left);
 		for (Widget w : this) {
-			sys.offset(w.x, w.y);
+			sys.offset(w.getX(), w.getY());
 			w.draw();
-			sys.offset(-w.x, -w.y);
+			sys.offset(-w.getX(), -w.getY());
 		}
 		//sys.offset(-padding.top, -padding.left);
 	}
@@ -68,7 +68,7 @@ public abstract class ParentWidget extends Widget implements Iterable<Widget> {
 	 */
 	public void ensureVisible(Widget child, int x, int y, int w, int h) {
 
-		parent.ensureVisible(this, child.x+x, child.y+y, w, h);
+		parent.ensureVisible(this, child.getX()+x, child.getY()+y, w, h);
 		
 	}
 

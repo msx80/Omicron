@@ -8,9 +8,9 @@ import com.github.msx80.omicron.api.adv.AdvancedSys.KeyboardListener;
 
 import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.ShapeDrawer;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 
-public class TextArea extends Widget implements KeyboardListener {
+public class TextArea extends BaseWidget implements KeyboardListener {
 
 	class TextAreaCache {
 		List<String> items;

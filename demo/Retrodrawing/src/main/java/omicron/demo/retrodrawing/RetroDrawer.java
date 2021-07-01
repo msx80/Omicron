@@ -10,8 +10,8 @@ import com.github.msx80.omicron.api.SysConfig;
 import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.ShapeDrawer;
-import com.github.msx80.omicron.basicutils.TextDrawer;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawer;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 
 public class RetroDrawer implements Game, Ctx {
 	
@@ -186,7 +186,6 @@ public class RetroDrawer implements Game, Ctx {
 	@Override
 	public void recordUndo() {
 		byte[] buf = SurfUtils.surfaceToBuffer(sys, surface, 0, 0, SURFWIDTH, HEIGHT);
-		System.out.println(buf.length);
 		undos.push(buf);
 		if(undos.size()>10)
 			undos.remove(0);

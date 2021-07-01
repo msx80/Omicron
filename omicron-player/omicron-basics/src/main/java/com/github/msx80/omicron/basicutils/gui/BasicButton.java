@@ -1,6 +1,6 @@
 package com.github.msx80.omicron.basicutils.gui;
 
-public class BasicButton extends Widget implements Clickable {
+public class BasicButton extends BaseWidget implements Clickable {
 
 	protected Event onClick;
 

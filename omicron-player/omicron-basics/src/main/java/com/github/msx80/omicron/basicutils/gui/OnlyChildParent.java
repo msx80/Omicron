@@ -15,7 +15,7 @@ public abstract class OnlyChildParent extends ParentWidget {
 		super(sys, w, h);
 		this.child = child;
 		this.children = Arrays.asList(child);
-		this.child.parent = this;
+		this.child.setParent(this);
 	}
 	
 	@Override

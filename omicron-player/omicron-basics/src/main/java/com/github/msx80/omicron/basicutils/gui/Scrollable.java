@@ -6,6 +6,6 @@ package com.github.msx80.omicron.basicutils.gui;
  */
 public interface Scrollable {
 	public void startScroll(int x, int y);
-	public void doScroll(int dx, int dy);
+	public void doScroll(int dx, int dy, int x, int y);
 	public void endScroll();
 }

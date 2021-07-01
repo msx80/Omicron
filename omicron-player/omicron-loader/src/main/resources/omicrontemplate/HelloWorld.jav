@@ -6,8 +6,8 @@ import com.github.msx80.omicron.api.Sys;
 import com.github.msx80.omicron.api.SysConfig;
 import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
 import com.github.msx80.omicron.basicutils.Colors;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
-import com.github.msx80.omicron.basicutils.TextDrawer.Align;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawer.Align;
 
 public class %%MAIN%% implements Game 
 {

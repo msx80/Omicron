@@ -14,8 +14,10 @@ import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.MapDrawer;
 import com.github.msx80.omicron.basicutils.MapDrawer.MapDataArray;
 import com.github.msx80.omicron.basicutils.ShapeDrawer;
-import com.github.msx80.omicron.basicutils.TextDrawer.Align;
-import com.github.msx80.omicron.basicutils.TextDrawerFixed;
+import com.github.msx80.omicron.basicutils.text.TextDrawer.Align;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
+
+import omicron.demo.snake.testinvoke.TestInvoke;
 
 
 class Point {
@@ -65,7 +67,7 @@ public class SnakeMain implements Game
 	private MapDrawer mapDrawer;
 	private Controller controller; 
 			
-	private Random r = new Random(System.currentTimeMillis());
+	private Random r;
 	
 	private int score;		// game score
 	private int timeToTic; 	// loops to next snake advancement
@@ -78,15 +80,22 @@ public class SnakeMain implements Game
 	
     public void init(final Sys sys) 
     {
+    	this.r = new Random(sys.millis());
+    	Runnable r = TestInvoke::hello;
+    	doRun(r);
         this.sys = sys;
         td = new TextDrawerFixed(sys, SHEET_FONT, 6, 6, 6);
         mapDrawer = new MapDrawer(sys, TILE_SIZE, TILE_SIZE, 8, map);
         controller = sys.controllers()[0];
-        
         gameState = this::welcomeLoop;
         resetGame();
         sys.sound(3, 1, 1);
     }
+
+
+	private void doRun(Runnable r2) {
+		r2.run();
+	}
 
 
 	public void resetGame() {
@@ -144,7 +153,6 @@ public class SnakeMain implements Game
 
 
 	private void render() {
-		
 		ShapeDrawer.rect(sys, 0, GAME_HEIGHT, WIDTH, HEIGHT-GAME_HEIGHT, 0, Colors.from(80, 40, 20)); // bottom box
 		sys.fill(0, 0, GAME_HEIGHT, WIDTH, 1, Colors.WHITE);	// bottom white line
         mapDrawer.draw(SHEET_MAP, 0, 0, 0, 0, MAP_WIDTH, MAP_HEIGHT);  // actual map (the game)

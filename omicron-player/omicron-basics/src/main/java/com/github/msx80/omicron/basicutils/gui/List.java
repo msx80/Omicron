@@ -1,9 +1,9 @@
 package com.github.msx80.omicron.basicutils.gui;
 
 
-import com.github.msx80.omicron.basicutils.TextDrawer;
+import com.github.msx80.omicron.basicutils.text.TextDrawer;
 
-public class List<T> extends AbstractList<T> {
+public abstract class List<T> extends FixedHeightAbstractList<T> {
 
 	private java.util.List<T> items;
 	private TextDrawer td;

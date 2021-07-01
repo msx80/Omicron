@@ -1,4 +1,4 @@
-package com.github.msx80.omicron.basicutils;
+package com.github.msx80.omicron.basicutils.text;
 
 /**
  * Draws a text on the screen.

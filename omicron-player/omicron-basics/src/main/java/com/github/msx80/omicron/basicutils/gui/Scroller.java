@@ -11,7 +11,7 @@ import com.github.msx80.omicron.basicutils.gui.drawers.ScrollbarDrawer;
  * calculation on relative child position still works
  */
 public class Scroller extends OnlyChildParent implements Scrollable {
-	
+	static enum ScrollingWhat {AREA, VERT_KNOB, HORIZ_KNOB};
 	static class ScrollBar {
 		int scroll;
 		int curPos;
@@ -68,6 +68,8 @@ public class Scroller extends OnlyChildParent implements Scrollable {
 			scroll += i;
 			
 		}
+
+
 	}
 		
 	ScrollBar scrollX = new ScrollBar();
@@ -75,13 +77,15 @@ public class Scroller extends OnlyChildParent implements Scrollable {
 	private ScrollbarDrawer drawerV;
 	private ScrollbarDrawer drawerH;
 	
+	private ScrollingWhat scrollingWhat;
+	private int offsetScrollKnob;
+	
 	public Scroller(Sys sys, int w, int h, Widget child, ScrollbarDrawer drawerV, ScrollbarDrawer drawerH) 
 	{
 		super(sys, child, w, h);
 		this.drawerV = drawerV;
 		this.drawerH = drawerH;
-		child.x = 0;
-		child.y = 0;
+		child.setPosition(0, 0);
 		childInvalidated(child);
 	}
 
@@ -106,17 +110,17 @@ public class Scroller extends OnlyChildParent implements Scrollable {
 		
 		sys.offset(scrollX.scroll, scrollY.scroll);
 */
-		sys.offset(child.x, child.y);
+		sys.offset(child.getX(), child.getY());
 		if(child instanceof PartialDrawable)
 		{
 			//throw new RuntimeException("Drawing of PartialDrawable not implemented yet");
-			((PartialDrawable) child).draw(-child.x, -child.y, areaWidth, areaHeight);
+			((PartialDrawable) child).draw(-child.getX(), -child.getY(), areaWidth, areaHeight);
 		}
 		else
 		{
 			child.draw();
 		}
-		sys.offset(-child.x, -child.y);
+		sys.offset(-child.getX(), -child.getY());
 
 		
 		
@@ -174,24 +178,79 @@ public class Scroller extends OnlyChildParent implements Scrollable {
 	}
 
 	private void recalcScrollY() {
-		scrollY.calc(getClientAreaHeight(), child.h, drawerV.getBorder());
-		child.y = - scrollY.scroll;
+		scrollY.calc(getClientAreaHeight(), child.getH(), drawerV.getBorder());
+		
+		child.setPosition(child.getX(), - scrollY.scroll);
+		//child.y = - scrollY.scroll;
 	}
 	private void recalcScrollX() {
-		scrollX.calc(getClientAreaWidth(), child.w, drawerH.getBorder());
-		child.x = - scrollX.scroll;
+		scrollX.calc(getClientAreaWidth(), child.getW(), drawerH.getBorder());
+		child.setPosition(- scrollX.scroll, child.getY());
+		//child.x = - scrollX.scroll;
 	}
 
 	@Override
 	public void startScroll(int x, int y) {
-		
+		System.out.println("Started scrolling at: "+x+" "+y);
+		if (x>(w-drawerV.getThickness()))
+		{
+			scrollingWhat = ScrollingWhat.VERT_KNOB;
+			offsetScrollKnob = calcVKnob(y)-scrollY.scroll; 
+		}
+		else if (y>(h-drawerH.getThickness()))
+		{
+			scrollingWhat = ScrollingWhat.HORIZ_KNOB;
+		}
+		else
+		{
+			scrollingWhat = ScrollingWhat.AREA;
+		}
+		System.out.println("Scrolling: "+scrollingWhat);
+
 	}
 
 	@Override
-	public void doScroll(int dx, int dy) {
+	public void doScroll(int dx, int dy, int x, int y) {
 		//System.out.println("Dragged "+dx+" "+dy);
-		this.scrollHorizontal(-dx);
-		this.scrollVertical(-dy);
+		if(scrollingWhat == ScrollingWhat.AREA)
+		{
+			this.scrollHorizontal(-dx);
+			this.scrollVertical(-dy);
+		}
+		else if(scrollingWhat == ScrollingWhat.VERT_KNOB)
+		{
+			this.scrollKnobVertical(y);
+		}
+		else if(scrollingWhat == ScrollingWhat.HORIZ_KNOB)
+		{
+			this.scrollKnobHorizontal(x);
+		}
+	}
+
+	private void scrollKnobHorizontal(int ax) {
+		int scroll = calcHKnob(ax);
+		scrollX.scroll = scroll-offsetScrollKnob; //scroll(ay);
+		recalcScrollX();
+	}
+
+	private void scrollKnobVertical(int ay) {
+		int scroll = calcVKnob(ay);
+		scrollY.scroll = scroll-offsetScrollKnob; //scroll(ay);
+		recalcScrollY();
+	}
+
+	private int calcVKnob(int ay) {
+		float d = ((float)ay) / (float)h;
+		//System.out.println("Perc: "+d);
+		int scroll = (int) (child.getH() * d);
+		return scroll;
+	}
+
+	private int calcHKnob(int ax) {
+		float d = ((float)ax) / (float)w;
+		//System.out.println("Perc: "+d);
+		int scroll = (int) (child.getW() * d);
+		return scroll;
 	}
 
 	@Override
