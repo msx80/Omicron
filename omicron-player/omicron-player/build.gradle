@@ -10,7 +10,7 @@ def aArtifactId = "omicron-player"
 def aVersion = "0.0.1"
 
 dependencies {
-    implementation project(':omicron-api')
+    implementation "com.github.msx80:omicron-api:0.0.1"
     implementation project(':omicron-basics')
     implementation project(':omicron-loader')
 }

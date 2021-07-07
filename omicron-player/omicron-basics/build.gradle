@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply plugin: "maven-publish"
 
 dependencies {
-    implementation "com.github.msx80.omicron:omicron-api:0.0.1"
+    implementation "com.github.msx80:omicron-api:0.0.1"
 }
 
 sourceCompatibility = 1.8

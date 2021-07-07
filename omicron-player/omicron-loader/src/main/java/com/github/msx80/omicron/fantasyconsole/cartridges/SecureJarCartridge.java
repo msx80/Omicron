@@ -49,6 +49,12 @@ public class SecureJarCartridge implements Cartridge {
 		}, WhitelistedJDKClasses.LIST);
 		
 		c.allowClasses(
+				"java.util.Comparator",
+				"java.util.stream.IntStream",
+				"java.util.function.ToIntFunction",
+				"java.util.concurrent.Callable",
+				"java.io.EOFException",
+				"java.util.Map$Entry",
 				"com.github.msx80.omicron.api.Game",
 				"com.github.msx80.omicron.api.Sys",
 				"com.github.msx80.omicron.api.SysConfig",
@@ -56,6 +62,14 @@ public class SecureJarCartridge implements Cartridge {
 				"com.github.msx80.omicron.api.Pointer",
 				"com.github.msx80.omicron.api.Controller",
 
+				"java.lang.Boolean",
+				"java.util.function.Predicate",
+				"java.math.BigInteger",
+				"java.util.Arrays",
+				"java.util.function.IntConsumer",
+				"java.util.function.Supplier",
+				"java.util.regex.Pattern",
+				"java.lang.Iterable",
 				"java.lang.Class",
 				"java.io.InputStream",
 				"java.io.OutputStream",
@@ -66,7 +80,7 @@ public class SecureJarCartridge implements Cartridge {
 		Class<?> userClass = c.loadClass(className);
 		return (Game) userClass.newInstance();
 		}
-		catch(Exception e)
+		catch(Throwable e)
 		{
 			throw new RuntimeException("Unable to instantiate game object", e);
 		}

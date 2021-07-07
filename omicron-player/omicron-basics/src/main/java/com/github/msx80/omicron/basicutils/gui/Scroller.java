@@ -191,7 +191,7 @@ public class Scroller extends OnlyChildParent implements Scrollable {
 
 	@Override
 	public void startScroll(int x, int y) {
-		System.out.println("Started scrolling at: "+x+" "+y);
+		// System.out.println("Started scrolling at: "+x+" "+y);
 		if (x>(w-drawerV.getThickness()))
 		{
 			scrollingWhat = ScrollingWhat.VERT_KNOB;
@@ -205,7 +205,7 @@ public class Scroller extends OnlyChildParent implements Scrollable {
 		{
 			scrollingWhat = ScrollingWhat.AREA;
 		}
-		System.out.println("Scrolling: "+scrollingWhat);
+		//System.out.println("Scrolling: "+scrollingWhat);
 
 	}
 

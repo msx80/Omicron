@@ -6,7 +6,7 @@ Omicron is an open source Game Engine for Java based on LibGDX, inspired by Fant
 
 Features:
 
-1. Super simple API, just a couple of methods for drawing, playing sound, handling input, etc.
+1. [Super simple API](https://github.com/msx80/omicron-api), just a bunch of methods for drawing, playing sound, handling input, etc.
 2. No resource management: just refer to the thing you want to draw or play by it's number.
 3. Work on desktop and android (there's also an experimental libretro core)
 4. Plaform independent API

@@ -12,7 +12,6 @@ def aVersion = "0.0.1"
 project.ext.mainClassName = "com.github.msx80.omicron.player.OmicronPlayerMain"
 
 dependencies {
-    api project(':omicron-api')
 	api project(':omicron-player') 
     api project(':omicron-desktop') 
 	api project(':omicron-loader') 

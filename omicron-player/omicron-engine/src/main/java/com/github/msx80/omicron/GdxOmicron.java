@@ -1,8 +1,8 @@
 package com.github.msx80.omicron;
 
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+//import java.security.AccessController;
+//import java.security.PrivilegedAction;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -137,7 +137,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			for (HardwarePlugin hwp : r.plugins.values()) {
 				hwp.init(this, hw);
 			}
-			r.game.init(this);
+			r.game.init(this); // TODO handle throws!
 		}
 		if(r.screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(r.screenInfo.requiredSysConfig.title);
 		setUpCam(r, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
@@ -248,7 +248,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			continuous = true; // reset to continuous rendering
 			Runnable r = afterLoop;
 			afterLoop = null;
-			r.run();
+			r.run(); // TODO problem: if this throws, (ie loading a subcartridge) we have no way of telling it to the currently running cart
 		}
 		// doesn't guarantee that the last frame is rendered. Analyze better
 		// Gdx.graphics.setContinuousRendering(continuous);
@@ -626,13 +626,14 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	@Override
 	public String mem(final String key) {
 		
-		return AccessController.doPrivileged( new PrivilegedAction<String>() {
+		// Not needed since we switched to WiseLoader
+		//return AccessController.doPrivileged( new PrivilegedAction<String>() {
 
-			@Override
-			public String run() {
+		//	@Override
+		//	public String run() {
 				return getPrefs().getString(key);
-			}
-		} );
+		//	}
+		//} );
 		
 	}
 
@@ -646,14 +647,14 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 	@Override
 	public void mem(final String key, final String value) {
-
-		AccessController.doPrivileged( new PrivilegedAction<Void>() {
-			@Override
-			public Void run() {
+		// Not needed since we switched to WiseLoader
+//		AccessController.doPrivileged( new PrivilegedAction<Void>() {
+//			@Override
+//			public Void run() {
 				getPrefs().putString(key, value).flush();
-				return null;
-			}
-		} );
+//				return null;
+//			}
+//		} );
 	}
 
 	@Override
@@ -695,12 +696,16 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	@Override
 	public void music(final int musicNum, final float volume, final boolean loop) {
 		
+		
 		// inside class SynthesisFilter there's a file loaded from resources
 		// without privileged access it doesn't work
-		AccessController.doPrivileged( new PrivilegedAction<Void>() {
-			
-			@Override
-			public Void run() {
+		
+		
+		// Not needed since we switched to WiseLoader
+//		AccessController.doPrivileged( new PrivilegedAction<Void>() {
+//			
+//			@Override
+//			public Void run() {
 
 				if (currentMusic != null) {
 					currentMusic.stop();
@@ -710,9 +715,9 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 				currentMusic.setVolume(volume);
 				currentMusic.setLooping(loop);
 				currentMusic.play();
-				return null;
-			}});
-		
+//				return null;
+//			}});
+//		
 		
 	}
 
