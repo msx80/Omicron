@@ -30,6 +30,21 @@ jobs:
         cd demo/HelloWorld
         chmod +x gradlew
         ./gradlew build
+    - name: Build FeatureDemo cart
+      run: |
+        cd demo/FeatureDemo
+        chmod +x gradlew
+        ./gradlew build
+    - name: Build AlienBuster cart
+      run: |
+        cd demo/AlienBuster
+        chmod +x gradlew
+        ./gradlew build
+    - name: Build Retrodrawing cart
+      run: |
+        cd demo/Retrodrawing
+        chmod +x gradlew
+        ./gradlew build
     - name: Build Snake cart
       run: |
         cd demo/Snake
@@ -50,8 +65,23 @@ jobs:
       with:
         name: 'HelloWorld.omicron'
         path: demo/HelloWorld/HelloWorld.omicron
+    - name: Deploy FeatureDemo Demo
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'FeatureDemo.omicron'
+        path: demo/FeatureDemo/FeaturesDemo.omicron
     - name: Deploy Snake Demo
       uses: actions/upload-artifact@v2
       with:
         name: 'SnakeMain.omicron'
         path: demo/Snake/SnakeMain.omicron
+    - name: Deploy AlienBuster Demo
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'AlienBusterGame.omicron'
+        path: demo/AlienBuster/AlienBusterGame.omicron
+    - name: Deploy Retrodrawing Demo
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'RetroDrawer.omicron'
+        path: demo/Retrodrawing/RetroDrawer.omicron
