@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: cd
-      run: cd libretro/LibretroOmicronCore
     - name: make
-      run: make all
+      run: |
+        cd libretro/LibretroOmicronCore
+        make all
