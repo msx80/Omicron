@@ -16,4 +16,4 @@ jobs:
     - name: cd
       run: cd libretro/LibretroOmicronCore
     - name: make
-      run: make
+      run: make all
