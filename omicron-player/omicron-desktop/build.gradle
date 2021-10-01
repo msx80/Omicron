@@ -13,7 +13,9 @@ dependencies {
     api project(':omicron-engine') 
     api "com.github.msx80:omicron-basics:0.0.2"
     api group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl3', version: '1.9.14'
+	// i don't know why but entering this twice is the only way to make it pick up both the regular jar and the natives
 	api "com.badlogicgames.gdx:gdx-platform:1.9.14:natives-desktop"
+	api "com.badlogicgames.gdx:gdx-platform:1.9.14"
 }
 
  publishing {

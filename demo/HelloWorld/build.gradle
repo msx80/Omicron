@@ -55,8 +55,7 @@ configurations {
 
 dependencies {
     implementation group: 'com.github.msx80', name: 'omicron-api', version: omicron.omicronVersion
-	runtimeOnly group: 'com.github.msx80.omicron', name: 'omicron-desktop', version: omicron.omicronVersion
-	// runtimeOnly "com.badlogicgames.gdx:gdx-platform:1.9.10:natives-desktop"
+	runtimeOnly group: 'com.github.msx80.omicron', name: 'omicron-desktop', version: '0.0.2'
 	// to add dependencies from properties 
 	if(omicron.dep) {
 		def deps = omicron.dep.split(";")
@@ -109,6 +108,9 @@ task run(type: Exec) {
     dependsOn build
     group = "Execution"
     description = "Run the main class with ExecTask"
+	println sourceSets.main.runtimeClasspath.getAsPath()
+	println "x"
+	println sourceSets.main.runtimeClasspath
     commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.github.msx80.omicron.DesktopLauncher", omicron.pkg+"."+omicron.main
 }  
   

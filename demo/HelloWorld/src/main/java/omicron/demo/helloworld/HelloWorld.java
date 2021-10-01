@@ -5,7 +5,6 @@ import com.github.msx80.omicron.api.Game;
 import com.github.msx80.omicron.api.Sys;
 import com.github.msx80.omicron.api.SysConfig;
 import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
-import com.github.msx80.omicron.basicutils.Colors;
 
 public class HelloWorld implements Game 
 {
@@ -19,7 +18,7 @@ public class HelloWorld implements Game
 
 	public boolean loop() 
 	{
-    	sys.clear(Colors.BLACK);
+    	sys.clear(0xFF); // RGBA black
     	sys.draw(1, 70,20,0, 0, 100, 50, 0, 0);
         return true;
     }

@@ -12,8 +12,8 @@ def aVersion = "0.0.2"
 
 dependencies {
     implementation "com.github.msx80:omicron-api:0.0.1"
-	compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
-	compile group: 'com.github.msx80', name: 'wiseloader', version: '1.0.1'
+	implementation group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
+	implementation group: 'com.github.msx80', name: 'wiseloader', version: '1.0.1'
     
 }
 
