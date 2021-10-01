@@ -7,7 +7,7 @@ sourceCompatibility = 1.8
 
 def aGroupId = "com.github.msx80.omicron"
 def aArtifactId = "omicron-player"
-def aVersion = "0.0.1"
+def aVersion = "0.0.2"
 
 dependencies {
     implementation "com.github.msx80:omicron-api:0.0.1"
