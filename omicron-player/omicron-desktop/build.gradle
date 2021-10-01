@@ -11,7 +11,7 @@ def aVersion = "0.0.1"
 
 dependencies {
     api project(':omicron-engine') 
-    api project(':omicron-basics')
+    api "com.github.msx80:omicron-basics:0.0.2"
     api group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl3', version: '1.9.14'
 	api "com.badlogicgames.gdx:gdx-platform:1.9.14:natives-desktop"
 }

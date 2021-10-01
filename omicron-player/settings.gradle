@@ -1,6 +1,4 @@
 rootProject.name = 'OmicronPlayer'
-include 'omicron-api'
-include 'omicron-basics'
 include 'omicron-engine'
 include 'omicron-desktop'
 include 'omicron-loader'

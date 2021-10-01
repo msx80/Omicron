@@ -11,7 +11,7 @@ def aVersion = "0.0.1"
 
 dependencies {
     implementation "com.github.msx80:omicron-api:0.0.1"
-    implementation project(':omicron-basics')
+    implementation "com.github.msx80:omicron-basics:0.0.2"
     implementation project(':omicron-loader')
 }
 
