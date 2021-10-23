@@ -3,18 +3,16 @@ This is an experimental Libretro core for Omicron.
 HOW TO
 ======
 
-Build omicron as described on the main project page. It will put the necessary dependencies in the maven cache.
-
 Build the C project in `omicron/libretro/LibretroOmicronCore` with the provided `Makefile`. 
 It should generate a file named `omicron_libretro.dll` (or .so)
 
 move it to `yourpath/RetroArch/cores`
 
-Go to `omicron/libretro/omicron-libretro-java` and build the java engine for libretro:
+Go to `omicron/omicron-player` and build the player:
 
-`mvn clean compile assembly:single`
+`mvn clean package`
 
-it generates a file named `omicron-libretro-java-0.0.1-jar-with-dependencies.jar` in `target/`
+it generates a file named `omicron-assembly-0.0.3-jar-with-dependencies.jar` in `omicron-assembly/target/`
 
 move and rename it to:
 
