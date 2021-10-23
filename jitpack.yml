@@ -3,4 +3,4 @@ jdk:
 install:
    - echo "Running a custom install command"
    - cd omicron-player
-   - ./gradlew clean build publishToMavenLocal
+   - mvn clean compile package

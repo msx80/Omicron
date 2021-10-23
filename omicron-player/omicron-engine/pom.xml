@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- do_not_remove: published-with-gradle-metadata -->
+<modelVersion>4.0.0</modelVersion>
+    <parent>
+    <groupId>com.github.msx80.omicron</groupId>
+    <artifactId>omicron-parent</artifactId>
+    <version>0.0.3</version>  
+  </parent>
+  <artifactId>omicron-engine</artifactId>
+  
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+  <dependencies>
+    <dependency>
+      <groupId>com.github.msx80.omicron</groupId>
+      <artifactId>omicron-loader</artifactId>
+      <version>0.0.3</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.msx80</groupId>
+      <artifactId>omicron-api</artifactId>
+      <version>0.0.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.badlogicgames.gdx</groupId>
+      <artifactId>gdx</artifactId>
+      <version>1.9.14</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+	  <groupId>com.badlogicgames.gdx-controllers</groupId>
+	  <artifactId>gdx-controllers-core</artifactId>
+	  <version>2.2.1</version>
+	</dependency>
+  </dependencies>
+  <build>
+      <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+	 </plugins>
+	</build>  
+</project>

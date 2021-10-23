@@ -1,4 +1,4 @@
-package com.github.msx80.omicron.plugins;
+package com.github.msx80.omicron.plugins.builtin;
 
 import com.github.msx80.omicron.HardwareInterface;
 import com.github.msx80.omicron.HardwarePlugin;
@@ -18,11 +18,6 @@ public class ArgsPlugin implements HardwarePlugin {
 	public Object exec(String command, Object params) {
 		
 		return hw.startupArgs();
-	}
-
-	@Override
-	public String name() {
-		return "ARGS";
 	}
 
 }

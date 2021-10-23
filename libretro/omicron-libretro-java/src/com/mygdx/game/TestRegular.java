@@ -6,8 +6,7 @@ import org.lwjgl.system.jemalloc.JEmalloc;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-
-import experimental.LibretroApplication;
+import com.github.msx80.omicron.libretro.entrypoint.LibretroApplication;
 
 @Deprecated
 public class TestRegular {

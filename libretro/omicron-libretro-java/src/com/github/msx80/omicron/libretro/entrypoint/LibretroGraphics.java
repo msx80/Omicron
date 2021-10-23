@@ -1,4 +1,6 @@
-package experimental;
+package com.github.msx80.omicron.libretro.entrypoint;
+
+import org.lwjgl.glfw.GLFW;
 
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Cursor;
@@ -232,7 +234,11 @@ public class LibretroGraphics implements Graphics {
 
 	@Override
 	public boolean supportsExtension(String extension) {
-		throw new RuntimeException("Unimplemented method");
+		System.out.println("OMICRON asked for extension: "+extension);
+		boolean res = GLFW.glfwExtensionSupported(extension);
+		System.out.println("OMICRON reply for extension: "+extension+": "+res);
+		return res;
+		//throw new RuntimeException("Unimplemented method");
 		//return false;
 	}
 
@@ -292,6 +298,36 @@ public class LibretroGraphics implements Graphics {
 		}
 		frames++;
 		frameId++;
+	}
+
+	@Override
+	public float getBackBufferScale() {
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	@Override
+	public int getSafeInsetLeft() {
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	@Override
+	public int getSafeInsetTop() {
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	@Override
+	public int getSafeInsetBottom() {
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	@Override
+	public int getSafeInsetRight() {
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	@Override
+	public void setForegroundFPS(int fps) {
+		throw new RuntimeException("Unimplemented method");
 	}
 
 	

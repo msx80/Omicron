@@ -659,7 +659,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 	@Override
 	public Object hardware(String module, String command, Object param) {
-		
+		Gdx.app.log("GdxOmicron", "Plugin called "+module+" "+command+" "+param);
 		if("HTTP".equals(module))
 		{
 			HttpRequest r = new HttpRequest(HttpMethods.GET);
@@ -689,7 +689,21 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		else
 		{
 			HardwarePlugin e = current.plugins.get(module);
-			return e == null ? null : e.exec(command, param);
+			if(e==null) e = initPlugin(module);
+			return e.exec(command, param);
+		}
+	}
+
+	private HardwarePlugin initPlugin(String module) {
+		try {
+			@SuppressWarnings("unchecked")
+			Class<? extends HardwarePlugin> cc = (Class<? extends HardwarePlugin>) current.game.getClass().getClassLoader().loadClass(module);
+			HardwarePlugin p = cc.newInstance();
+			p.init(this, hw);
+			current.plugins.put(module, p);
+			return p;
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to load plugin "+module, e);
 		}
 	}
 

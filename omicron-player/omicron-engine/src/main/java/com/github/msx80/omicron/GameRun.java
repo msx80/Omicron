@@ -18,9 +18,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.msx80.omicron.api.Game;
 import com.github.msx80.omicron.api.adv.Cartridge;
-import com.github.msx80.omicron.plugins.ArgsPlugin;
-import com.github.msx80.omicron.plugins.SaveFilePlugin;
-import com.github.msx80.omicron.plugins.UrlOpenerPlugin;
+import com.github.msx80.omicron.plugins.builtin.ArgsPlugin;
+import com.github.msx80.omicron.plugins.builtin.SaveFilePlugin;
+import com.github.msx80.omicron.plugins.builtin.UrlOpenerPlugin;
 
 public class GameRun {
 	public final Game game;
@@ -49,10 +49,10 @@ public class GameRun {
 			UrlOpenerPlugin up = new UrlOpenerPlugin();
 			ArgsPlugin ap = new ArgsPlugin();
 			SaveFilePlugin sp = new SaveFilePlugin();
-			plugins.put(pp.name(), pp);
-			plugins.put(up.name(), up);
-			plugins.put(ap.name(), ap);
-			plugins.put(sp.name(), sp);
+			plugins.put(pp.getClass().getName(), pp);
+			plugins.put(up.getClass().getName(), up);
+			plugins.put(ap.getClass().getName(), ap);
+			plugins.put(sp.getClass().getName(), sp);
 		
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to start cartridge: "+e.getMessage(), e );

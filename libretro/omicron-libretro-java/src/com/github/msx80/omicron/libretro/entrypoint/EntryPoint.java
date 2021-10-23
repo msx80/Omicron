@@ -1,25 +1,20 @@
-package org.github.msx80.omicron.libretro.entrypoint;
+package com.github.msx80.omicron.libretro.entrypoint;
 
 import java.io.File;
 
-import org.github.msx80.omicron.ControllerImpl;
-import org.github.msx80.omicron.GdxOmicron;
-import org.github.msx80.omicron.GdxOmicronOptions;
-import org.github.msx80.omicron.MouseImpl;
-import org.github.msx80.omicron.api.Game;
-import org.github.msx80.omicron.api.SysConfig;
-import org.github.msx80.omicron.api.adv.Cartridge;
-import org.github.msx80.omicron.fantasyconsole.CartridgeLoadingUtils;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.Configuration;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxNativesLoader;
-
-import experimental.LibretroApplication;
-import experimental.LibretroGraphics;
-import experimental.NullHardwareInterface;
+import com.github.msx80.omicron.ControllerImpl;
+import com.github.msx80.omicron.GdxOmicron;
+import com.github.msx80.omicron.GdxOmicronOptions;
+import com.github.msx80.omicron.MouseImpl;
+import com.github.msx80.omicron.api.SysConfig;
+import com.github.msx80.omicron.api.adv.Cartridge;
+import com.github.msx80.omicron.fantasyconsole.CartridgeLoadingUtils;
 
 
 /*

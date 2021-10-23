@@ -8,37 +8,42 @@
   <name>Omicron Libretro Backend</name>
 
   <packaging>jar</packaging>
-
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
   <dependencies>
     <dependency>
     <groupId>com.badlogicgames.gdx</groupId>
     <artifactId>gdx</artifactId>
-    <version>1.9.10</version>
+    <version>1.9.14</version>
   </dependency>
 
 
 <dependency>
     <groupId>com.badlogicgames.gdx</groupId>
     <artifactId>gdx-backend-lwjgl3</artifactId>
-    <version>1.9.10</version>
+    <version>1.9.14</version>
 </dependency>
 
 <dependency>
-    <groupId>org.github.msx80.omicron</groupId>
+    <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-engine</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3</version>
 </dependency>
 <dependency>
-    <groupId>org.github.msx80.omicron</groupId>
+    <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-loader</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3</version>
 </dependency>
   
-<dependency>
-    <groupId>org.github.msx80.omicron</groupId>
-    <artifactId>omicron-api</artifactId>
-    <version>0.0.1</version>
-</dependency>
+    <dependency>
+      <groupId>com.github.msx80</groupId>
+      <artifactId>omicron-api</artifactId>
+      <version>0.0.1</version>
+    </dependency>
 <!-- <dependency>
   <groupId>org.github.msx80.omicron.featuresdemo</groupId>
   <artifactId>features-demo</artifactId>
@@ -49,13 +54,13 @@
   <artifactId>alienbuster</artifactId>
   <version>0.0.1</version>
 </dependency> -->
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version></dependency>
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-desktop</classifier></dependency>
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-armeabi</classifier></dependency>
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-armeabi-v7a</classifier></dependency>
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-arm64-v8a</classifier></dependency>
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-x86</classifier></dependency>
-<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.9</version><classifier>natives-x86_64</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-desktop</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-armeabi</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-armeabi-v7a</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-arm64-v8a</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-x86</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-x86_64</classifier></dependency>
     
     
   </dependencies>

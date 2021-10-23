@@ -1,5 +1,6 @@
 .gradle
 /build/
+bin/
 
 Thumbs.db
 
@@ -52,6 +53,10 @@ buildNumber.properties
 
 # Compiled class file
 *.class
+*.o
+*.omicron
+*.dll
+
 
 # Log file
 *.log

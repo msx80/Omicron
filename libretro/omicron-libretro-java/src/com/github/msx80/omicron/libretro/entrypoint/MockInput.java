@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package experimental;
+package com.github.msx80.omicron.libretro.entrypoint;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -268,5 +268,18 @@ public class MockInput implements Input {
 	@Override
 	public void setCursorPosition(int x, int y) {
 
+	}
+
+	@Override
+	public void getTextInput(TextInputListener listener, String title, String text, String hint,
+			OnscreenKeyboardType type) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setOnscreenKeyboardVisible(boolean visible, OnscreenKeyboardType type) {
+		// TODO Auto-generated method stub
+		
 	}
 }

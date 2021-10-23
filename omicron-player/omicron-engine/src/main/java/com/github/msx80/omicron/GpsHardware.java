@@ -10,11 +10,7 @@ public class GpsHardware implements HardwarePlugin {
 		return null;
 	}
 
-	@Override
-	public String name() {
-		return null;
-	}
-
+	
 	@Override
 	public void init(Sys sys, HardwareInterface hw) {
 	}

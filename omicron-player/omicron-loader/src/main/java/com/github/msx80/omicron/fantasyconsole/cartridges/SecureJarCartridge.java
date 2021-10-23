@@ -76,7 +76,8 @@ public class SecureJarCartridge implements Cartridge {
 				"java.io.ByteArrayOutputStream",
 				"java.io.ByteArrayInputStream",
 				"java.util.zip.GZIPOutputStream",
-				"java.util.zip.GZIPInputStream");
+				"java.util.zip.GZIPInputStream",
+				"java.lang.IllegalArgumentException");
 		Class<?> userClass = c.loadClass(className);
 		return (Game) userClass.newInstance();
 		}

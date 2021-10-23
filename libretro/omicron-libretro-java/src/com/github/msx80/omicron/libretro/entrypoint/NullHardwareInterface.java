@@ -1,8 +1,8 @@
-package experimental;
+package com.github.msx80.omicron.libretro.entrypoint;
 
 import java.util.function.Consumer;
 
-import org.github.msx80.omicron.HardwareInterface;
+import com.github.msx80.omicron.HardwareInterface;
 
 public class NullHardwareInterface implements HardwareInterface {
 

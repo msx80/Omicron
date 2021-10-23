@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- do_not_remove: published-with-gradle-metadata -->
+<modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.github.msx80.omicron</groupId>
+    <artifactId>omicron-parent</artifactId>
+    <version>0.0.3</version>  
+  </parent>
+  <artifactId>omicron-assembly</artifactId>
+  <packaging>pom</packaging>
+  	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+  <dependencies>
+
+  
+	<dependency>
+      <groupId>com.github.msx80.omicron</groupId>
+      <artifactId>omicron-player-desktop</artifactId>
+      <version>0.0.3</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <build>
+      <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+	  
+	   
+	  
+	  <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-bundles</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+			<archive>
+          <manifest>
+            <mainClass>com.github.msx80.omicron.player.OmicronPlayerMain</mainClass>
+          </manifest>
+        </archive>
+			<descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+	  
+	   <plugin>
+          <groupId>com.akathist.maven.plugins.launch4j</groupId>
+          <artifactId>launch4j-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>l4j-clui</id>
+              <phase>package</phase>
+              <goals><goal>launch4j</goal></goals>
+              <configuration>
+                <headerType>gui</headerType>
+                <outfile>target/omicron.exe</outfile>
+                <jar>target/omicron-assembly-0.0.3-jar-with-dependencies.jar</jar>
+				<downloadUrl>https://adoptium.net/</downloadUrl>
+                <errTitle>Omicron</errTitle>
+                <classPath>
+                  <mainClass>com.github.msx80.omicron.player.OmicronPlayerMain</mainClass>
+                  <addDependencies>false</addDependencies>
+                  <preCp>anything</preCp>
+                </classPath>
+                <jre>
+                  <minVersion>1.8.0</minVersion>
+                  <opts>
+                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
+                  </opts>
+				  <jdkPreference>preferJre</jdkPreference>
+				  <runtimeBits>64/32</runtimeBits>
+				  <bundledJre64Bit>false</bundledJre64Bit>
+					<bundledJreAsFallback>false</bundledJreAsFallback>
+                </jre>
+                <versionInfo>
+                  <fileVersion>1.2.3.4</fileVersion>
+                  <txtFileVersion>1.2.3.4</txtFileVersion>
+                  <fileDescription>Omicron Fantasy Console</fileDescription>
+                  <copyright>See website</copyright>
+                  <productVersion>1.2.3.4</productVersion>
+                  <txtProductVersion>1.2.3.4</txtProductVersion>
+                  <productName>Omicron</productName>
+                  <internalName>omicron</internalName>
+                  <originalFilename>omicron.exe</originalFilename>
+                </versionInfo>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+	 </plugins>
+	</build>
+</project>

@@ -1,4 +1,4 @@
-package com.github.msx80.omicron.plugins;
+package com.github.msx80.omicron.plugins.builtin;
 
 import com.github.msx80.omicron.HardwareInterface;
 import com.github.msx80.omicron.HardwarePlugin;
@@ -26,12 +26,6 @@ public class UrlOpenerPlugin implements HardwarePlugin {
 			}
 		}
 		return "ERR: command not found";
-	}
-
-	@Override
-	public String name() {
-		
-		return "URL_OPENER";
 	}
 
 }

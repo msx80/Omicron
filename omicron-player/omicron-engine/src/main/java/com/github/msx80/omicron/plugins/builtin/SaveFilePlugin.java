@@ -1,4 +1,4 @@
-package com.github.msx80.omicron.plugins;
+package com.github.msx80.omicron.plugins.builtin;
 
 import java.util.function.Consumer;
 
@@ -25,11 +25,6 @@ public class SaveFilePlugin implements HardwarePlugin {
 		byte[] content = (byte[]) p[3];
 		hw.saveFile(mimeType, filename, content, result);
 		return null;
-	}
-
-	@Override
-	public String name() {
-		return "FILE";
 	}
 
 }

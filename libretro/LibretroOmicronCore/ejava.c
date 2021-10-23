@@ -271,7 +271,7 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 			jstr      = (*env)->NewStringUTF(env, "");
 			main_args = (*env)->NewObjectArray(env, 2, (*env)->FindClass(env, "java/lang/String"), jstr);
 			
-			(*env)->SetObjectArrayElement(env, main_args, 0, (*env)->NewStringUTF(env, "org.github.msx80.omicron.libretro.entrypoint.EntryPoint"));
+			(*env)->SetObjectArrayElement(env, main_args, 0, (*env)->NewStringUTF(env, "com.github.msx80.omicron.libretro.entrypoint.EntryPoint"));
 		#if defined(_WIN32) 	
 			(*env)->SetObjectArrayElement(env, main_args, 1, (*env)->NewStringUTF(env, 
 			//"system/omicron/omicron.jar")); 

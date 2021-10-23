@@ -12,12 +12,6 @@ public class DebugPlugin implements HardwarePlugin {
 	}
 
 	@Override
-	public String name() {
-		
-		return "DEBUG";
-	}
-
-	@Override
 	public void init(Sys sys, HardwareInterface hw) {
 	}
 

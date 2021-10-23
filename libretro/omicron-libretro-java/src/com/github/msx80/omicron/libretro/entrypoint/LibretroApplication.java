@@ -1,4 +1,4 @@
-package experimental;
+package com.github.msx80.omicron.libretro.entrypoint;
 
 import java.io.File;
 import java.util.HashMap;
@@ -82,38 +82,38 @@ public class LibretroApplication implements Application {
 
 	@Override
 	public void log(String tag, String message) {
-		// TODO Auto-generated method stub
+		System.out.println("[LIBGDX LOG "+tag+"]"+message);
 
 	}
 
 	@Override
 	public void log(String tag, String message, Throwable exception) {
-		// TODO Auto-generated method stub
-
+		System.out.println("[LIBGDX LOG "+tag+"]"+message);
+		exception.printStackTrace(System.out);
 	}
 
 	@Override
 	public void error(String tag, String message) {
-		// TODO Auto-generated method stub
-
+		System.out.println("[LIBGDX ERR "+tag+"]"+message);
 	}
 
 	@Override
 	public void error(String tag, String message, Throwable exception) {
-		// TODO Auto-generated method stub
+		System.out.println("[LIBGDX ERR "+tag+"]"+message);
+		exception.printStackTrace(System.out);
 
 	}
 
 	@Override
 	public void debug(String tag, String message) {
-		// TODO Auto-generated method stub
+		System.out.println("[LIBGDX DBG "+tag+"]"+message);
 
 	}
 
 	@Override
 	public void debug(String tag, String message, Throwable exception) {
-		// TODO Auto-generated method stub
-
+		System.out.println("[LIBGDX DBG "+tag+"]"+message);
+		exception.printStackTrace(System.out);
 	}
 
 	@Override

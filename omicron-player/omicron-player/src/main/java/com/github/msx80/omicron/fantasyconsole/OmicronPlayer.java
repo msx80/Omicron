@@ -87,7 +87,7 @@ public class OmicronPlayer implements Game {
         getIntroWidgets(sys);
         
        
-        String[] args = (String[]) sys.hardware("ARGS", "GET", null);
+        String[] args = (String[]) sys.hardware("com.github.msx80.omicron.plugins.builtin.ArgsPlugin", "GET", null);
         if(args.length==1)
         {
         	runJar(args[0]);
