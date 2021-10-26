@@ -235,9 +235,9 @@ public class LibretroGraphics implements Graphics {
 	@Override
 	public boolean supportsExtension(String extension) {
 		System.out.println("OMICRON asked for extension: "+extension);
-		boolean res = GLFW.glfwExtensionSupported(extension);
-		System.out.println("OMICRON reply for extension: "+extension+": "+res);
-		return res;
+		//boolean res = GLFW.glfwExtensionSupported(extension);
+		//System.out.println("OMICRON reply for extension: "+extension+": "+res);
+		return false;
 		//throw new RuntimeException("Unimplemented method");
 		//return false;
 	}

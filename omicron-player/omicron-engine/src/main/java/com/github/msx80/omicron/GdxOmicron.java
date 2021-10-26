@@ -194,11 +194,15 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	@Override
 	public void render () {
+		System.out.println("Init rendering");
 		fps.log();
+		System.out.println("Init renderingx");
 		offset(0,0); // reset offset
+		System.out.println("Init renderingx1");
 
 		// reset current color to white
 		this.colorf(1, 1, 1, 1);
+		System.out.println("Init renderingx2 "+options.getRenderingToTexture());
 		
 		// clear the screen to black, including portions outside the scissor area
 		if(!options.getRenderingToTexture())
@@ -207,9 +211,11 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			this.clear(ColorsCopy.BLACK);
 			Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 		}	
+		System.out.println("Init renderingxxxx");
 		current.screenInfo.applyGlClipping();
+		System.out.println("Init renderingasdfasdf");
 		batch.setProjectionMatrix(cam.combined);
-
+		System.out.println("Init rendering2");
 		
 		Throwable t = null;
 		// batch.begin(); // TODO make it begin lazily at first draw so well behaved games will do the updates before
@@ -217,8 +223,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		try
 		{
 			try {
+				System.out.println("Calling actual loop");
 				continuous = current.game.loop();
+				System.out.println("Finished actual loop");
 			} catch (Throwable e) {
+				System.out.println("Exception in actual loop!");
+				e.printStackTrace(System.out);
 				t = e;
 			}
 		}
@@ -226,6 +236,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		{
 			if(batch.isDrawing()) batch.end();
 		}
+		System.out.println("Finished loop");
 		for (Controller controller : controllers) {
 			ControllerImpl c = (ControllerImpl) controller;
 			c.copyOld();
@@ -235,7 +246,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			mouse.copyOld();
 			mouse.resetScroll();
 		}
-
+		System.out.println("Finished all");
 		if(t != null)
 		{
 			// game has launched an exception
@@ -252,6 +263,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		}
 		// doesn't guarantee that the last frame is rendered. Analyze better
 		// Gdx.graphics.setContinuousRendering(continuous);
+		System.out.println("Exiting");
 	}
 
 
@@ -411,9 +423,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			if(lastPixel != color) // caching our pixel texture
 			{
 				if(batch.isDrawing())batch.end();
+				System.out.println("Doing shit on texture in FILL");
+				
 				( (PixmapTextureData) pixel.getTextureData() ).consumePixmap().drawPixel(0, 0, color);
 				lastPixel = color;
 				pixel.load(pixel.getTextureData());
+				System.out.println("DONE Doing shit on texture in FILL");
 			}
 			if(!batch.isDrawing()) batch.begin();
 			batch.draw(pixel, x+ox, y+oy, w, h);

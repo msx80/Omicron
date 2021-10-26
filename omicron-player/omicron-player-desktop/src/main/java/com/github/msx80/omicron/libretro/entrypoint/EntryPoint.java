@@ -83,21 +83,33 @@ public class EntryPoint{
 	
 	public static void callLoop(int ctrlStat, int mx, int my) {
 		// this is the main loop function. The parameters are the controllers and mouse status
+		logEntry("Inside loop!");
 		try
 		{
 			if(s==null) return; // this indicate no actual game was loaded.
 			
+			logEntry("Calling update..");
+				
 			// update FPS counters on Graphics
 			((LibretroGraphics) Gdx.graphics).update();
 			
+			logEntry("Parsing input..");
 			// prepare input received, inject them into the system
 			parseInput(ctrlStat, mx, my);
 			
+			logEntry("Setting viewport..");
 			Gdx.gl.glViewport(0, 0, s.width, s.height); // to do every loop as per GL Core docs
 	
+			logEntry("Rendering..");
 			// call the render on Omicron engine, which will call update and render on the Game
-			engine.render();
+			try {
+				engine.render();
+			} catch (Exception e) {
+				logEntry("EXCEPTION IN RENDER");
+				e.printStackTrace();
+			}
 			
+			logEntry("Binding texture 0..");
 			// here we should unbind everything, TODO check if something is left bound.
 			Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D, 0);
 			
@@ -135,29 +147,35 @@ public class EntryPoint{
 		{
 			// set up the Opengl context.
 			// See: http://forum.lwjgl.org/index.php?topic=6992.0
-			System.out.println("Loading gdx natives");
+			logEntry("Loading gdx natives");
 			GdxNativesLoader.load();
-			System.out.println("Calling createCapabilities");
+			logEntry("Calling createCapabilities");
 			GL.createCapabilities();
-			System.out.println("Called createCapabilities, all good");
+			logEntry("Called createCapabilities, all good");
 		} catch (Exception e) 
 		{
 			e.printStackTrace();
 			throw e; 
 		}
 	}
+	private static void logEntry(String string) {
+		System.out.println("ENTRYPOINT: "+string);
+		
+	}
+
 	public static void callLoadGame(String filename)
 	{
 		// simply store the cartridge file to load
+		logEntry("Loading game: "+filename);
 		gameToLoad = filename;
-		System.out.println("Loading game: "+filename);
 		game = CartridgeLoadingUtils.fromOmicronFile(new File(gameToLoad));
 		s = game.getGameObject().sysConfig();
+		logEntry("Game loaded, sysconfig: "+s);
 	}
 	public static void callSetup() {
 		try
 		{
-			System.out.println("Calling JAVA setup");
+			logEntry("Calling JAVA setup");
 
 			// TODO this is actually called on context creation right after callSetupContext.
 			// if coming from fullscreen toggle or such, we don't have the game anymore
@@ -166,20 +184,22 @@ public class EntryPoint{
 			// actually load the game from the cartridge.
 			// this parse the included omicron.properties descriptor and use a custom classloader to load classes in a sandbox.
 			 
-			System.out.println("Game loaded, initializing engine");
+			logEntry("Game loaded, initializing engine");
 			engine = new GdxOmicron(game, new NullHardwareInterface(), new GdxOmicronOptions().setRenderingToTexture(true));
 			// obtain desired system configuration from cartridge.
 			// s = engine.current.game.sysConfig();
 
 			new LibretroApplication(engine); // stores itself as Gdx.app
 			
+			logEntry("Java Setup OK!");
+
 	
 		} catch (Exception e) {e.printStackTrace();throw e; }
 	}
 
 	public static int sysInfo(int iswidth)
 	{
-		System.out.println("Desired system info: "+s);
+		logEntry("Desired system info: "+s);
 		if(iswidth!=0) return s.width; else return s.height;
 	}
 	
@@ -187,6 +207,7 @@ public class EntryPoint{
 		
 		// this is called on OPENGL context destruction, should at least finalize the engine object.
 		// TODO do some cleaning ?
+		logEntry("called TEARDOWN");
 
 	}
 
