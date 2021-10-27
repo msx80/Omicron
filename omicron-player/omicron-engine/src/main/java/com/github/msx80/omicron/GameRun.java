@@ -14,6 +14,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.msx80.omicron.api.Game;
@@ -126,16 +127,24 @@ public class GameRun {
 		}
 		private TextureRegion loadSheet(int n) {
 			FileHandle r = loadResource("sheet"+n+".png");
-			
 			if (r==null) return null;
 			
-			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
+			Pixmap p = readPixmapSafe(r);
 			p.setBlending(Blending.None);
 			Texture tt = new Texture(p, false);
-				
 			TextureRegion img = new TextureRegion(tt);
 			img.flip(false, true);
 			return img;
+		}
+
+
+		private Pixmap readPixmapSafe(FileHandle r) {
+			try {
+			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
+			return p;
+			} catch (Throwable e) {
+				throw new RuntimeException("**** Unable to load pixmap! "+e.getMessage(), e); 
+			}
 		}	  
 		private Sound loadSound(int n) {
 			String fn = "sound"+n+".wav";
@@ -148,7 +157,7 @@ public class GameRun {
 	    	TextureRegion b = sheets.get(sheetNum);
 	        if(b == null)
 	        {
-	        	
+	        	System.out.println("Calling load sheet");
 	        	b = loadSheet(sheetNum);
 	            
 	        	sheets.put(sheetNum, b);

@@ -167,7 +167,6 @@ public class NonBleedingSpriteBatch implements Batch {
 
 	@Override
 	public void begin () {
-		System.out.println("Called BEGIN");
 		if (drawing) throw new IllegalStateException("SpriteBatch.end must be called before begin.");
 		renderCalls = 0;
 
@@ -179,22 +178,18 @@ public class NonBleedingSpriteBatch implements Batch {
 		setupMatrices();
 
 		drawing = true;
-		System.out.println("Finished BEGIN");
 	}
 
 	@Override
 	public void end () {
-		System.out.println("Doing END");
 		if (!drawing) throw new IllegalStateException("SpriteBatch.begin must be called before end.");
 		if (idx > 0) flush();
-		System.out.println("Done flush on END");
 		lastTexture = null;
 		drawing = false;
 
 		GL20 gl = Gdx.gl;
 		gl.glDepthMask(true);
 		if (isBlendingEnabled()) gl.glDisable(GL20.GL_BLEND);
-		System.out.println("Finished END");
 	}
 
 	@Override
@@ -965,11 +960,8 @@ public class NonBleedingSpriteBatch implements Batch {
 		lastTexture.bind();
 		Mesh mesh = this.mesh;
 		mesh.setVertices(vertices, 0, idx);
-		System.out.println("Calling stuff on buffers");
 		((Buffer) mesh.getIndicesBuffer()).position(0);
 		((Buffer) mesh.getIndicesBuffer()).limit(count);
-		
-		System.out.println("Finished Calling stuff on buffers");
 		
 		if (blendingDisabled) {
 			Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -979,7 +971,6 @@ public class NonBleedingSpriteBatch implements Batch {
 		}
 
 		mesh.render(customShader != null ? customShader : shader, GL20.GL_TRIANGLES, 0, count);
-		System.out.println("Finished render!");
 		idx = 0;
 	}
 
@@ -1052,7 +1043,6 @@ public class NonBleedingSpriteBatch implements Batch {
 	@Override
 	public void setProjectionMatrix (Matrix4 projection) {
 		if (drawing) flush();
-		System.out.println("Setprojmatr!");
 		projectionMatrix.set(projection);
 		if (drawing) setupMatrices();
 	}
@@ -1065,7 +1055,6 @@ public class NonBleedingSpriteBatch implements Batch {
 	}
 
 	protected void setupMatrices () {
-		System.out.println("Setting up matrices yo!");
 		combinedMatrix.set(projectionMatrix).mul(transformMatrix);
 		if (customShader != null) {
 			customShader.setUniformMatrix("u_projTrans", combinedMatrix);
@@ -1074,7 +1063,6 @@ public class NonBleedingSpriteBatch implements Batch {
 			shader.setUniformMatrix("u_projTrans", combinedMatrix);
 			shader.setUniformi("u_texture", 0);
 		}
-		System.out.println("Done Setting up matrices yo!");
 	}
 
 	protected void switchTexture (Texture texture) {

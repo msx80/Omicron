@@ -1,13 +1,20 @@
 package com.github.msx80.omicron.libretro.entrypoint;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.Configuration;
+import org.lwjgl.system.linux.DynamicLinkLoader;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.utils.GdxNativesLoader;
+import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.github.msx80.omicron.ControllerImpl;
 import com.github.msx80.omicron.GdxOmicron;
 import com.github.msx80.omicron.GdxOmicronOptions;
@@ -75,7 +82,7 @@ public class EntryPoint{
 	static GdxOmicron engine;
 	
 	static {
-		Configuration.DEBUG.set(true);
+		Configuration.DEBUG.set(true);		
 	}
 	
 	static String gameToLoad = null;
@@ -83,24 +90,25 @@ public class EntryPoint{
 	
 	public static void callLoop(int ctrlStat, int mx, int my) {
 		// this is the main loop function. The parameters are the controllers and mouse status
-		logEntry("Inside loop!");
+		
+		//logEntry("Inside loop!");
 		try
 		{
 			if(s==null) return; // this indicate no actual game was loaded.
 			
-			logEntry("Calling update..");
+			//logEntry("Calling update..");
 				
 			// update FPS counters on Graphics
 			((LibretroGraphics) Gdx.graphics).update();
 			
-			logEntry("Parsing input..");
+			//logEntry("Parsing input..");
 			// prepare input received, inject them into the system
 			parseInput(ctrlStat, mx, my);
 			
-			logEntry("Setting viewport..");
+			//logEntry("Setting viewport..");
 			Gdx.gl.glViewport(0, 0, s.width, s.height); // to do every loop as per GL Core docs
 	
-			logEntry("Rendering..");
+			//logEntry("Rendering..");
 			// call the render on Omicron engine, which will call update and render on the Game
 			try {
 				engine.render();
@@ -109,7 +117,7 @@ public class EntryPoint{
 				e.printStackTrace();
 			}
 			
-			logEntry("Binding texture 0..");
+			//logEntry("Binding texture 0..");
 			// here we should unbind everything, TODO check if something is left bound.
 			Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D, 0);
 			
@@ -145,17 +153,71 @@ public class EntryPoint{
 	{
 		try
 		{
+			if(SharedLibraryLoader.isLinux)
+			{
+
+/*
+
+Thread 1 "retroarch" received signal SIGABRT, Aborted.
+__GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:51
+51      ../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+(gdb) list
+46      in ../sysdeps/unix/sysv/linux/raise.c
+(gdb) trace
+Tracepoint 1 at 0x7fffedadcfb7: file ../sysdeps/unix/sysv/linux/raise.c, line 51.
+(gdb) bt
+#0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:51
+#1  0x00007fffedade921 in __GI_abort () at abort.c:79
+#2  0x00007fffedace48a in __assert_fail_base (fmt=0x7fffedc55750 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7ffff1f5740$
+    file=file@entry=0x7ffff1f573f9 "allocator.c", line=line@entry=177, function=function@entry=0x7ffff1f574a0 "sixel_allocator_realloc") at assert.c:$
+#3  0x00007fffedace502 in __GI___assert_fail (assertion=0x7ffff1f57405 "allocator", file=0x7ffff1f573f9 "allocator.c", line=177, function=0x7ffff1f57$
+#4  0x00007ffff1f51470 in sixel_allocator_realloc () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
+#5  0x00007ffff1f44363 in ?? () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
+#6  0x00007ffff1f45de9 in ?? () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
+#7  0x00007ffff1f48b9f in ?? () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
+#8  0x00007ffff1f48cf8 in stbi_load_from_memory () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
+#9  0x00007fff7fdf2bbc in gdx2d_load () from /tmp/libgdxnicola/8551b6a6/libgdx64.so
+#10 0x00007fff7fde03fc in Java_com_badlogic_gdx_graphics_g2d_Gdx2DPixmap_load () from /tmp/libgdxnicola/8551b6a6/libgdx64.so
+#11 0x00007fffc0e4e345 in ?? ()
+#12 0x00007fffffffa398 in ?? ()
+#13 0x00007fffc0e4e0cd in ?? ()
+#14 0x0000000000000000 in ?? ()
+
+*/
+
+
+
+				logEntry("Dynamically loading library with DEEPBIND");
+				SharedLibraryLoader sl = new SharedLibraryLoader();
+				String platformName = sl.mapLibraryName("gdx");
+				logEntry("Platform name: "+platformName);
+				try {
+					File f = sl.extractFile(platformName, null);
+					System.out.println(f.getCanonicalPath());
+					DynamicLinkLoader.dlopen(f.getCanonicalPath(), DynamicLinkLoader.RTLD_DEEPBIND | DynamicLinkLoader.RTLD_NOW);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+
+			}
+			
+
+			// technically in linux we can skip this since it's already loaded in the trick above
+			//if(!SharedLibraryLoader.isLinux)
+			//{
+				logEntry("Loading gdx natives");
+				GdxNativesLoader.load();
+			//}
+			
 			// set up the Opengl context.
 			// See: http://forum.lwjgl.org/index.php?topic=6992.0
-			logEntry("Loading gdx natives");
-			GdxNativesLoader.load();
 			logEntry("Calling createCapabilities");
 			GL.createCapabilities();
 			logEntry("Called createCapabilities, all good");
 		} catch (Exception e) 
 		{
 			e.printStackTrace();
-			throw e; 
+			throw new RuntimeException(e); 
 		}
 	}
 	private static void logEntry(String string) {
@@ -176,6 +238,8 @@ public class EntryPoint{
 		try
 		{
 			logEntry("Calling JAVA setup");
+			logEntry("Cartridge is: "+game);
+			logEntry("Game is: "+game.getGameObject());
 
 			// TODO this is actually called on context creation right after callSetupContext.
 			// if coming from fullscreen toggle or such, we don't have the game anymore

@@ -14,6 +14,7 @@ public class CartridgeFileHandle extends FileHandleStream {
 	{
 		super(resourceName);
 		this.data = cartridge.loadFile(resourceName);
+		System.out.println("CartridgeFile: "+resourceName+" data: "+data.length);
 	}
 
 
@@ -24,7 +25,7 @@ public class CartridgeFileHandle extends FileHandleStream {
 
 	@Override
 	public boolean exists() {
-		return read() != null;
+		return data != null;
 	}
 
 	

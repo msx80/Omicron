@@ -127,6 +127,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 void retro_set_environment(retro_environment_t cb)
 {
+   log_cb(RETRO_LOG_INFO, "[BACK] retro_set_environment\n");
    environ_cb = cb;
    if(log_cb == fallback_log)
    {
@@ -198,6 +199,7 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 
 static void update_variables(void)
 {
+log_cb(RETRO_LOG_INFO, "[BACK] update_variables\n");
 	/*
    struct retro_variable var = {
       .key = "testgl_resolution",
@@ -229,9 +231,12 @@ static unsigned frame_count;
 
 void retro_run(void)
 {
+  log_cb(RETRO_LOG_INFO, "[BACK] retro_run\n");
    bool updated = false;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       update_variables();
+
+  log_cb(RETRO_LOG_INFO, "[BACK] input poll\n");
 
    input_poll_cb();
 	unsigned int ctrlStat = 0;
@@ -269,15 +274,21 @@ void retro_run(void)
 	if(my>=height) my = height-1;
 #ifdef CORE
 #endif
+    log_cb(RETRO_LOG_INFO, "[BACK] binding backbuffer\n");
+
       
    glBindFramebuffer(RARCH_GL_FRAMEBUFFER, hw_render.get_current_framebuffer());
-   
+     log_cb(RETRO_LOG_INFO, "[BACK] starting java loop\n");
+
    javaLoop(ctrlStat, mx, my);
-  
+
+  log_cb(RETRO_LOG_INFO, "[BACK] java loop done\n");
+
    frame_count++;
 
    video_cb(RETRO_HW_FRAME_BUFFER_VALID, width, height, 0);
    
+   log_cb(RETRO_LOG_INFO, "[BACK] retro_run finished\n");
    // glBindFramebuffer(RARCH_GL_FRAMEBUFFER, 0); // TODO needed ?
 }
 
@@ -296,7 +307,7 @@ static void context_destroy(void)
 {
    log_cb(RETRO_LOG_INFO, "[BACK] Context destroy!\n");
    javaTeardown();
-   log_cb(RETRO_LOG_INFO, "Called java teardown!\n");
+   log_cb(RETRO_LOG_INFO, "[BACK] Called java teardown!\n");
 }
 
 #ifdef HAVE_OPENGLES
@@ -434,6 +445,7 @@ unsigned retro_get_region(void)
 
 bool retro_load_game_special(unsigned type, const struct retro_game_info *info, size_t num)
 {
+   log_cb(RETRO_LOG_INFO, "[BACK] retro_load_game_special\n");
    (void)type;
    (void)info;
    (void)num;

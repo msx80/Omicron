@@ -40,6 +40,7 @@ typedef jint (JNICALL *dynJNI_GetCreatedJavaVMs)(JavaVM ** vm, jsize nVMs, jsize
 dynJNI_CreateJavaVM mydynJNI_CreateJavaVM;
 dynJNI_GetCreatedJavaVMs mydynJNI_GetCreatedJavaVMs;
 
+
 int fileExists(char* fname)
 {
 	if( access( fname, F_OK ) != -1 ) {
@@ -131,7 +132,7 @@ int loadJavaLib()
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Unable to load jvm.dll/so\n");
 		return -1;
 	 } 
-	 
+	     
 	mydynJNI_CreateJavaVM = (dynJNI_CreateJavaVM)GetProcAddress(hinstLib, "JNI_CreateJavaVM");
 	if (NULL == mydynJNI_CreateJavaVM) 
     {
@@ -191,7 +192,8 @@ int loadJavaLib()
 int deinitJava()
 {
 	log_cb(RETRO_LOG_INFO, "[JAVA] Deinitin java\n");
-	
+
+/*	
 	// turns out you can get only one VM per process, even if you destroy it, you cannot create any more.
 	// so we keep the same one around and carry on.
 #if defined(_WIN32) 
@@ -208,6 +210,7 @@ int deinitJava()
 	}
 	
 #endif	
+*/
 	return 0;
 }
 int initJava(retro_log_printf_t logger, const char *omicronJarPath)
@@ -291,9 +294,13 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 	else
 	{
 		// use already made JVM. Bootstrap is already there and loaded, just get the instance to class
+//		log_cb(RETRO_LOG_INFO, "[JAVA] Attaching thread\n");
+//		(*vm)->AttachCurrentThread(vm, env, NULL);
 		
+
 		log_cb(RETRO_LOG_INFO, "[JAVA] Reusing previously started JVM");
 		vm = buffer[0];
+
 		
 		int result = (*vm)->GetEnv(vm,  (void**) &env, JNI_VERSION_1_8);
 		if(result != 0)
@@ -301,7 +308,7 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 			log_cb(RETRO_LOG_ERROR, "[JAVA] Unable to regain VM: %d\n", result);
 			return result;
 		}
-		
+
 		bootstrapCls = (*env)->FindClass(env, "Bootstrap");
 		if (bootstrapCls == NULL) {
 				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to initialize Bootstrap class\n");
@@ -375,7 +382,24 @@ int javaSysInfo(int width)
 void javaLoop(int ctrlStat, int mx, int my)
 {
 	jint c2 = ctrlStat; // not sure what i'm doing
-	(*env)->CallStaticVoidMethod(env, entryPointCls, callLoop, c2, (jint)mx, (jint)my);
+    jint mx2 = mx;
+    jint my2 = my;
+    (*env)->CallStaticVoidMethod(env, entryPointCls, callLoop, c2, mx2, my2);	
+	
+	if ( (*env)->ExceptionOccurred(env)  ) {
+		log_cb(RETRO_LOG_INFO, "[JAVA] EXCEPTION IN LOOP\n");
+        (*env) -> ExceptionDescribe(env);
+            // return NS_ERROR_FAILURE;
+    }
+    
+	//ExceptionCheck
+ //We introduce a convenience function to check for pending exceptions without creating a local reference to the exception object.
+  /* if ((*env)->ExceptionCheck()) {
+   	  log_cb(RETRO_LOG_INFO, "[JAVA] EXCEPTION TRUE!\n");
+   	  (*env)->ExceptionDescribe();
+   }*/
+
+
 }
 
 void javaSetup()
@@ -395,7 +419,10 @@ void javaLoadGame(const char* path)
 
 void javaTeardown()
 {
+	
 	(*env)->CallStaticVoidMethod(env, entryPointCls, callTeardown, NULL);
+//	log_cb(RETRO_LOG_INFO, "[JAVA] Detaching thread\n");
+//	(*vm)->DetachCurrentThread(vm);
 }
 
 
