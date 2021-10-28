@@ -23,8 +23,7 @@ jobs:
     - name: Build Omicron Player
       run: |
         cd omicron-player
-        chmod +x gradlew
-        ./gradlew build dist
+        mvn --batch-mode clean compile package
     - name: Build Hello World cart
       run: |
         cd demo/HelloWorld
