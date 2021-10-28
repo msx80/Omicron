@@ -14,7 +14,7 @@ public class CartridgeFileHandle extends FileHandleStream {
 	{
 		super(resourceName);
 		this.data = cartridge.loadFile(resourceName);
-		System.out.println("CartridgeFile: "+resourceName+" data: "+data.length);
+		System.out.println("CartridgeFile: "+resourceName+" data: "+ (data==null ? "null" : ""+data.length));
 	}
 
 

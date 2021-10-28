@@ -100,6 +100,7 @@ void retro_get_system_info(struct retro_system_info *info)
    info->library_version  = "v1";
    info->need_fullpath    = true; // TODO not strictly necessary, change later
    info->valid_extensions = "omicron"; 
+   info->block_extract    = false;
    
   
 }
@@ -162,6 +163,8 @@ void retro_set_environment(retro_environment_t cb)
    bool no_rom = false;
    cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &no_rom);
  //  cb(RETRO_ENVIRONMENT_SET_VARIABLES, variables);
+ 
+  
 }
 
 
@@ -231,12 +234,12 @@ static unsigned frame_count;
 
 void retro_run(void)
 {
-  log_cb(RETRO_LOG_INFO, "[BACK] retro_run\n");
+  //log_cb(RETRO_LOG_INFO, "[BACK] retro_run\n");
    bool updated = false;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       update_variables();
 
-  log_cb(RETRO_LOG_INFO, "[BACK] input poll\n");
+  //log_cb(RETRO_LOG_INFO, "[BACK] input poll\n");
 
    input_poll_cb();
 	unsigned int ctrlStat = 0;
@@ -274,21 +277,21 @@ void retro_run(void)
 	if(my>=height) my = height-1;
 #ifdef CORE
 #endif
-    log_cb(RETRO_LOG_INFO, "[BACK] binding backbuffer\n");
+    //log_cb(RETRO_LOG_INFO, "[BACK] binding backbuffer\n");
 
       
    glBindFramebuffer(RARCH_GL_FRAMEBUFFER, hw_render.get_current_framebuffer());
-     log_cb(RETRO_LOG_INFO, "[BACK] starting java loop\n");
+    // log_cb(RETRO_LOG_INFO, "[BACK] starting java loop\n");
 
    javaLoop(ctrlStat, mx, my);
 
-  log_cb(RETRO_LOG_INFO, "[BACK] java loop done\n");
+  //log_cb(RETRO_LOG_INFO, "[BACK] java loop done\n");
 
    frame_count++;
 
    video_cb(RETRO_HW_FRAME_BUFFER_VALID, width, height, 0);
    
-   log_cb(RETRO_LOG_INFO, "[BACK] retro_run finished\n");
+   //log_cb(RETRO_LOG_INFO, "[BACK] retro_run finished\n");
    // glBindFramebuffer(RARCH_GL_FRAMEBUFFER, 0); // TODO needed ?
 }
 
@@ -297,21 +300,20 @@ static void context_reset(void)
 
    log_cb(RETRO_LOG_INFO, "[BACK] Context reset!\n");
    rglgen_resolve_symbols(hw_render.get_proc_address);
-
-	javaSetupContext();
-	javaSetup(); 
+   javaResetContext();
+   //javaSetup(); 
 	
 }
 
 static void context_destroy(void)
 {
    log_cb(RETRO_LOG_INFO, "[BACK] Context destroy!\n");
-   javaTeardown();
-   log_cb(RETRO_LOG_INFO, "[BACK] Called java teardown!\n");
+   javaContextDestroy();
+   log_cb(RETRO_LOG_INFO, "[BACK] Called javaContextDestroy!\n");
 }
 
 #ifdef HAVE_OPENGLES
-static bool retro_init_hw_context(void)
+static bool do_init_hw_context(void)
 {
 	log_cb(RETRO_LOG_INFO, "retro_init_hw_context 1!\n");
 #if defined(HAVE_OPENGLES_3_1)
@@ -338,7 +340,7 @@ static bool retro_init_hw_context(void)
    return true;
 }
 #else
-static bool retro_init_hw_context(void)
+static bool do_init_hw_context(void)
 {
 	log_cb(RETRO_LOG_INFO, "retro_init_hw_context 2\n");
 #if defined(CORE)
@@ -416,7 +418,7 @@ bool retro_load_game(const struct retro_game_info *info)
       return false;
    }
 
-   if (!retro_init_hw_context())
+   if (!do_init_hw_context())
    {
       log_cb(RETRO_LOG_ERROR, "HW Context could not be initialized, exiting...\n");
       return false;
@@ -434,7 +436,7 @@ bool retro_load_game(const struct retro_game_info *info)
 void retro_unload_game(void)
 {
 	log_cb(RETRO_LOG_INFO, "[BACK] retro_unload_game\n");
-	deinitJava();
+	javaUnloadGame();
 }
 
 unsigned retro_get_region(void)

@@ -15,10 +15,11 @@
 	static JNIEnv         *env;
 	static jclass          entryPointCls;
 	static jmethodID 		callLoop;
-	static jmethodID 		callSetup;
+	//static jmethodID 		callSetup;
 	static jmethodID 		callLoadGame;	
-	static jmethodID 		callSetupContext;
-	static jmethodID 		callTeardown;
+	static jmethodID 		callUnloadGame;	
+	static jmethodID 		callResetContext;
+	static jmethodID 		callContextDestroy;
 	static jmethodID 		callSysInfo;
 
 
@@ -224,6 +225,8 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 	jmethodID       mid2;
 	jstring         jstr;
 	jobjectArray    main_args;
+	
+	log_cb(RETRO_LOG_INFO, "[JAVA] INITIALIZING JAVA VM\n");
 
 	if(loadJavaLib() != 0)
 	{
@@ -337,16 +340,18 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callLoop functionn");
 		return 2;
 	}
-	callSetup = (*env)->GetStaticMethodID(env, entryPointCls, "callSetup", "()V");
+	
+/*	callSetup = (*env)->GetStaticMethodID(env, entryPointCls, "callSetup", "()V");
 	
 	if (callSetup == NULL) {
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callSetup functionn");
 		return 2;
 	}
-	callSetupContext = (*env)->GetStaticMethodID(env, entryPointCls, "callSetupContext", "()V");
+*/
+	callResetContext = (*env)->GetStaticMethodID(env, entryPointCls, "callResetContext", "()V");
 	
-	if (callSetupContext == NULL) {
-		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callSetupContext functionn");
+	if (callResetContext == NULL) {
+		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callResetContext functionn");
 		return 2;
 	}
 	callSysInfo = (*env)->GetStaticMethodID(env, entryPointCls, "sysInfo", "(I)I");
@@ -356,16 +361,21 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 		return 2;
 	}
 
-	callTeardown = (*env)->GetStaticMethodID(env, entryPointCls, "callTeardown", "()V");
+	callContextDestroy = (*env)->GetStaticMethodID(env, entryPointCls, "callContextDestroy", "()V");
 	
-	if (callTeardown == NULL) {
-		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callTeardown functionn");
+	if (callContextDestroy == NULL) {
+		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callContextDestroy functionn");
 		return 2;
 	}
 	callLoadGame = (*env)->GetStaticMethodID(env, entryPointCls, "callLoadGame", "(Ljava/lang/String;)V");
-	
 	if (callLoadGame == NULL) {
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callLoadGame functionn");
+		return 2;
+	}
+	
+	callUnloadGame = (*env)->GetStaticMethodID(env, entryPointCls, "callUnloadGame", "()V");
+	if (callUnloadGame == NULL) {
+		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callUnloadGame functionn");
 		return 2;
 	}
 	
@@ -402,14 +412,15 @@ void javaLoop(int ctrlStat, int mx, int my)
 
 }
 
+/*
 void javaSetup()
 {
 	(*env)->CallStaticVoidMethod(env, entryPointCls, callSetup, NULL);
 }
-
-void javaSetupContext()
+*/
+void javaResetContext()
 {
-	(*env)->CallStaticVoidMethod(env, entryPointCls, callSetupContext, NULL);
+	(*env)->CallStaticVoidMethod(env, entryPointCls, callResetContext, NULL);
 }
 
 void javaLoadGame(const char* path)
@@ -417,10 +428,16 @@ void javaLoadGame(const char* path)
 	(*env)->CallStaticVoidMethod(env, entryPointCls, callLoadGame, (*env)->NewStringUTF(env, path));
 }
 
-void javaTeardown()
+void javaUnloadGame()
 {
-	
-	(*env)->CallStaticVoidMethod(env, entryPointCls, callTeardown, NULL);
+	log_cb(RETRO_LOG_INFO, "[JAVA] CALLING UNLOAD GAME\n");
+	(*env)->CallStaticVoidMethod(env, entryPointCls, callUnloadGame);
+}
+
+void javaContextDestroy()
+{
+	log_cb(RETRO_LOG_INFO, "[JAVA] CALLING CONTEXTDESTROY\n");
+	(*env)->CallStaticVoidMethod(env, entryPointCls, callContextDestroy, NULL);
 //	log_cb(RETRO_LOG_INFO, "[JAVA] Detaching thread\n");
 //	(*vm)->DetachCurrentThread(vm);
 }

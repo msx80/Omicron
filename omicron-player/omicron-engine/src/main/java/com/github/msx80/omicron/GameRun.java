@@ -140,7 +140,9 @@ public class GameRun {
 
 		private Pixmap readPixmapSafe(FileHandle r) {
 			try {
+				System.out.println("Loading pixmap");
 			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
+			System.out.println("Pixmap loaded ok!");
 			return p;
 			} catch (Throwable e) {
 				throw new RuntimeException("**** Unable to load pixmap! "+e.getMessage(), e); 
@@ -157,7 +159,7 @@ public class GameRun {
 	    	TextureRegion b = sheets.get(sheetNum);
 	        if(b == null)
 	        {
-	        	System.out.println("Calling load sheet");
+	        	System.out.println("Calling load sheet "+sheetNum);
 	        	b = loadSheet(sheetNum);
 	            
 	        	sheets.put(sheetNum, b);
@@ -192,6 +194,7 @@ public class GameRun {
 				System.out.println("trying "+resourceName);
 				r = new CartridgeFileHandle(cartridge, resourceName);
 			}
+			if(!r.exists()) return null;
 			Pixmap p = new Pixmap( r); // Gdx2DPixmap.newPixmap(stre, 0));
 			p.setBlending(Blending.None);
 			Texture tt = new Texture(p, false);
@@ -221,6 +224,8 @@ public class GameRun {
 		
 		public void dispose()
 		{
+			// Note: becouse of all opengl stuff this should reset to a usable state
+			
 			for (Disposable a : sounds.values()) {
 				if(a!=null) a.dispose();
 			}
@@ -239,7 +244,6 @@ public class GameRun {
 			sheets.clear();
 			if(textureToReload != null)	textureToReload.clear();
 			
-			//  TODO move cartridge closure here ?
 			
 		}
 		

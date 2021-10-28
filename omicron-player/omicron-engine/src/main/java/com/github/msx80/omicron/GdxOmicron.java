@@ -92,13 +92,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void create () {
 
 		
-		Pixmap p = new Pixmap(1, 1, Format.RGBA8888);
-		p.drawPixel(0, 0, ColorsCopy.WHITE);
-		pixel = new Texture(p);
-		lastPixel = ColorsCopy.WHITE;
-		
-		
-		batch = new NonBleedingSpriteBatch();
+		contextReset();
 		//batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
 		//batch.enableBlending();
 		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
@@ -118,6 +112,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		initOrResumeGameRun(current);
 		
 	}
+
 
 	private void initOrResumeGameRun(GameRun r) {
 		boolean isResume = r.screenInfo.requiredSysConfig != null;
@@ -261,6 +256,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	@Override
 	public void dispose () {
 		batch.dispose();
+		while(!gameStack.isEmpty())
+		{
+			gameStack.pop().dispose();
+		}
 	}
 
 	@Override
@@ -856,5 +855,31 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		System.out.println("TRACE "+s);
 	}
 
-	
+	public void contextReset()
+	{
+		// create all opengl-related things.
+		
+		Pixmap p = new Pixmap(1, 1, Format.RGBA8888);
+		p.drawPixel(0, 0, ColorsCopy.WHITE);
+		pixel = new Texture(p);
+		lastPixel = ColorsCopy.WHITE;
+			
+			
+		batch = new NonBleedingSpriteBatch();
+	}
+
+	public void contextDestroy()
+	{
+		// create all opengl-related things.
+		
+		pixel.dispose();
+		pixel = null;
+			
+		batch.dispose();
+		batch = null;
+		
+		for (GameRun gr : gameStack) {
+			gr.dispose();
+		}
+	}
 }

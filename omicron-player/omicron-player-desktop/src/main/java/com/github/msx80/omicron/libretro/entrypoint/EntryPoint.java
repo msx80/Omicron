@@ -76,17 +76,16 @@ public class EntryPoint{
 	public static final int M_2 = (1 << 10);
 
 	
-
+	static boolean libraryLoaded = false;
+	
 	static SysConfig s = null; // the system configuration required by the actual omicron cartridge 
 	
 	static GdxOmicron engine;
 	
-	static {
-		Configuration.DEBUG.set(true);		
-	}
+	
 	
 	static String gameToLoad = null;
-	static Cartridge game = null;
+	static Cartridge cartridge = null;
 	
 	public static void callLoop(int ctrlStat, int mx, int my) {
 		// this is the main loop function. The parameters are the controllers and mouse status
@@ -149,14 +148,74 @@ public class EntryPoint{
 		
 	}
 
-	public static void callSetupContext()
+	public static void callResetContext()
 	{
+		logEntry("CONTEXT RESET ****");
 		try
 		{
-			if(SharedLibraryLoader.isLinux)
+			// set up the Opengl context.
+			// See: http://forum.lwjgl.org/index.php?topic=6992.0
+			logEntry("Calling createCapabilities");
+			GL.createCapabilities();
+			logEntry("Called createCapabilities, all good");
+
+			logEntry("Initializing engine");
+
+			if(engine == null)
 			{
+				logEntry("New engine, cartridge is: "+cartridge);
+				engine = new GdxOmicron(cartridge, new NullHardwareInterface(), new GdxOmicronOptions().setRenderingToTexture(true));
+				
+				new LibretroApplication(engine); // stores itself as Gdx.app
+			}
+			else
+			{
+				logEntry("Engine already initialized, calling context reset");
+				engine.contextReset();
+			}
+			
+			logEntry("Java Setup OK!");
+
+			
+			
+			
+			
+		} catch (Exception e) 
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e); 
+		}
+	}
+
+	private static void loadLibraries() {
+		deepbindTrick();
+		
+
+		// technically in linux we can skip this since it's already loaded in the trick above
+		//if(!SharedLibraryLoader.isLinux)
+		//{
+			logEntry("Loading gdx natives");
+			GdxNativesLoader.load();
+		//}
+	}
+
+	private static void deepbindTrick() {
+		if(SharedLibraryLoader.isLinux)
+		{
 
 /*
+
+So i encountered a nasty bug while working on linux. Upon starting a game, the whole system would crash
+with the following error:
+
+retroarch: allocator.c:177: sixel_allocator_realloc: Assertion `allocator' failed.
+./test.sh: line 6:  1993 Aborted                 (core dumped) /usr/bin/retroarch -L etc..
+
+I first tought it was some mismatch with opengl, but after putting LOTS of debug "printf" around, i found 
+that it crashed when invoking Gdx2DPixmap.load, a native method.
+I searched for that "sixel" to find that it was an obscure image format loader. But libgdx wasn't using it.
+But retroarch was. I tought that maybe some library mismatch was sending the program to the wrong call or something.
+I fired up gdb and dusted off my knowledge of it and sure enought something was fishy:
 
 Thread 1 "retroarch" received signal SIGABRT, Aborted.
 __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:51
@@ -169,7 +228,7 @@ Tracepoint 1 at 0x7fffedadcfb7: file ../sysdeps/unix/sysv/linux/raise.c, line 51
 #0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:51
 #1  0x00007fffedade921 in __GI_abort () at abort.c:79
 #2  0x00007fffedace48a in __assert_fail_base (fmt=0x7fffedc55750 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7ffff1f5740$
-    file=file@entry=0x7ffff1f573f9 "allocator.c", line=line@entry=177, function=function@entry=0x7ffff1f574a0 "sixel_allocator_realloc") at assert.c:$
+   file=file@entry=0x7ffff1f573f9 "allocator.c", line=line@entry=177, function=function@entry=0x7ffff1f574a0 "sixel_allocator_realloc") at assert.c:$
 #3  0x00007fffedace502 in __GI___assert_fail (assertion=0x7ffff1f57405 "allocator", file=0x7ffff1f573f9 "allocator.c", line=177, function=0x7ffff1f57$
 #4  0x00007ffff1f51470 in sixel_allocator_realloc () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
 #5  0x00007ffff1f44363 in ?? () from /usr/lib/x86_64-linux-gnu/libsixel.so.1
@@ -183,41 +242,55 @@ Tracepoint 1 at 0x7fffedadcfb7: file ../sysdeps/unix/sysv/linux/raise.c, line 51
 #13 0x00007fffc0e4e0cd in ?? ()
 #14 0x0000000000000000 in ?? ()
 
+In line #9 it's calling gdx2d_load from libgdx64.so, the next line (#8) is calling stbi_load_from_memory, 
+but from libsixel.so! Turns out that gdx includes a library called stb image (https://github.com/nothings/stb/blob/master/stb_image.h)
+which define stbi_load_from_memory, but the same library was used by libsixel! So we have a conflict: two different
+.so library have the same symbol (stbi_load_from_memory). Since libsixel is loaded when retroarch starts, by the time libgdx64 is loaded the symbol
+is already taken. For how linux works, the symbol is resolved to the one in libsixel, crashing the app.
+
+To verify the issue, i started retroarch preloading libgdx64 with LD_PRELOAD:
+LD_PRELOAD=/path/to/libgdx64.so retroarch 
+
+This runs the program with the given libraries already loaded, so they would take precedence. And behold, the
+core was now starting correctly and running fine!
+
+Problem is: i can't expect all people to use LD_PRELOAD to run the core. I spent some hours googling
+about linux internal working and finally landed on this StackOverflow question:
+
+https://stackoverflow.com/questions/22004131/is-there-symbol-conflict-when-loading-two-shared-libraries-with-a-same-symbol
+
+So i was right:
+
+"When you load a library with dlopen you can access all symbols in it with dlsym and those symbols will be
+the correct symbols from that library and doesn't pollute the global symbol space (unless you used RTLD_GLOBAL).
+But its dependencies are still resolved using the already loaded global symbols if available even if the
+library itself defines the symbol."
+
+It also suggests a solution: there's a flag in dlopen() that solves just this problem: bind all symbold in
+a library to the library itself and not from the global symbol table.
+
+Problem is, libgdx ultimately loads libraries with System.load, which doesn't let you specify any flag.
+Luckly, i found out that LWJGL is using a different system, implemented in their own native library, 
+which lets you call dlopen() directly and with flags. 
+
+So the following code estract the libgdx64.so from the jars (as gdk normally does) and then loads it
+with LWJGL facility, using the RTLD_DEEPBIND flag.
 */
 
 
 
-				logEntry("Dynamically loading library with DEEPBIND");
-				SharedLibraryLoader sl = new SharedLibraryLoader();
-				String platformName = sl.mapLibraryName("gdx");
-				logEntry("Platform name: "+platformName);
-				try {
-					File f = sl.extractFile(platformName, null);
-					System.out.println(f.getCanonicalPath());
-					DynamicLinkLoader.dlopen(f.getCanonicalPath(), DynamicLinkLoader.RTLD_DEEPBIND | DynamicLinkLoader.RTLD_NOW);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-
+			logEntry("Dynamically loading library with DEEPBIND");
+			SharedLibraryLoader sl = new SharedLibraryLoader();
+			String platformName = sl.mapLibraryName("gdx");
+			logEntry("Platform name: "+platformName);
+			try {
+				File f = sl.extractFile(platformName, null);
+				System.out.println(f.getCanonicalPath());
+				DynamicLinkLoader.dlopen(f.getCanonicalPath(), DynamicLinkLoader.RTLD_DEEPBIND | DynamicLinkLoader.RTLD_NOW);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			
 
-			// technically in linux we can skip this since it's already loaded in the trick above
-			//if(!SharedLibraryLoader.isLinux)
-			//{
-				logEntry("Loading gdx natives");
-				GdxNativesLoader.load();
-			//}
-			
-			// set up the Opengl context.
-			// See: http://forum.lwjgl.org/index.php?topic=6992.0
-			logEntry("Calling createCapabilities");
-			GL.createCapabilities();
-			logEntry("Called createCapabilities, all good");
-		} catch (Exception e) 
-		{
-			e.printStackTrace();
-			throw new RuntimeException(e); 
 		}
 	}
 	private static void logEntry(String string) {
@@ -227,52 +300,44 @@ Tracepoint 1 at 0x7fffedadcfb7: file ../sysdeps/unix/sysv/linux/raise.c, line 51
 
 	public static void callLoadGame(String filename)
 	{
+		if(!libraryLoaded)
+		{
+			loadLibraries();
+			libraryLoaded = true;
+		}
+		
 		// simply store the cartridge file to load
-		logEntry("Loading game: "+filename);
+		logEntry("Loading game: "+filename+", Engine is: "+engine);
 		gameToLoad = filename;
-		game = CartridgeLoadingUtils.fromOmicronFile(new File(gameToLoad));
-		s = game.getGameObject().sysConfig();
+		cartridge = CartridgeLoadingUtils.fromOmicronFile(new File(gameToLoad));
+		s = cartridge.getGameObject().sysConfig();
 		logEntry("Game loaded, sysconfig: "+s);
 	}
-	public static void callSetup() {
-		try
-		{
-			logEntry("Calling JAVA setup");
-			logEntry("Cartridge is: "+game);
-			logEntry("Game is: "+game.getGameObject());
-
-			// TODO this is actually called on context creation right after callSetupContext.
-			// if coming from fullscreen toggle or such, we don't have the game anymore
-			//if(game==null) game = GameLoadingUtils.loadGameFromJar(new File(gameToLoad));
-			
-			// actually load the game from the cartridge.
-			// this parse the included omicron.properties descriptor and use a custom classloader to load classes in a sandbox.
-			 
-			logEntry("Game loaded, initializing engine");
-			engine = new GdxOmicron(game, new NullHardwareInterface(), new GdxOmicronOptions().setRenderingToTexture(true));
-			// obtain desired system configuration from cartridge.
-			// s = engine.current.game.sysConfig();
-
-			new LibretroApplication(engine); // stores itself as Gdx.app
-			
-			logEntry("Java Setup OK!");
-
 	
-		} catch (Exception e) {e.printStackTrace();throw e; }
+	public static void callUnloadGame()
+	{
+		logEntry("UNLOADGAME ****");
+		// context is already destroyed.
+		engine = null;
+		gameToLoad = null;
+		cartridge = null;
+		s = null;
 	}
 
 	public static int sysInfo(int iswidth)
 	{
+		logEntry("SYSINFO ****");
 		logEntry("Desired system info: "+s);
 		if(iswidth!=0) return s.width; else return s.height;
 	}
 	
-	public static void callTeardown() {
+	public static void callContextDestroy() {
 		
 		// this is called on OPENGL context destruction, should at least finalize the engine object.
 		// TODO do some cleaning ?
-		logEntry("called TEARDOWN");
-
+		logEntry("CONTEXTDESTROY ****");
+		if(engine!=null) engine.contextDestroy();
+		
 	}
 
 	
