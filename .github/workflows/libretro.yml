@@ -19,5 +19,6 @@ jobs:
         java-version: 11.0
     - name: make
       run: |
+        sudo apt-get install mesa-common-dev
         cd libretro/LibretroOmicronCore
         make all
