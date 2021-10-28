@@ -23,7 +23,7 @@ jobs:
     - name: Build Omicron Player
       run: |
         cd omicron-player
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Build Hello World cart
       run: |
         cd demo/HelloWorld
