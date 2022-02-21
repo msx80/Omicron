@@ -198,13 +198,13 @@ int deinitJava()
 	// turns out you can get only one VM per process, even if you destroy it, you cannot create any more.
 	// so we keep the same one around and carry on.
 #if defined(_WIN32) 
-	if( FreeLibrary(hinstLib)  == 0)
+	if(hinstLib && FreeLibrary(hinstLib)  == 0)
 	{
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Could not free JAVA dll/so");
 		return -1;
 	}
 #else
-	if( dlclose(handle)  != 0)
+	if(handle && dlclose(handle)  != 0)
 	{
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Could not free JAVA dll/so");
 		return -1;
