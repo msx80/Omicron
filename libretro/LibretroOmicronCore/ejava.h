@@ -8,7 +8,7 @@ void javaContextDestroy();
 void javaLoadGame(const char* path);
 void javaUnloadGame();
 int javaSysInfo(int width);
-int initJava(retro_log_printf_t logger, const char *omicronJarPath);
+int initJava(const char *omicronJarPath);
 //int deinitJava();
 
 

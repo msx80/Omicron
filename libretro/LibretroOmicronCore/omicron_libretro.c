@@ -63,7 +63,7 @@ static retro_audio_sample_batch_t audio_batch_cb;
 static retro_environment_t environ_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
-static retro_log_printf_t log_cb = fallback_log;
+retro_log_printf_t log_cb = fallback_log;
 
 
 void retro_init(void)
@@ -400,7 +400,7 @@ bool retro_load_game(const struct retro_game_info *info)
    }
 	
     
-	if (initJava(log_cb, &systemOmicronPath) != 0)
+	if (initJava(&systemOmicronPath) != 0)
 	{
 		log_cb(RETRO_LOG_ERROR, "Could not initialize JAVA\n");
 		return false;

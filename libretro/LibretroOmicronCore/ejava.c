@@ -30,7 +30,7 @@ void* handle;
 #endif
 
 
-static retro_log_printf_t log_cb = NULL;
+extern retro_log_printf_t log_cb;
 
 
 // types for the two system call we're making
@@ -214,9 +214,9 @@ int deinitJava()
 */
 	return 0;
 }
-int initJava(retro_log_printf_t logger, const char *omicronJarPath)
+
+int initJava(const char *omicronJarPath)
 {
-	log_cb = logger;
 	JavaVMInitArgs  vm_args;
 	jint            res;
 	jclass          bootstrapCls;
