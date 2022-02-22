@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 500
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -75,6 +77,21 @@ int locateJavaDLL(char* buf, size_t size, const char* file)
 	log_cb(RETRO_LOG_INFO, "[JAVA] Getting JAVA_HOME\n");
 	char* javaHome = getenv("JAVA_HOME");
 	log_cb(RETRO_LOG_INFO, "[JAVA] JAVA_HOME: %s\n",(javaHome!=NULL)? javaHome : "NULL");
+#ifndef _WIN32
+	if (!javaHome)
+	{
+		char *realjavabin = realpath("/usr/bin/java", NULL);
+		if (realjavabin) {
+			char *r = strrchr(realjavabin, '/');
+			if (r)
+				*r = '\0';
+			r = strrchr(realjavabin, '/');
+			if (r)
+				*r = '\0';
+			javaHome = realjavabin;
+		}
+	}
+#endif
 	if(!javaHome)
 	{
 		// we could search PATH variable for java paths and find some dll around
