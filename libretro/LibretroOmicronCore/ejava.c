@@ -8,6 +8,7 @@
 #include <dlfcn.h>
 #endif
 #include <jni.h>
+#include <string.h>
 #include "bootstrap.h"
 #include "libretro.h"
 
