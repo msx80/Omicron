@@ -400,7 +400,7 @@ bool retro_load_game(const struct retro_game_info *info)
    }
 	
     
-	if (initJava(&systemOmicronPath) != 0)
+	if (initJava(systemOmicronPath) != 0)
 	{
 		log_cb(RETRO_LOG_ERROR, "Could not initialize JAVA\n");
 		return false;
