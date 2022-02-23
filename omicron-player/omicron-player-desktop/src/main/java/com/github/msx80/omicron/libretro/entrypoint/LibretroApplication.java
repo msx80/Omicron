@@ -34,18 +34,19 @@ public class LibretroApplication implements Application {
 	public LibretroApplication(ApplicationListener game) {
 		this.game = game;
 		Gdx.app = this;
-
+		System.out.println("Setting up opengl");
 		Gdx.gl20 = new Lwjgl3GL20(); // new UnimplementedGL20();
 		Gdx.gl = Gdx.gl20;
 		Gdx.gl30 = new Lwjgl3GL30(); // new UnimplementedGL30();
-		
+		System.out.println("Setting up more stuff");
 		Gdx.graphics = new LibretroGraphics(Gdx.gl20, Gdx.gl30);
 		Gdx.files = new Lwjgl3Files();
 		Gdx.input = new MockInput();
 		Gdx.audio = new MockAudio();
 		Gdx.net = new Lwjgl3Net(new Lwjgl3ApplicationConfiguration()); // TODO fix ?
-		
+		System.out.println("Greating game");
 		game.create();
+		System.out.println("Game created");
 	}
 
 	@Override

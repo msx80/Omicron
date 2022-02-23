@@ -30,8 +30,8 @@ A videogame developed with Omicron, **Doors of Doom**, available on [Play Store]
 How can I try it?
 -----------------
 
-1. Build the omicron-player project (`cd omicron-player\`, `gradlew build dist`)
-2. Run the player jar (`java -jar OmicronPlayer.jar`)
+1. Build the omicron-player project (`cd omicron-player\`, `mvn clean package`)
+2. Run the player jar in omicron-assembly/target (`java -jar omicron-assembly-0.0.3-jar-with-dependencies.jar`)
 3. Build some cartridges:
 4. `cd demo/HelloWorld` (or any other demo)
 5. `gradlew build`

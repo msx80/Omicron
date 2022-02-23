@@ -3,9 +3,8 @@ package com.github.msx80.omicron.player;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.github.msx80.omicron.api.adv.Cartridge;
-
 import com.github.msx80.omicron.DesktopLauncher;
+import com.github.msx80.omicron.api.adv.Cartridge;
 import com.github.msx80.omicron.fantasyconsole.cartridges.ClasspathCartridge;
 
 public class OmicronPlayerMain {

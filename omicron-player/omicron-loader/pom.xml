@@ -16,6 +16,11 @@
 		</repository>
 	</repositories>
   <dependencies>
+  <dependency>
+  <groupId>dev.jeka</groupId>
+  <artifactId>jeka-core</artifactId>
+  <version>0.9.20.RC14</version>
+</dependency>
     <dependency>
       <groupId>com.miglayout</groupId>
       <artifactId>miglayout-swing</artifactId>
@@ -25,7 +30,7 @@
     <dependency>
       <groupId>com.github.msx80</groupId>
       <artifactId>wiseloader</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

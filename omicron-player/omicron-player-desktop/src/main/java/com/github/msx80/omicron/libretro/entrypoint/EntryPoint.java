@@ -165,8 +165,10 @@ public class EntryPoint{
 			{
 				logEntry("New engine, cartridge is: "+cartridge);
 				engine = new GdxOmicron(cartridge, new NullHardwareInterface(), new GdxOmicronOptions().setRenderingToTexture(true));
+				logEntry("Engine loaded: "+engine);
 				
-				new LibretroApplication(engine); // stores itself as Gdx.app
+				Object o = new LibretroApplication(engine); // stores itself as Gdx.app
+				logEntry("LibretroApplication started: "+o);
 			}
 			else
 			{

@@ -22,8 +22,10 @@ import com.github.msx80.omicron.basicutils.gui.drawers.NoScrollbarDrawer;
 import com.github.msx80.omicron.basicutils.gui.drawers.ScrollbarDrawer;
 import com.github.msx80.omicron.basicutils.gui.drawers.StandardScrollbarDrawer;
 import com.github.msx80.omicron.basicutils.palette.Tic80;
-import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 import com.github.msx80.omicron.basicutils.text.TextDrawer.Align;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
+import com.github.msx80.omicron.fantasyconsole.cartridges.FolderLoader;
+import com.github.msx80.omicron.fantasyconsole.cartridges.SourceCartridge;
 
 public class OmicronPlayer implements Game {
 	
@@ -119,6 +121,13 @@ public class OmicronPlayer implements Game {
 		case "Load a cart":
 			getCartSelectWidgets(sys, Paths.get("").toAbsolutePath());
 			break;
+		case "Credits":
+//			try {
+//				runCartridge(new SourceCartridge(new FolderLoader(Paths.get("C:\\Users\\niclugat\\dev\\Omicron\\omicron\\demo\\Retrodrawing\\RetroDrawerSrc"))));
+//			} catch (Exception e) {
+//				throw new RuntimeException(e);
+//			}
+			break;
 		default:
 			break;
 		}
@@ -212,10 +221,16 @@ public class OmicronPlayer implements Game {
 
 	public void runJar(String jarToLaunch2)
     {
+    
+		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2));		
+		runCartridge(gg);
+    }
+	public void runCartridge(Cartridge gg)
+    {
     	//Game gg =  GameLoadingUtils.loadGameFromJar(new File("C:\\Users\\niclugat\\dev\\LibretroOmicron\\LibretroOmicron\\DoorsOfDoom.omicron"));
     	//Game gg =  GameLoadingUtils.loadGameFromJar(new File("C:\\Users\\niclugat\\dev\\LibretroOmicron\\LibretroOmicron\\doors-of-doom-malvagio.jar"));
 		
-		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2));		
+		//Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2));		
 		running = gg;
     	((AdvancedSys)sys).execute(gg, s -> {
     		running.close();

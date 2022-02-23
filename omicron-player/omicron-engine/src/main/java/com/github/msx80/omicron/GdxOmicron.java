@@ -90,7 +90,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 	@Override
 	public void create () {
-
+		System.out.println("calling cr");
 		
 		contextReset();
 		//batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
@@ -108,8 +108,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		
 		//Cursor cursor = Gdx.graphics.newCursor(new Pixmap(1, 1, Format.RGBA8888),0,0);
 		//Gdx.graphics.setCursor(cursor);
+		System.out.println("Init or resuming game");
+		
 		
 		initOrResumeGameRun(current);
+		
+		System.out.println("Done!");
 		
 	}
 
@@ -245,8 +249,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			afterLoop = null;
 			r.run(); // TODO problem: if this throws, (ie loading a subcartridge) we have no way of telling it to the currently running cart
 		}
-		// doesn't guarantee that the last frame is rendered. Analyze better
-		// Gdx.graphics.setContinuousRendering(continuous);
+
 	}
 
 
@@ -752,12 +755,23 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			@Override
 			public void run() {
 
-
-				GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), onResult, onException);
+				GameRun gr;
+				try {
+					gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), onResult, onException);
+				} catch (Exception e) {
+					onException.accept(e);
+					return;
+				}
 				
 				gameStack.push(gr);
 				current = gr;
-				initOrResumeGameRun(gr);
+				
+				try {
+					initOrResumeGameRun(gr);
+				} catch (Exception e) {
+					// if we're here, we already pushed the game on the stack, just handle normal quit/except
+					handleQuitOrException(null, e);
+				}
 				// we clean mouse state so that clicking doesn't pass to child
 				for (Pointer p : pointers) {
 					MouseImpl mouse = (MouseImpl)p;
@@ -782,7 +796,6 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			}
 		};
 		
-
 	}
 
 	@Override
@@ -858,14 +871,16 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void contextReset()
 	{
 		// create all opengl-related things.
-		
+		System.out.println("Creating pixmap");
 		Pixmap p = new Pixmap(1, 1, Format.RGBA8888);
 		p.drawPixel(0, 0, ColorsCopy.WHITE);
+		System.out.println("Creating texture");
 		pixel = new Texture(p);
 		lastPixel = ColorsCopy.WHITE;
-			
+		System.out.println("Creating spriteBatcg");
 			
 		batch = new NonBleedingSpriteBatch();
+		System.out.println("done");
 	}
 
 	public void contextDestroy()

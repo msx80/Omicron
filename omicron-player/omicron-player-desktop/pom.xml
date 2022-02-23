@@ -36,6 +36,14 @@
       <version>0.0.3</version>
       <scope>compile</scope>
     </dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-desktop</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-armeabi</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-armeabi-v7a</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-arm64-v8a</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-x86</classifier></dependency>
+<dependency><groupId>com.badlogicgames.gdx</groupId><artifactId>gdx-platform</artifactId><version>1.9.14</version><classifier>natives-x86_64</classifier></dependency>
+        
   </dependencies>
   <build>
       <plugins>
