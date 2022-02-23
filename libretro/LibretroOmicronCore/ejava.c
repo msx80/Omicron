@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 500
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -8,7 +10,7 @@
 #include <dlfcn.h>
 #endif
 #include <jni.h>
-#include "bootstrap.h"
+#include <string.h>
 #include "libretro.h"
 
 	static JavaVM         *vm;
@@ -30,7 +32,7 @@ void* handle;
 #endif
 
 
-static retro_log_printf_t log_cb = NULL;
+extern retro_log_printf_t log_cb;
 
 
 // types for the two system call we're making
@@ -75,6 +77,21 @@ int locateJavaDLL(char* buf, size_t size, const char* file)
 	log_cb(RETRO_LOG_INFO, "[JAVA] Getting JAVA_HOME\n");
 	char* javaHome = getenv("JAVA_HOME");
 	log_cb(RETRO_LOG_INFO, "[JAVA] JAVA_HOME: %s\n",(javaHome!=NULL)? javaHome : "NULL");
+#ifndef _WIN32
+	if (!javaHome)
+	{
+		char *realjavabin = realpath("/usr/bin/java", NULL);
+		if (realjavabin) {
+			char *r = strrchr(realjavabin, '/');
+			if (r)
+				*r = '\0';
+			r = strrchr(realjavabin, '/');
+			if (r)
+				*r = '\0';
+			javaHome = realjavabin;
+		}
+	}
+#endif
 	if(!javaHome)
 	{
 		// we could search PATH variable for java paths and find some dll around
@@ -198,13 +215,13 @@ int deinitJava()
 	// turns out you can get only one VM per process, even if you destroy it, you cannot create any more.
 	// so we keep the same one around and carry on.
 #if defined(_WIN32) 
-	if( FreeLibrary(hinstLib)  == 0)
+	if(hinstLib && FreeLibrary(hinstLib)  == 0)
 	{
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Could not free JAVA dll/so");
 		return -1;
 	}
 #else
-	if( dlclose(handle)  != 0)
+	if(handle && dlclose(handle)  != 0)
 	{
 		log_cb(RETRO_LOG_ERROR, "[JAVA] Could not free JAVA dll/so");
 		return -1;
@@ -214,17 +231,11 @@ int deinitJava()
 */
 	return 0;
 }
-int initJava(retro_log_printf_t logger, const char *omicronJarPath)
+
+int initJava(const char *omicronJarPath)
 {
-	log_cb = logger;
 	JavaVMInitArgs  vm_args;
 	jint            res;
-	jclass          bootstrapCls;
-	//jobject			obj;
-	jmethodID       mid;
-	jmethodID       mid2;
-	jstring         jstr;
-	jobjectArray    main_args;
 	
 	log_cb(RETRO_LOG_INFO, "[JAVA] INITIALIZING JAVA VM\n");
 
@@ -249,7 +260,8 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 	if(nVMs == 0)
 	{
 		// let's setup everything
-	
+			jclass          clazz;
+			jmethodID       classForNameMethod;
 			log_cb(RETRO_LOG_INFO, "[JAVA] Initializing new VM\n");
 			memset(&vm_args, 0, sizeof(vm_args));
 			vm_args.version  = JNI_VERSION_1_8;
@@ -261,38 +273,45 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to create Java VM: %d\n", res);
 				return 4;
 			}
-			bootstrapCls = (*env)->DefineClass(env, "Bootstrap", NULL, BOOTSTRAP_CLASS, BOOTSTRAP_CLASS_SIZE);
-	
-			if (bootstrapCls == NULL) {
-				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to initialize Bootstrap class\n");
+
+			jstring classToLoad = (*env)->NewStringUTF(env, "com.github.msx80.omicron.libretro.entrypoint.EntryPoint");
+			log_cb(RETRO_LOG_INFO, "[JAVA] Calling main\n");
+			jmethodID urlConstructor = (*env)->GetMethodID(env, (*env)->FindClass(env, "java/net/URL"), "<init>", "(Ljava/lang/String;)V");
+			size_t jarPathLen = sizeof("file://") + strlen(omicronJarPath);
+			char *jarPath = malloc(jarPathLen);
+			if (jarPath == NULL) {
+				log_cb(RETRO_LOG_ERROR, "Malloc failed");
 				return 3;
 			}
-			
-			mid = (*env)->GetStaticMethodID(env, bootstrapCls, "main", "([Ljava/lang/String;)V");
-			if (mid == NULL) {
-				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find main functionn\n");
-				return 2;
+			memcpy(jarPath, "file://", sizeof("file://") - 1);
+			memcpy(jarPath + sizeof("file://") - 1, omicronJarPath, jarPathLen - sizeof("file://") + 1);
+				
+			jstring jarPathJString = (*env)->NewStringUTF(env, jarPath);
+			jobject url = (*env)->NewObject(env, (*env)->FindClass(env, "java/net/URL"), urlConstructor, jarPathJString);
+			(*env)->ReleaseStringUTFChars(env, jarPathJString, NULL);
+			if(url == NULL){
+				log_cb(RETRO_LOG_ERROR, "Couldn't create URL object");
+				return 3;
 			}
-		
-			jstr      = (*env)->NewStringUTF(env, "");
-			main_args = (*env)->NewObjectArray(env, 2, (*env)->FindClass(env, "java/lang/String"), jstr);
-			
-			(*env)->SetObjectArrayElement(env, main_args, 0, (*env)->NewStringUTF(env, "com.github.msx80.omicron.libretro.entrypoint.EntryPoint"));
-		#if defined(_WIN32) 	
-			(*env)->SetObjectArrayElement(env, main_args, 1, (*env)->NewStringUTF(env, 
-			//"system/omicron/omicron.jar")); 
-			omicronJarPath));
-			
-			//"C:\\Users\\niclugat\\dev\\LibretroOmicron\\omicron-libretro-java\\target\\omicron-libretro-java-0.0.1-jar-with-dependencies.jar"));
-		#else
-		    (*env)->SetObjectArrayElement(env, main_args, 1, (*env)->NewStringUTF(env, 
-		     	omicronJarPath));
-			 //"/home/nicola/LibretroOmicron/omicron-libretro-java-0.0.1-jar-with-dependencies.jar"));
-		#endif	
-			log_cb(RETRO_LOG_INFO, "[JAVA] Calling main\n");
-			(*env)->CallStaticVoidMethod(env, bootstrapCls, mid, main_args);
-		
+//			(*env)->CallStaticVoidMethod(env, bootstrapCls, mid, main_args);
 
+			jobjectArray urls = (*env)->NewObjectArray(env, 1, (*env)->FindClass(env, "java/net/URL"), NULL);
+			(*env)->SetObjectArrayElement(env, urls, 0, url);
+			    
+			jclass classLoaderClass = (*env)->FindClass(env,"java/net/URLClassLoader");
+			jmethodID constructor = (*env)->GetMethodID(env, classLoaderClass, "<init>", "([Ljava/net/URL;)V");
+			jobject classLoader = (*env)->NewObject(env, classLoaderClass, constructor, urls);
+			log_cb(RETRO_LOG_INFO, "[JAVA] Classloader created\n");
+	
+			clazz = (*env)->FindClass(env, "java/lang/Class");
+			classForNameMethod = (*env)->GetStaticMethodID(env, clazz, "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+			if(classForNameMethod == NULL){
+				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find Class.forName\n");
+				return 3;
+			}
+
+			entryPointCls = (jclass) (*env)->CallStaticObjectMethod(env, clazz, classForNameMethod, classToLoad, true, classLoader);
+			(*env)->ReleaseStringUTFChars(env, classToLoad, NULL);
 	}
 	else
 	{
@@ -312,27 +331,7 @@ int initJava(retro_log_printf_t logger, const char *omicronJarPath)
 			return result;
 		}
 
-		bootstrapCls = (*env)->FindClass(env, "Bootstrap");
-		if (bootstrapCls == NULL) {
-				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to initialize Bootstrap class\n");
-				return 3;
-		}
-	}
-
-	
-	
-	mid2 = (*env)->GetStaticMethodID(env, bootstrapCls, "getMainClass", "()Ljava/lang/Class;");
-	if (mid2 == NULL) {
-		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find getRunnable functionn");
-		return 2;
-	}
-	
-
-
-	entryPointCls = (*env)->CallStaticObjectMethod(env, bootstrapCls, mid2, NULL);
-	if (entryPointCls == NULL) {
-		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to get entryPointCls\n");
-		return 3;
+		entryPointCls = (*env)->FindClass(env,"com/github/msx80/omicron/libretro/entrypoint/EntryPoint");
 	}
 	
 	callLoop = (*env)->GetStaticMethodID(env, entryPointCls, "callLoop", "(III)V");
