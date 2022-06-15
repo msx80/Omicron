@@ -322,6 +322,7 @@ with LWJGL facility, using the RTLD_DEEPBIND flag.
 		gameToLoad = null;
 		cartridge = null;
 		s = null;
+		logEntry("UNLOADGAME DONE ****");
 	}
 
 	public static int sysInfo(int iswidth)

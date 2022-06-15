@@ -14,6 +14,9 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 static struct retro_hw_render_callback hw_render;
 
+#define AUDIO_FRAMES (44100 / 60)
+int16_t audio_buffer[2 * AUDIO_FRAMES];
+
 #if defined(HAVE_PSGL)
 #define RARCH_GL_FRAMEBUFFER GL_FRAMEBUFFER_OES
 #define RARCH_GL_FRAMEBUFFER_COMPLETE GL_FRAMEBUFFER_COMPLETE_OES
@@ -111,10 +114,10 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 	width = javaSysInfo(1);
 	height = javaSysInfo(0);
 	log_cb(RETRO_LOG_INFO, "Requested screen size: %d, %d\n", width, height);
-   info->timing = (struct retro_system_timing) {
-      .fps = 60.0,
-      .sample_rate = 44100.0,
-   };
+
+
+   info->timing.fps = 60.0;
+   info->timing.sample_rate = 44100.0;
 
    info->geometry = (struct retro_game_geometry) {
       .base_width   = width,
@@ -292,7 +295,9 @@ void retro_run(void)
    video_cb(RETRO_HW_FRAME_BUFFER_VALID, width, height, 0);
    
    //log_cb(RETRO_LOG_INFO, "[BACK] retro_run finished\n");
-   // glBindFramebuffer(RARCH_GL_FRAMEBUFFER, 0); // TODO needed ?
+   glBindFramebuffer(RARCH_GL_FRAMEBUFFER, 0); // TODO needed ?
+
+   audio_batch_cb(audio_buffer, AUDIO_FRAMES);
 }
 
 static void context_reset(void)
