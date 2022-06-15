@@ -113,7 +113,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 	log_cb(RETRO_LOG_INFO, "Requested screen size: %d, %d\n", width, height);
    info->timing = (struct retro_system_timing) {
       .fps = 60.0,
-      .sample_rate = 0.0,
+      .sample_rate = 44100.0,
    };
 
    info->geometry = (struct retro_game_geometry) {

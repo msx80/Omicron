@@ -98,18 +98,18 @@ public class NonBleedingSpriteBatch implements Batch {
 	public NonBleedingSpriteBatch (int size, ShaderProgram defaultShader) {
 		// 32767 is max vertex index, so 32767 / 4 vertices per sprite = 8191 sprites max.
 		if (size > 8191) throw new IllegalArgumentException("Can't have more than 8191 sprites per batch: " + size);
-
-		VertexDataType vertexDataType = (Gdx.gl30 != null) ? VertexDataType.VertexBufferObjectWithVAO : defaultVertexDataType;
+		System.out.println("ciccio1 "+Gdx.gl30);
+		VertexDataType vertexDataType = (Gdx.gl30 != null) ? VertexDataType.VertexBufferObject : defaultVertexDataType;
 
 		mesh = new Mesh(vertexDataType, false, size * 4, size * 6,
 			new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
 			new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
 			new VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"));
-
+		System.out.println("ciccio2");
 		projectionMatrix.setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		vertices = new float[size * Sprite.SPRITE_SIZE];
-
+		System.out.println("ciccio3");
 		int len = size * 6;
 		short[] indices = new short[len];
 		short j = 0;
@@ -122,12 +122,13 @@ public class NonBleedingSpriteBatch implements Batch {
 			indices[i + 5] = j;
 		}
 		mesh.setIndices(indices);
-
+		System.out.println("ciccio4");
 		if (defaultShader == null) {
 			shader = createDefaultShader();
 			ownsShader = true;
 		} else
 			shader = defaultShader;
+		System.out.println("ciccio5");
 	}
 
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */

@@ -12,11 +12,11 @@ Go to `omicron/omicron-player` and build the player:
 
 `mvn clean package`
 
-it generates a file named `omicron-assembly-0.0.3-jar-with-dependencies.jar` in `omicron-assembly/target/`
+it generates a file named `omicron.jar` in `omicron-assembly/target/`
 
-move and rename it to:
+move it to:
 
-`yourpath\RetroArch\system\omicron\omicron.jar`
+`yourpath\RetroArch\system\omicron\`
 
 Set the JAVA_HOME environment variable and run retroarch executable. It needs to see the JAVA_HOME environment variable to locate the jvm.
 

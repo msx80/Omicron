@@ -31,7 +31,7 @@ How can I try it?
 -----------------
 
 1. Build the omicron-player project (`cd omicron-player\`, `mvn clean package`)
-2. Run the player jar in omicron-assembly/target (`java -jar omicron-assembly-0.0.3-jar-with-dependencies.jar`)
+2. Run the player jar in omicron-assembly/target (`java -jar omicron.jar`)
 3. Build some cartridges:
 4. `cd demo/HelloWorld` (or any other demo)
 5. `gradlew build`

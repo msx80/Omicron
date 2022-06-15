@@ -2,17 +2,15 @@ package com.github.msx80.omicron.libretro.entrypoint;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.system.Configuration;
 import org.lwjgl.system.linux.DynamicLinkLoader;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.github.msx80.omicron.ControllerImpl;
@@ -342,5 +340,5 @@ with LWJGL facility, using the RTLD_DEEPBIND flag.
 		
 	}
 
-	
+
 }

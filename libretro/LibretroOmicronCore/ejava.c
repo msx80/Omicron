@@ -232,6 +232,74 @@ int deinitJava()
 	return 0;
 }
 
+bool checkException()
+{
+
+	if ( (*env)->ExceptionCheck(env) )  {
+		log_cb(RETRO_LOG_ERROR, "[JAVA] Exception getting class\n");
+		(*env)->ExceptionDescribe(env);
+	  	return true;
+	}
+	return false;
+}
+
+jclass getEntryPoint(const char *omicronJarPath)
+{
+				jclass          clazz;
+			jmethodID       classForNameMethod;
+
+	jstring classToLoad = (*env)->NewStringUTF(env, "com.github.msx80.omicron.libretro.entrypoint.EntryPoint");
+			log_cb(RETRO_LOG_INFO, "[JAVA] Calling main\n");
+			jmethodID urlConstructor = (*env)->GetMethodID(env, (*env)->FindClass(env, "java/net/URL"), "<init>", "(Ljava/lang/String;)V");
+			
+			#ifndef _WIN32
+				const char *prefix = "file://";
+			#else
+				const char *prefix = "file:///";
+			#endif
+			size_t prefixLength = strlen(prefix);
+			size_t jarPathLen = prefixLength + strlen(omicronJarPath)+1;
+			char *jarPath = malloc(jarPathLen);
+			if (jarPath == NULL) {
+				log_cb(RETRO_LOG_ERROR, "Malloc failed");
+				return NULL;
+			}
+			memcpy(jarPath, prefix, prefixLength );
+			memcpy(jarPath + prefixLength , omicronJarPath, strlen(omicronJarPath) + 1);
+
+			log_cb(RETRO_LOG_INFO, "Jar is %s\n", jarPath);
+			jstring jarPathJString = (*env)->NewStringUTF(env, jarPath);
+			jobject url = (*env)->NewObject(env, (*env)->FindClass(env, "java/net/URL"), urlConstructor, jarPathJString);
+			if(checkException()) return NULL;
+			
+			(*env)->ReleaseStringUTFChars(env, jarPathJString, NULL);
+			if(url == NULL){
+				log_cb(RETRO_LOG_ERROR, "Couldn't create URL object");
+				return NULL;
+			}
+//			(*env)->CallStaticVoidMethod(env, bootstrapCls, mid, main_args);
+
+			jobjectArray urls = (*env)->NewObjectArray(env, 1, (*env)->FindClass(env, "java/net/URL"), NULL);
+			(*env)->SetObjectArrayElement(env, urls, 0, url);
+			    
+			jclass classLoaderClass = (*env)->FindClass(env,"java/net/URLClassLoader");
+			jmethodID constructor = (*env)->GetMethodID(env, classLoaderClass, "<init>", "([Ljava/net/URL;)V");
+			jobject classLoader = (*env)->NewObject(env, classLoaderClass, constructor, urls);
+			if(checkException()) return NULL;
+			log_cb(RETRO_LOG_INFO, "[JAVA] Classloader created %d\n", classLoader);
+	
+			clazz = (*env)->FindClass(env, "java/lang/Class");
+			classForNameMethod = (*env)->GetStaticMethodID(env, clazz, "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+			if(classForNameMethod == NULL){
+				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find Class.forName\n");
+				return NULL;
+			}
+
+			entryPointCls = (jclass) (*env)->CallStaticObjectMethod(env, clazz, classForNameMethod, classToLoad, true, classLoader);
+			if(checkException()) return NULL;
+			(*env)->ReleaseStringUTFChars(env, classToLoad, NULL);
+			return entryPointCls;
+}
 int initJava(const char *omicronJarPath)
 {
 	JavaVMInitArgs  vm_args;
@@ -260,8 +328,6 @@ int initJava(const char *omicronJarPath)
 	if(nVMs == 0)
 	{
 		// let's setup everything
-			jclass          clazz;
-			jmethodID       classForNameMethod;
 			log_cb(RETRO_LOG_INFO, "[JAVA] Initializing new VM\n");
 			memset(&vm_args, 0, sizeof(vm_args));
 			vm_args.version  = JNI_VERSION_1_8;
@@ -274,44 +340,9 @@ int initJava(const char *omicronJarPath)
 				return 4;
 			}
 
-			jstring classToLoad = (*env)->NewStringUTF(env, "com.github.msx80.omicron.libretro.entrypoint.EntryPoint");
-			log_cb(RETRO_LOG_INFO, "[JAVA] Calling main\n");
-			jmethodID urlConstructor = (*env)->GetMethodID(env, (*env)->FindClass(env, "java/net/URL"), "<init>", "(Ljava/lang/String;)V");
-			size_t jarPathLen = sizeof("file://") + strlen(omicronJarPath);
-			char *jarPath = malloc(jarPathLen);
-			if (jarPath == NULL) {
-				log_cb(RETRO_LOG_ERROR, "Malloc failed");
-				return 3;
-			}
-			memcpy(jarPath, "file://", sizeof("file://") - 1);
-			memcpy(jarPath + sizeof("file://") - 1, omicronJarPath, jarPathLen - sizeof("file://") + 1);
-				
-			jstring jarPathJString = (*env)->NewStringUTF(env, jarPath);
-			jobject url = (*env)->NewObject(env, (*env)->FindClass(env, "java/net/URL"), urlConstructor, jarPathJString);
-			(*env)->ReleaseStringUTFChars(env, jarPathJString, NULL);
-			if(url == NULL){
-				log_cb(RETRO_LOG_ERROR, "Couldn't create URL object");
-				return 3;
-			}
-//			(*env)->CallStaticVoidMethod(env, bootstrapCls, mid, main_args);
-
-			jobjectArray urls = (*env)->NewObjectArray(env, 1, (*env)->FindClass(env, "java/net/URL"), NULL);
-			(*env)->SetObjectArrayElement(env, urls, 0, url);
-			    
-			jclass classLoaderClass = (*env)->FindClass(env,"java/net/URLClassLoader");
-			jmethodID constructor = (*env)->GetMethodID(env, classLoaderClass, "<init>", "([Ljava/net/URL;)V");
-			jobject classLoader = (*env)->NewObject(env, classLoaderClass, constructor, urls);
-			log_cb(RETRO_LOG_INFO, "[JAVA] Classloader created\n");
-	
-			clazz = (*env)->FindClass(env, "java/lang/Class");
-			classForNameMethod = (*env)->GetStaticMethodID(env, clazz, "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
-			if(classForNameMethod == NULL){
-				log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find Class.forName\n");
-				return 3;
-			}
-
-			entryPointCls = (jclass) (*env)->CallStaticObjectMethod(env, clazz, classForNameMethod, classToLoad, true, classLoader);
-			(*env)->ReleaseStringUTFChars(env, classToLoad, NULL);
+			
+			entryPointCls = getEntryPoint(omicronJarPath);
+			if(entryPointCls == NULL) return 3;
 	}
 	else
 	{
@@ -320,7 +351,7 @@ int initJava(const char *omicronJarPath)
 //		(*vm)->AttachCurrentThread(vm, env, NULL);
 		
 
-		log_cb(RETRO_LOG_INFO, "[JAVA] Reusing previously started JVM");
+		log_cb(RETRO_LOG_INFO, "[JAVA] Reusing previously started JVM\n");
 		vm = buffer[0];
 
 		
@@ -331,12 +362,17 @@ int initJava(const char *omicronJarPath)
 			return result;
 		}
 
-		entryPointCls = (*env)->FindClass(env,"com/github/msx80/omicron/libretro/entrypoint/EntryPoint");
+		entryPointCls = getEntryPoint(omicronJarPath);
+		if(entryPointCls == NULL) return 3;
 	}
-	
+	if(entryPointCls == NULL)
+	{
+		log_cb(RETRO_LOG_ERROR, "[JAVA] entryPointCls is null\n");
+		return 2;
+	}
 	callLoop = (*env)->GetStaticMethodID(env, entryPointCls, "callLoop", "(III)V");
 	if (callLoop == NULL) {
-		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callLoop functionn");
+		log_cb(RETRO_LOG_ERROR, "[JAVA] Failed to find callLoop function\n");
 		return 2;
 	}
 	

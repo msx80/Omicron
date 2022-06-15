@@ -50,6 +50,8 @@
             </goals>
             <phase>package</phase>
             <configuration>
+			<finalName>omicron</finalName>
+			<appendAssemblyId>false</appendAssemblyId>
 			<archive>
           <manifest>
             <mainClass>com.github.msx80.omicron.player.OmicronPlayerMain</mainClass>
