@@ -467,6 +467,7 @@ void javaUnloadGame()
 {
 	log_cb(RETRO_LOG_INFO, "[JAVA] CALLING UNLOAD GAME\n");
 	(*env)->CallStaticVoidMethod(env, entryPointCls, callUnloadGame);
+	log_cb(RETRO_LOG_INFO, "[JAVA] UNLOAD GAME DONE\n");
 }
 
 void javaContextDestroy()

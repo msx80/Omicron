@@ -73,7 +73,6 @@ dependencies {
 jar {
 	from('.') {
       include 'omicron.properties'
-      
    }
    from {
     // we want to package extra dependencies but NOT the api, since it will 

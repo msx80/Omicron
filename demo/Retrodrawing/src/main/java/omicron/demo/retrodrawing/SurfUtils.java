@@ -111,7 +111,7 @@ public class SurfUtils {
 		for (int i = 0; i < Palette.P.length; i++) {
 			if(c==Palette.P[i]) return i;
 		}
-		throw new RuntimeException("Color not found in palette!");
+		throw new RuntimeException("Color not found in palette! "+Integer.toHexString(c));
 	}	
 	
 }

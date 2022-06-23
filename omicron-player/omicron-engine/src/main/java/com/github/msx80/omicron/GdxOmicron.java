@@ -195,7 +195,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void render () {
 		
 		fps.log();
-		offset(0,0); // reset offset
+		ox=0;
+		oy=0;
 
 		// reset current color to white
 		this.colorf(1, 1, 1, 1);

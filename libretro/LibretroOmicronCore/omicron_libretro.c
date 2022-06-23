@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#define _USE_MATH_DEFINES // for C
 #include <math.h>
 
 #include "glsym/glsym.h"
@@ -103,7 +104,7 @@ void retro_get_system_info(struct retro_system_info *info)
    info->library_version  = "v1";
    info->need_fullpath    = true; // TODO not strictly necessary, change later
    info->valid_extensions = "omicron"; 
-   info->block_extract    = false;
+   info->block_extract    = true;
    
   
 }
