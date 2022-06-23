@@ -3,4 +3,4 @@ jdk:
 install:
    - echo "Running a custom install command"
    - cd omicron-player
-   - mvn clean compile package
+   - mvn clean install package
