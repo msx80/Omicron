@@ -37,9 +37,11 @@ public class SecureJarCartridge extends AbstractJarCartridge implements Cartridg
 
 		c.allowClasses(
 				"java.lang.Class",
-				"com.github.msx80.omicron.api.Game", "com.github.msx80.omicron.api.Sys",
+				"com.github.msx80.omicron.api.Game", 
+				"com.github.msx80.omicron.api.Sys",
 				"com.github.msx80.omicron.api.SysConfig",
-				"com.github.msx80.omicron.api.SysConfig$VirtualScreenMode", "com.github.msx80.omicron.api.Pointer",
+				"com.github.msx80.omicron.api.SysConfig$VirtualScreenMode", 
+				"com.github.msx80.omicron.api.Pointer",
 				"com.github.msx80.omicron.api.Controller",
 				"com.github.msx80.omicron.basicutils.MapDrawer$MapData",
 				"com.github.msx80.omicron.basicutils.MapDrawer$MapDataArray");

@@ -27,9 +27,7 @@ public class JarLoader implements Loader {
 	public byte[] loadFile(String filePath) {
 		ZipEntry entry = jarFile.getJarEntry(filePath);
 		if (entry == null) {
-			
-				return null;
-			
+			return null;
 		}
 		try {
 			return FileUtil.readData(jarFile.getInputStream(entry));

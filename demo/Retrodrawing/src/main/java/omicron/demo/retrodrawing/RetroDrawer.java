@@ -53,6 +53,7 @@ public class RetroDrawer implements Game, Ctx {
         tool = new SmallPen() ;
         
         td = new TextDrawerFixed(sys, 1, 6, 6, 6);
+		
     }
 
     public void render() 
@@ -62,6 +63,7 @@ public class RetroDrawer implements Game, Ctx {
     	
     	sys.fill(0, SURFWIDTH+2, 2, 16, 16, Palette.P[cur]);
     	
+		
     	for (int i = 0; i < tools.length; i++) {
 			ToolItem ti = tools[i];
 			if(ti.toolClass.isInstance(tool)) 
@@ -73,7 +75,6 @@ public class RetroDrawer implements Game, Ctx {
 	    		sys.color(Colors.from(255, 255, 255,100));
 	    	}
 	    	sys.draw(2, SURFWIDTH+2, 20*(i+1), i*16, 0, 16,16, 0,0);
-	    	
 		}
     	
     	sys.color(Colors.WHITE);
@@ -81,15 +82,15 @@ public class RetroDrawer implements Game, Ctx {
     	
     	if(w!=null) w.draw(sys, 0);
     	
-    	/*
+    	
     	sys.color(Colors.BLACK);
-    	int i=0;
+    	
     	for (Pointer p : sys.pointers()) {
-    		td.print(""+p, 2,i*10+2);
-    		i++;
+    		sys.fill(0,p.x(), p.y(), 3,3, Colors.RED);
+    	
 			
 		}
-		*/
+		
     }
 
 	public boolean update() 
@@ -153,7 +154,6 @@ public class RetroDrawer implements Game, Ctx {
 			}
 			cooldownMouse = true;
 		}
-		
 		
         return false;
     }

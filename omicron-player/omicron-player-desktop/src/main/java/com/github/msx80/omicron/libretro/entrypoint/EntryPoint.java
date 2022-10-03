@@ -309,7 +309,7 @@ with LWJGL facility, using the RTLD_DEEPBIND flag.
 		// simply store the cartridge file to load
 		logEntry("Loading game: "+filename+", Engine is: "+engine);
 		gameToLoad = filename;
-		cartridge = CartridgeLoadingUtils.fromOmicronFile(new File(gameToLoad));
+		cartridge = CartridgeLoadingUtils.fromOmicronFile(new File(gameToLoad), true);
 		s = cartridge.getGameObject().sysConfig();
 		logEntry("Game loaded, sysconfig: "+s);
 	}

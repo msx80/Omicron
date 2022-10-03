@@ -222,7 +222,7 @@ public class OmicronPlayer implements Game {
 	public void runJar(String jarToLaunch2)
     {
     
-		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2));		
+		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2), true);		
 		runCartridge(gg);
     }
 	public void runCartridge(Cartridge gg)

@@ -49,25 +49,6 @@ public abstract class AbstractJarCartridge implements Cartridge {
 	
 	protected byte[] loadCustomClass(String filePath) {
 		return loader.loadFile(filePath);
-		/*
-		ZipEntry entry = jarFile.getJarEntry(filePath);
-		if (entry == null) {
-			if(filePath.startsWith("/"))
-			{
-				// retry without leading slash
-				throw new RuntimeException("Are we sure this is needed?");
-				// if yes uncomment: return loadFile(filePath.substring(1));
-			}
-			else
-			{
-				return null;
-			}
-		}
-		try {
-			return FileUtil.readData(jarFile.getInputStream(entry));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}*/
 	}
 	
 	

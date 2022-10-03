@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.github.msx80.omicron.api.Game;
 import com.github.msx80.omicron.api.adv.Cartridge;
+import com.github.msx80.omicron.fantasyconsole.cartridges.InsecureJarCartridge;
 import com.github.msx80.omicron.fantasyconsole.cartridges.JarLoader;
 import com.github.msx80.omicron.fantasyconsole.cartridges.SecureJarCartridge;
 
@@ -37,6 +38,7 @@ public class CartridgeLoadingUtils {
 	 * The classloader will make sure that the correct resources in the jar are used. And will attempt to load all referenced classes from this jar
 	 * @param className
 	 * @param jarFile
+	 * @param safe 
 	 * @return
 	 */
 	/*
@@ -75,10 +77,17 @@ public static Game loadGameFromJar(File jarFile) {
 */
 
 
-	public static Cartridge fromOmicronFile(File jarFile) {
+	public static Cartridge fromOmicronFile(File jarFile, boolean safe) {
 		
 		try {
-			return new SecureJarCartridge(new JarLoader( jarFile));
+			if (safe)
+			{
+				return new SecureJarCartridge(new JarLoader( jarFile));
+			}
+			else
+			{
+				return new InsecureJarCartridge(new JarLoader( jarFile));
+			}
 		
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to load Game from jar: "+e.getMessage(), e);
