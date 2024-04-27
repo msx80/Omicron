@@ -16,7 +16,13 @@
 		</repository>
 	</repositories>
   <dependencies>
-
+	  <!--
+<dependency>
+	  <groupId>testing</groupId>
+  <artifactId>abstract-text-editor</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+</dependency>-->
     <dependency>
       <groupId>com.github.msx80</groupId>
       <artifactId>omicron-api</artifactId>

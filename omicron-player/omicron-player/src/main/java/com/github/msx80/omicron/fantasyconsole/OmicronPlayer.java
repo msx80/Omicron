@@ -137,6 +137,7 @@ public class OmicronPlayer implements Game {
 		}
 	}
 	private void activateEditorWidget(Sys sys2, TextDrawerFixed font3) {
+		/*
 		wm = new WidgetManager(sys);
 		EditorWidget ew = new EditorWidget(sys2, font3, 300, 500);
    //     l = new ListWithSelection<>(fileList.files, font2, 0, 0, 100);
@@ -147,7 +148,7 @@ public class OmicronPlayer implements Game {
         ScrollbarDrawer sh = new StandardScrollbarDrawer(3, Tic80.RED, Tic80.DARK_RED);
         s = new Scroller(sys, 200+sv.getThickness(), 100, ew, sv, sh);
         wm.add(s, 40, 30);
-		
+		*/
 	}
 
 

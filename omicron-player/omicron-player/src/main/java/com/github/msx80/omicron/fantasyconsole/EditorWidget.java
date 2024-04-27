@@ -1,22 +1,22 @@
 package com.github.msx80.omicron.fantasyconsole;
 
-import java.util.EnumSet;
-
-import com.github.msx80.omicron.api.Controller;
-import com.github.msx80.omicron.api.Sys;
-import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.gui.BaseWidget;
-import com.github.msx80.omicron.basicutils.gui.Controllable;
-import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
-
-import ate.Cursor;
-import ate.Editor;
-import ate.Modifiers;
-import ate.SpecialKeys;
 
 
-public class EditorWidget extends BaseWidget implements Controllable {
+public class EditorWidget extends BaseWidget /*implements Controllable*/ {
 
+	public EditorWidget(int w, int h) {
+		super(w, h);
+		
+	}
+
+	@Override
+	public void draw() {
+		
+	}
+	
+	
+/*
 	private Editor tb = new Editor();
 	private TextDrawerFixed td;
 	private Sys sys;
@@ -150,5 +150,5 @@ public class EditorWidget extends BaseWidget implements Controllable {
 			y+=8;
 		}
 	}
-
+*/
 }
