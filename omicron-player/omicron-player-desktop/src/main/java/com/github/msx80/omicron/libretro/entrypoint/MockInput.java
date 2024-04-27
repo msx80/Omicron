@@ -160,15 +160,6 @@ public class MockInput implements Input {
 
 	}
 
-	@Override
-	public void vibrate(long[] pattern, int repeat) {
-
-	}
-
-	@Override
-	public void cancelVibrate() {
-
-	}
 
 	@Override
 	public float getAzimuth() {
@@ -279,6 +270,24 @@ public class MockInput implements Input {
 
 	@Override
 	public void setOnscreenKeyboardVisible(boolean visible, OnscreenKeyboardType type) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void vibrate(int milliseconds, boolean fallback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void vibrate(int milliseconds, int amplitude, boolean fallback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void vibrate(VibrationType vibrationType) {
 		// TODO Auto-generated method stub
 		
 	}

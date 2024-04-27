@@ -32,7 +32,7 @@
     <dependency>
       <groupId>com.badlogicgames.gdx</groupId>
       <artifactId>gdx</artifactId>
-      <version>1.9.14</version>
+      <version>${libgdx.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -40,6 +40,13 @@
 	  <artifactId>gdx-controllers-core</artifactId>
 	  <version>2.2.1</version>
 	</dependency>
+<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx-controllers/gdx-controllers-core -->
+<dependency>
+    <groupId>com.badlogicgames.gdx-controllers</groupId>
+    <artifactId>gdx-controllers-core</artifactId>
+    <version>2.2.3</version>
+</dependency>
+	
   </dependencies>
   <build>
       <plugins>

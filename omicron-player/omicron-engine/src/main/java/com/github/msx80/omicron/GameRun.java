@@ -35,7 +35,7 @@ public class GameRun {
 	
 	private Set<Integer> textureToReload = null;	
 	
-	Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
+	//Map<String, HardwarePlugin> plugins = new HashMap<String, HardwarePlugin>();
 	private Cartridge cartridge;
 	
 	public GameRun(Cartridge cartridge, ScreenInfo screenInfo, Consumer<String> onResult, Consumer<Throwable> onException) {
@@ -46,14 +46,14 @@ public class GameRun {
 			this.onResult = onResult;
 			this.onException = onException;
 			
-			HardwarePlugin pp = new DebugPlugin();
-			UrlOpenerPlugin up = new UrlOpenerPlugin();
-			ArgsPlugin ap = new ArgsPlugin();
-			SaveFilePlugin sp = new SaveFilePlugin();
-			plugins.put(pp.getClass().getName(), pp);
-			plugins.put(up.getClass().getName(), up);
-			plugins.put(ap.getClass().getName(), ap);
-			plugins.put(sp.getClass().getName(), sp);
+//			HardwarePlugin pp = new DebugPlugin();
+//			UrlOpenerPlugin up = new UrlOpenerPlugin();
+//			ArgsPlugin ap = new ArgsPlugin();
+//			SaveFilePlugin sp = new SaveFilePlugin();
+//			plugins.put(pp.getClass().getName(), pp);
+//			plugins.put(up.getClass().getName(), up);
+//			plugins.put(ap.getClass().getName(), ap);
+//			plugins.put(sp.getClass().getName(), sp);
 		
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to start cartridge: "+e.getMessage(), e );

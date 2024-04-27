@@ -17,17 +17,19 @@
 		</repository>
 	</repositories>
   <dependencies>
+	  
+
 
     <dependency>
       <groupId>com.badlogicgames.gdx</groupId>
       <artifactId>gdx-backend-lwjgl3</artifactId>
-      <version>1.9.14</version>
+      <version>${libgdx.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.badlogicgames.gdx</groupId>
       <artifactId>gdx-platform</artifactId>
-      <version>1.9.14</version>
+      <version>${libgdx.version}</version>
 	  <classifier>natives-desktop</classifier>
       <scope>compile</scope>
     </dependency>
@@ -43,6 +45,14 @@
       <version>0.0.3</version>
       <scope>compile</scope>
     </dependency>
+    
+	  <!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx-controllers/gdx-controllers-desktop -->
+<dependency>
+    <groupId>com.badlogicgames.gdx-controllers</groupId>
+    <artifactId>gdx-controllers-desktop</artifactId>
+    <version>2.2.3</version>
+</dependency>
+    
   </dependencies>
   <build>
       <plugins>

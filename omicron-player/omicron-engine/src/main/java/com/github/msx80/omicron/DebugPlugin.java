@@ -12,7 +12,7 @@ public class DebugPlugin implements HardwarePlugin {
 	}
 
 	@Override
-	public void init(Sys sys, HardwareInterface hw) {
+	public void init(HardwareInterface hw) {
 	}
 
 }

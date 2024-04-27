@@ -23,4 +23,10 @@ public class NullHardwareInterface implements HardwareInterface {
 		
 	}
 
+	@Override
+	public Object hardware(String module, String command, Object param) {
+		
+		return null;
+	}
+
 }

@@ -90,9 +90,12 @@ public class OmicronPlayer implements Game {
         
        
         String[] args = (String[]) sys.hardware("com.github.msx80.omicron.plugins.builtin.ArgsPlugin", "GET", null);
-        if(args.length==1)
+        // if(args!=null)
         {
-        	runJar(args[0]);
+	        if(args.length==1)
+	        {
+	        	runJar(args[0]);
+	        }
         }
     }
 
@@ -116,7 +119,8 @@ public class OmicronPlayer implements Game {
 		case "Quit": ((AdvancedSys)sys).quit("ok");
 			break;
 		case "Create new cart":
-			ProjectCreatorWindow.main(null);
+			// ProjectCreatorWindow.main(null);
+			activateEditorWidget(sys, font);
 			break;
 		case "Load a cart":
 			getCartSelectWidgets(sys, Paths.get("").toAbsolutePath());
@@ -132,6 +136,21 @@ public class OmicronPlayer implements Game {
 			break;
 		}
 	}
+	private void activateEditorWidget(Sys sys2, TextDrawerFixed font3) {
+		wm = new WidgetManager(sys);
+		EditorWidget ew = new EditorWidget(sys2, font3, 300, 500);
+   //     l = new ListWithSelection<>(fileList.files, font2, 0, 0, 100);
+        
+      
+        //TestArea ta = new TestArea(sys, 0, 0, 300, 300);
+        ScrollbarDrawer sv = new StandardScrollbarDrawer(3, Tic80.RED, Tic80.DARK_RED);
+        ScrollbarDrawer sh = new StandardScrollbarDrawer(3, Tic80.RED, Tic80.DARK_RED);
+        s = new Scroller(sys, 200+sv.getThickness(), 100, ew, sv, sh);
+        wm.add(s, 40, 30);
+		
+	}
+
+
 	private void selectCartridge(int idx, FileItem p)
 	{
 		if(p.isDirectory)
@@ -222,7 +241,7 @@ public class OmicronPlayer implements Game {
 	public void runJar(String jarToLaunch2)
     {
     
-		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2), true);		
+		Cartridge gg =  CartridgeLoadingUtils.fromOmicronFile(new File(jarToLaunch2), false);		
 		runCartridge(gg);
     }
 	public void runCartridge(Cartridge gg)

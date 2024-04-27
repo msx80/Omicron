@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.GL31;
+import com.badlogic.gdx.graphics.GL32;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.GLVersion;
 
@@ -328,6 +330,42 @@ public class LibretroGraphics implements Graphics {
 	@Override
 	public void setForegroundFPS(int fps) {
 		throw new RuntimeException("Unimplemented method");
+	}
+
+	@Override
+	public boolean isGL31Available() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isGL32Available() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public GL31 getGL31() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GL32 getGL32() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGL31(GL31 gl31) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setGL32(GL32 gl32) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

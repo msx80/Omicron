@@ -657,4 +657,18 @@ class Lwjgl3GL30 extends Lwjgl3GL20 implements com.badlogic.gdx.graphics.GL30 {
 		int height) {
 		GL43.glInvalidateSubFramebuffer(target, attachments, x, y, width, height);
 	}
+
+	@Override
+	public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format,
+			int type, int offset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format,
+			int type, int offset) {
+		// TODO Auto-generated method stub
+		
+	}
 }

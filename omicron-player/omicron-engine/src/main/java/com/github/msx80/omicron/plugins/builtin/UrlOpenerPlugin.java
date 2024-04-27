@@ -9,7 +9,7 @@ public class UrlOpenerPlugin implements HardwarePlugin {
 	private HardwareInterface hw;
 
 	@Override
-	public void init(Sys sys, HardwareInterface hw) {
+	public void init(HardwareInterface hw) {
 		
 		this.hw = hw;
 	}

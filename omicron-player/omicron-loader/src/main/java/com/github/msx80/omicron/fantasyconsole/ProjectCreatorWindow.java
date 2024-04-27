@@ -1,5 +1,6 @@
 package com.github.msx80.omicron.fantasyconsole;
 
+
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -30,9 +31,7 @@ public class ProjectCreatorWindow {
 	private JLabel lblSorryForThe;
 	private JLabel lblHopefullyItWill;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -48,16 +47,11 @@ public class ProjectCreatorWindow {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+	
 	public ProjectCreatorWindow() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frmOmicronCartridgeCreator = new JFrame();
 		frmOmicronCartridgeCreator.setTitle("Omicron Cartridge Creator");

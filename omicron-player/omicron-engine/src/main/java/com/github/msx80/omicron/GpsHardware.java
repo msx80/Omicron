@@ -12,7 +12,7 @@ public class GpsHardware implements HardwarePlugin {
 
 	
 	@Override
-	public void init(Sys sys, HardwareInterface hw) {
+	public void init(HardwareInterface hw) {
 	}
 
 }

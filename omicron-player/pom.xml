@@ -10,7 +10,10 @@
  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <libgdx.version>1.12.1</libgdx.version>
+</properties>
  
   <modules>  
     <module>omicron-loader</module>

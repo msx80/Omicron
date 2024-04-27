@@ -1,6 +1,8 @@
 package com.github.msx80.omicron;
 
 
+import java.util.ArrayList;
+import java.util.List;
 //import java.security.AccessController;
 //import java.security.PrivilegedAction;
 import java.util.Stack;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -97,7 +100,17 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		//batch.enableBlending();
 		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
 	
-		controllers = new Controller[] {new ControllerImpl()}; // first is keyboard, TODO use joypad etc.
+		ArrayList<Controller> con = new ArrayList<>();
+		con.add(new ControllerImpl()); // first is keyboard, TODO use joypad etc.
+		
+		for (com.badlogic.gdx.controllers.Controller controller : Controllers.getControllers()) {
+		    System.out.println("Controller: "+controller.getName());
+		    con.add(new GamepadControllerImpl(controller)); 
+		}
+		
+		
+		
+		controllers = con.toArray(new Controller[con.size()]);
 		
 		pointers = new Pointer[Math.max(1, Math.min(Gdx.input.getMaxPointers(),MAX_SUPPORTED_TOUCHES))];
 		for (int i = 0; i < pointers.length; i++) {
@@ -133,9 +146,9 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		}
 		if(!isResume) 
 		{
-			for (HardwarePlugin hwp : r.plugins.values()) {
-				hwp.init(this, hw);
-			}
+//			for (HardwarePlugin hwp : r.plugins.values()) {
+//				hwp.init(this, hw);
+//			}
 			r.game.init(this); // TODO handle throws!
 		}
 		if(r.screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(r.screenInfo.requiredSysConfig.title);
@@ -228,8 +241,14 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			if(batch.isDrawing()) batch.end();
 		}
 		for (Controller controller : controllers) {
-			ControllerImpl c = (ControllerImpl) controller;
-			c.copyOld();
+			if(controller instanceof ControllerImpl)
+			{
+				((ControllerImpl) controller).copyOld();
+			}
+			if(controller instanceof GamepadControllerImpl)
+			{
+				((GamepadControllerImpl) controller).copyOld();
+			}
 		}
 		for (Pointer p : pointers) {
 			MouseImpl mouse = (MouseImpl) p;
@@ -268,7 +287,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 
 	@Override
 	public void clear(int value) {
-		
+		if(batch.isDrawing()) batch.end();
 		// todo cache the last clear() color to avoid recalculating all every time
 		// it's usually jsut the same color every type.
 		float r = ((value & 0xff000000) >>> 24) / 255f;
@@ -447,7 +466,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	}
 	
 	
-	public class MyInputProcessor implements InputProcessor {
+	public class MyInputProcessor implements InputProcessor 
+	{
 		   public boolean keyDown (int keycode) {
 			   if( Gdx.input.isKeyPressed(Input.Keys.ENTER) && Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT))
 			   {
@@ -591,6 +611,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		      return false;
 		   }
 
+		@Override
+		public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
 		
 		}
 
@@ -691,24 +717,11 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		}
 		else
 		{
-			HardwarePlugin e = current.plugins.get(module);
-			if(e==null) e = initPlugin(module);
-			return e.exec(command, param);
+			return hw.hardware(module, command, param);
 		}
 	}
 
-	private HardwarePlugin initPlugin(String module) {
-		try {
-			@SuppressWarnings("unchecked")
-			Class<? extends HardwarePlugin> cc = (Class<? extends HardwarePlugin>) current.game.getClass().getClassLoader().loadClass(module);
-			HardwarePlugin p = cc.newInstance();
-			p.init(this, hw);
-			current.plugins.put(module, p);
-			return p;
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to load plugin "+module, e);
-		}
-	}
+	
 
 	@Override
 	public void music(final int musicNum, final float volume, final boolean loop) {

@@ -26,7 +26,7 @@ public class TestSourceMain {
 //			System.out.println(path);
 //		}
 //		
-			SourceCartridge sc = new SourceCartridge(new JarLoader(new File("C:\\Users\\niclugat\\dev\\Omicron\\omicron\\demo\\Retrodrawing\\RetroDrawerSrc.omicron")));
+			SourceCartridge sc = new SourceCartridge(new JarLoader(new File("C:\\Users\\msx_8\\dev\\Omicron\\omicron\\demo\\Retrodrawing\\RetroDrawerSrc.omicron")));
 			Game g = sc.getGameObject();
 		
 			System.out.println(g.sysConfig());

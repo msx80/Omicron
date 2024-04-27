@@ -11,7 +11,7 @@ public class DesktopHardwareInterface implements HardwareInterface {
 	
 	
 	private String[] args;
-	
+	PluginManager plugins = new PluginManager(this);
 	
 
 	public DesktopHardwareInterface(String[] args) {
@@ -39,6 +39,12 @@ public class DesktopHardwareInterface implements HardwareInterface {
 	@Override
 	public void saveFile(String mimeType, String filename, byte[] content, Consumer<String> result) {
 		result.accept("Not implemented");
+	}
+
+	@Override
+	public Object hardware(String module, String command, Object param) {
+		
+		return plugins.getPlugin(module).exec(command, param);
 	}
 
 }
