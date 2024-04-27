@@ -8,7 +8,11 @@
 <groupId>com.github.msx80.omicron</groupId>
 <version>0.0.3</version>  
 
-
+	<properties>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+	</properties>
+	
  	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
@@ -17,37 +21,22 @@
 	</repositories>
   <dependencies>
 
-
-	<dependency>
-      <groupId>com.github.msx80</groupId>
-  <artifactId>omicron-api</artifactId>
-  <version>0.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-	
-	<dependency>
-<groupId>com.github.msx80</groupId>
-  <artifactId>omicron-basics</artifactId>
-  <version>0.0.2</version>	
-	</dependency>
+	  <dependency>
+		      <groupId>com.github.msx80.omicron</groupId>
+    <version>0.0.3</version>  
+  <artifactId>omicron-desktop</artifactId>
+	  </dependency>
 
   </dependencies>
   <build>
       <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+     
 <plugin>
       <artifactId>maven-assembly-plugin</artifactId>
       <configuration>
         <archive>
           <manifest>
+			<mainClass>omicron.demo.featuresdemo.FeaturesDemo</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>
@@ -73,15 +62,15 @@
         <id>rename-file</id>
         <phase>package</phase>
         <goals>
-            <goal>rename</goal>
+            <goal>copy</goal>
         </goals>
             <configuration>
                 <sourceFile>${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</sourceFile>
-                <destinationFile>${project.artifactId}.omicron</destinationFile>
+                <destinationFile>${project.artifactId}-standalone.jar</destinationFile>
             </configuration>
         </execution>
     </executions>
-</plugin>
+</plugin>	  
 	 </plugins>
 	</build>
 </project>
