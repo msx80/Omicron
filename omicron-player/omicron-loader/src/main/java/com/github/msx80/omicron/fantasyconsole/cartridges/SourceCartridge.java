@@ -1,19 +1,14 @@
 package com.github.msx80.omicron.fantasyconsole.cartridges;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import com.github.msx80.omicron.api.Game;
 import com.github.msx80.wiseloader.BytesLoader;
-import com.github.msx80.wiseloader.loaders.FileUtil;
 import com.github.msx80.wiseloader.loaders.JarLoader;
 import com.github.msx80.wiseloader.loaders.MultiBytesLoader;
 import com.github.msx80.wiseloader.loaders.compiler.CompilingLoader;

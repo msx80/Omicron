@@ -6,14 +6,14 @@ import java.util.Random;
 import com.github.msx80.omicron.basicutils.Colors;
 import com.github.msx80.omicron.basicutils.MapDrawer;
 import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
-
+import com.github.msx80.omicron.DesktopLauncher;
 import com.github.msx80.omicron.api.Controller;
 import com.github.msx80.omicron.api.Game;
 import com.github.msx80.omicron.api.Pointer;
 import com.github.msx80.omicron.api.Sys;
 import com.github.msx80.omicron.api.SysConfig;
 import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;
-
+import com.github.msx80.omicron.fantasyconsole.cartridges.ClassCartridge;
 import com.github.msx80.omicron.fantasyconsole.cartridges.ClasspathCartridge;
 
 public class FeaturesDemo implements Game {
@@ -161,7 +161,7 @@ public class FeaturesDemo implements Game {
 	}
 
 	public static void main(String[] args) {
-		com.github.msx80.omicron.DesktopLauncher.launch(new ClasspathCartridge("FeaturesDemo", "omicron.demo.featuresdemo", "FeaturesDemo"), false, args);
+		DesktopLauncher.launch(new ClassCartridge("FeaturesDemo", omicron.demo.featuresdemo.FeaturesDemo.class), false, args);
 
 	}
   

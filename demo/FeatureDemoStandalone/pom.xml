@@ -1,85 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-<modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-<artifactId>feature-demo</artifactId>
-<groupId>com.github.msx80.omicron</groupId>
-<version>0.0.3</version>  
+	<artifactId>feature-demo</artifactId>
+	<groupId>com.github.msx80.omicron</groupId>
+	<version>0.0.3</version>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
-	
- 	<repositories>
+
+	<repositories>
 		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
-  <dependencies>
 
-	  <dependency>
-		      <groupId>com.github.msx80.omicron</groupId>
-    <version>0.0.3</version>  
-  <artifactId>omicron-desktop</artifactId>
-	  </dependency>
-
-  </dependencies>
-  <build>
-      <plugins>
-     
-<plugin>
-      <artifactId>maven-assembly-plugin</artifactId>
-      <configuration>
-        <archive>
-          <manifest>
-			<mainClass>omicron.demo.featuresdemo.FeaturesDemo</mainClass>
-          </manifest>
-        </archive>
-        <descriptorRefs>
-          <descriptorRef>jar-with-dependencies</descriptorRef>
-        </descriptorRefs>
-      </configuration>
-	<executions>
-          <execution>
-            <id>make-assembly</id> 
-            <phase>package</phase> 
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>	  
-    </plugin>	  
-	        <plugin>
-    <groupId>com.coderplus.maven.plugins</groupId>
-    <artifactId>copy-rename-maven-plugin</artifactId>
-    <version>1.0</version>
-    <executions>
-        <execution>
-        <id>rename-file</id>
-        <phase>package</phase>
-        <goals>
-            <goal>copy</goal>
-        </goals>
-            <configuration>
-                <sourceFile>${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</sourceFile>
-                <destinationFile>${project.artifactId}-standalone.jar</destinationFile>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>	  
-<plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-			
-            <configuration>
-                <mainClass>omicron.demo.featuresdemo.FeaturesDemo</mainClass>
-            </configuration>
-        </plugin>
-	 </plugins>
+	<dependencies>
+		<dependency>
+			<groupId>com.github.msx80.omicron</groupId>
+			<version>0.0.3</version>
+			<artifactId>omicron-desktop</artifactId>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<!-- generate fat jar with the engine and all -->
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>omicron.demo.featuresdemo.FeaturesDemo</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- copy the jar with a different name, not sure about this -->
+				<groupId>com.coderplus.maven.plugins</groupId>
+				<artifactId>copy-rename-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>rename-file</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<sourceFile>
+								${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</sourceFile>
+							<destinationFile>
+								${project.artifactId}-standalone.jar</destinationFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- make this executable with exec:exec -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>omicron.demo.featuresdemo.FeaturesDemo</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>
