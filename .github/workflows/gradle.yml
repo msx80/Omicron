@@ -52,11 +52,11 @@ jobs:
         cd demo/Snake
         chmod +x gradlew
         ./gradlew build
-    - name: Build Android Player
-      run: |
-        cd android
-        chmod +x gradlew
-        ./gradlew clean android:assembleDebug
+    #- name: Build Android Player
+    #  run: |
+    #    cd android
+    #    chmod +x gradlew
+    #    ./gradlew clean android:assembleDebug
     - name: Deploy Player
       uses: actions/upload-artifact@v2
       with:
