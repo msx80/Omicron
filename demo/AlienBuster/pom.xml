@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	
-	<artifactId>feature-demo-st</artifactId>
+	<artifactId>alienbuster</artifactId>
 	<groupId>com.github.msx80.omicron</groupId>
 	<version>0.0.3</version>
 	
@@ -19,9 +19,21 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>com.github.msx80</groupId>
+			<artifactId>omicron-api</artifactId>
+			<version>0.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.msx80</groupId>
+			<artifactId>omicron-basics</artifactId>
+			<version>0.0.2</version>
+		</dependency>
+		<dependency>
 			<groupId>com.github.msx80.omicron</groupId>
 			<version>0.0.4</version>
 			<artifactId>omicron-desktop</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -46,14 +58,9 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<!-- generate fat jar with the engine and all -->
+				<!-- generate fat jar with the dependencies -->
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>${pkg}.${main}</mainClass>
-						</manifest>
-					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
@@ -69,7 +76,7 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<!-- copy the jar with a different name, not sure about this -->
+				<!-- rename the generated jar to an omicron cartridge -->
 				<groupId>com.coderplus.maven.plugins</groupId>
 				<artifactId>copy-rename-maven-plugin</artifactId>
 				<version>1.0</version>
@@ -82,7 +89,7 @@
 						</goals>
 						<configuration>
 							<sourceFile>${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</sourceFile>
-							<destinationFile>${project.artifactId}-standalone.jar</destinationFile>
+							<destinationFile>${project.artifactId}.omicron</destinationFile>
 						</configuration>
 					</execution>
 				</executions>
@@ -94,9 +101,11 @@
 				<version>3.1.0</version>
 				<configuration>
 					<executable>java</executable>
+					<classpathScope>test</classpathScope>
 					<arguments>
 						<argument>-classpath</argument>
 						<classpath/>
+						<argument>com.github.msx80.omicron.DesktopLauncher</argument>
 						<argument>${pkg}.${main}</argument>
 					</arguments>
 				</configuration>

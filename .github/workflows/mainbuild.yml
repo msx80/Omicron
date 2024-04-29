@@ -27,8 +27,7 @@ jobs:
     - name: Build Hello World cart
       run: |
         cd demo/HelloWorld
-        chmod +x gradlew
-        ./gradlew build
+        mvn --batch-mode clean compile install package
     - name: Build FeatureDemo cart
       run: |
         cd demo/FeatureDemo
@@ -40,8 +39,7 @@ jobs:
     - name: Build AlienBuster cart
       run: |
         cd demo/AlienBuster
-        chmod +x gradlew
-        ./gradlew build
+        mvn --batch-mode clean compile install package
     - name: Build Retrodrawing cart
       run: |
         cd demo/Retrodrawing
