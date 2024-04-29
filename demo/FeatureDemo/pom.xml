@@ -37,7 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.msx80.omicron</groupId>
-			<version>0.0.3</version>
+			<version>0.0.4</version>
 			<artifactId>omicron-desktop</artifactId>
 			<scope>test</scope>
 		</dependency>
