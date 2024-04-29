@@ -6,7 +6,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>feature-demo</artifactId>
+	<artifactId>feature-demo-st</artifactId>
 	<groupId>com.github.msx80.omicron</groupId>
 	<version>0.0.3</version>
 
@@ -78,12 +78,17 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<!-- make this executable with exec:exec -->
+				<!-- make the game executable with exec:exec -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-					<mainClass>omicron.demo.featuresdemo.FeaturesDemo</mainClass>
+					<executable>java</executable>
+					<arguments>
+						<argument>-classpath</argument>
+						<classpath />
+						<argument>omicron.demo.featuresdemo.FeaturesDemo</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -6,10 +6,17 @@
   <parent>
     <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-parent</artifactId>
-    <version>0.0.3</version>  
+    <version>0.0.4</version>  
   </parent>
   <artifactId>omicron-assembly</artifactId>
   <packaging>pom</packaging>
+  
+  <properties>
+	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>  
+  
   	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
@@ -22,24 +29,13 @@
 	<dependency>
       <groupId>com.github.msx80.omicron</groupId>
       <artifactId>omicron-player-desktop</artifactId>
-      <version>0.0.3</version>
+      <version>0.0.4</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
   <build>
       <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-	  
-	   
-	  
+      
 	  <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>

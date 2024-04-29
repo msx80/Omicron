@@ -6,10 +6,16 @@
     <parent>
     <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-parent</artifactId>
-    <version>0.0.3</version>  
+    <version>0.0.4</version>  
   </parent>
   <artifactId>omicron-engine</artifactId>
   
+    <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+	
 	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
@@ -20,7 +26,7 @@
     <dependency>
       <groupId>com.github.msx80.omicron</groupId>
       <artifactId>omicron-loader</artifactId>
-      <version>0.0.3</version>
+      <version>0.0.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -35,11 +41,6 @@
       <version>${libgdx.version}</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-	  <groupId>com.badlogicgames.gdx-controllers</groupId>
-	  <artifactId>gdx-controllers-core</artifactId>
-	  <version>2.2.1</version>
-	</dependency>
 <!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx-controllers/gdx-controllers-core -->
 <dependency>
     <groupId>com.badlogicgames.gdx-controllers</groupId>
@@ -48,17 +49,5 @@
 </dependency>
 	
   </dependencies>
-  <build>
-      <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-	 </plugins>
-	</build>  
+ 
 </project>
