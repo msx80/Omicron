@@ -32,8 +32,11 @@ jobs:
     - name: Build FeatureDemo cart
       run: |
         cd demo/FeatureDemo
-        chmod +x gradlew
-        ./gradlew build
+        mvn --batch-mode clean compile install package
+    - name: Build FeatureDemoStandalone
+      run: |
+        cd demo/FeatureDemoStandalone
+        mvn --batch-mode clean compile install package
     - name: Build AlienBuster cart
       run: |
         cd demo/AlienBuster
