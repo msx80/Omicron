@@ -25,27 +25,27 @@ jobs:
     - name: Build Hello World cart
       run: |
         cd demo/HelloWorld
-        mvn --batch-mode clean compile install package
+        mvn --batch-mode clean compile package
     - name: Build FeatureDemo cart
       run: |
         cd demo/FeatureDemo
-        mvn --batch-mode clean compile install package
+        mvn --batch-mode clean compile package
     - name: Build FeatureDemoStandalone
       run: |
         cd demo/FeatureDemoStandalone
-        mvn --batch-mode clean compile install package
+        mvn --batch-mode clean compile package
     - name: Build AlienBuster cart
       run: |
         cd demo/AlienBuster
-        mvn --batch-mode clean compile install package
+        mvn --batch-mode clean compile package
     - name: Build Retrodrawing cart
       run: |
         cd demo/Retrodrawing
-        mvn --batch-mode clean compile install package
+        mvn --batch-mode clean compile package
     - name: Build Snake cart
       run: |
         cd demo/Snake
-        mvn --batch-mode clean compile install package
+        mvn --batch-mode clean compile package
     #- name: Build Android Player
     #  run: |
     #    cd android
@@ -54,30 +54,30 @@ jobs:
     - name: Deploy Player
       uses: actions/upload-artifact@v2
       with:
-        name: 'OmicronPlayer.jar'
-        path: omicron-player/OmicronPlayer.jar       
+        name: 'omicron.jar'
+        path: omicron-player/omicron-assembly/target/omicron.jar       
     - name: Deploy HelloWorld Demo
       uses: actions/upload-artifact@v2
       with:
-        name: 'HelloWorld.omicron'
-        path: demo/HelloWorld/HelloWorld.omicron
+        name: 'helloworld.omicron'
+        path: demo/HelloWorld/helloworld.omicron
     - name: Deploy FeatureDemo Demo
       uses: actions/upload-artifact@v2
       with:
-        name: 'FeatureDemo.omicron'
-        path: demo/FeatureDemo/FeaturesDemo.omicron
+        name: 'feature-demo.omicron'
+        path: demo/FeatureDemo/feature-demo.omicron
     - name: Deploy Snake Demo
       uses: actions/upload-artifact@v2
       with:
-        name: 'SnakeMain.omicron'
-        path: demo/Snake/SnakeMain.omicron
+        name: 'snake.omicron'
+        path: demo/Snake/snake.omicron
     - name: Deploy AlienBuster Demo
       uses: actions/upload-artifact@v2
       with:
-        name: 'AlienBusterGame.omicron'
-        path: demo/AlienBuster/AlienBusterGame.omicron
+        name: 'alienbuster.omicron'
+        path: demo/AlienBuster/alienbuster.omicron
     - name: Deploy Retrodrawing Demo
       uses: actions/upload-artifact@v2
       with:
-        name: 'RetroDrawer.omicron'
-        path: demo/Retrodrawing/RetroDrawer.omicron
+        name: 'retrodrawing.omicron'
+        path: demo/Retrodrawing/retrodrawing.omicron
