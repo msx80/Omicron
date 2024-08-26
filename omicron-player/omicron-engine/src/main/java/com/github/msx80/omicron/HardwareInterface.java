@@ -1,11 +1,13 @@
 package com.github.msx80.omicron;
 
-import java.util.function.Consumer;
+import com.github.msx80.omicron.api.Sys;
 
 public interface HardwareInterface {
 
-	void openUrl(String url) throws Exception;
 	String[] startupArgs();
-	void saveFile(String mimeType, String filename, byte[] content, Consumer<String> result);
 	Object hardware(String module, String command, Object param);
+	void gamePaused();
+	void gameRestored();
+	Sys getSys();
+	void setSys(Sys sys);
 }

@@ -1,17 +1,14 @@
 package com.github.msx80.omicron.plugins.builtin;
 
+import com.badlogic.gdx.Gdx;
 import com.github.msx80.omicron.HardwareInterface;
 import com.github.msx80.omicron.HardwarePlugin;
-import com.github.msx80.omicron.api.Sys;
 
 public class UrlOpenerPlugin implements HardwarePlugin {
-
-	private HardwareInterface hw;
 
 	@Override
 	public void init(HardwareInterface hw) {
 		
-		this.hw = hw;
 	}
 
 	@Override
@@ -19,8 +16,8 @@ public class UrlOpenerPlugin implements HardwarePlugin {
 		if("OPEN".equals(command))
 		{
 			try {
-				hw.openUrl((String)params);
-				return "OK";
+				boolean ok  = Gdx.net.openURI((String)params);
+				return ok?"OK":"KO";
 			} catch (Exception e) {
 				return "ERR: "+e.getMessage();
 			}

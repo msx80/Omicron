@@ -77,10 +77,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
 		this.hw = hw;
+		hw.setSys(this);
 		this.options = options;
 		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), null, null);
 		this.gameStack.push(gr);
 		current = gr;
+		
 	}
 	
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw) {
@@ -911,4 +913,20 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 			gr.dispose();
 		}
 	}
+
+	@Override
+	public void pause() {
+		System.out.println("PAUSED");
+		hw.gamePaused();
+	}
+
+	@Override
+	public void resume() {
+		System.out.println("RESUMED");
+		hw.gameRestored();
+	}
+	
+	
+	
+	
 }
