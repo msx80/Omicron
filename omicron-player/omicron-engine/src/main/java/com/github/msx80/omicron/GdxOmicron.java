@@ -682,7 +682,15 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 //		AccessController.doPrivileged( new PrivilegedAction<Void>() {
 //			@Override
 //			public Void run() {
-				getPrefs().putString(key, value).flush();
+		if(value != null)
+		{
+			getPrefs().putString(key, value).flush();
+		}
+		else
+		{
+			getPrefs().remove(key);
+			getPrefs().flush();
+		}
 //				return null;
 //			}
 //		} );
