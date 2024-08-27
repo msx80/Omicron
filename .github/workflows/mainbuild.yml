@@ -46,6 +46,13 @@ jobs:
       run: |
         cd demo/Snake
         mvn --batch-mode clean compile package
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 8512546
+    - name: Install packages        
+      run: |
+        sdkmanager "build-tools;33.0.2" "platforms;android-26"        
     - name: Build Android Player
       run: |
         cd android-mvn
