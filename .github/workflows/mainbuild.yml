@@ -37,7 +37,7 @@ jobs:
     - name: Build AlienBuster cart
       run: |
         cd demo/AlienBuster
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Build Retrodrawing cart
       run: |
         cd demo/Retrodrawing
@@ -46,11 +46,10 @@ jobs:
       run: |
         cd demo/Snake
         mvn --batch-mode clean compile package
-    #- name: Build Android Player
-    #  run: |
-    #    cd android
-    #    chmod +x gradlew
-    #    ./gradlew clean android:assembleDebug
+    - name: Build Android Player
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
     - name: Deploy Player
       uses: actions/upload-artifact@v2
       with:

@@ -32,7 +32,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.msx80.omicron</groupId>
-			<version>{$omicron.engine.version}</version>
+			<version>${omicron.engine.version}</version>
 			<artifactId>omicron-desktop</artifactId>
 			<scope>test</scope>
 		</dependency>
