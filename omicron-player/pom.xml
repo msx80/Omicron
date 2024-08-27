@@ -22,5 +22,6 @@
     <module>omicron-desktop</module>
     <module>omicron-player-desktop</module>
     <module>omicron-assembly</module>
+	<module>android-lib</module>
   </modules>
 </project>
