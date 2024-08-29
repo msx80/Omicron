@@ -25,15 +25,15 @@ jobs:
     - name: Build Hello World cart
       run: |
         cd demo/HelloWorld
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Build FeatureDemo cart
       run: |
         cd demo/FeatureDemo
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Build FeatureDemoStandalone
       run: |
         cd demo/FeatureDemoStandalone
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Build AlienBuster cart
       run: |
         cd demo/AlienBuster
@@ -41,11 +41,11 @@ jobs:
     - name: Build Retrodrawing cart
       run: |
         cd demo/Retrodrawing
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Build Snake cart
       run: |
         cd demo/Snake
-        mvn --batch-mode clean compile package
+        mvn --batch-mode clean compile install package
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
