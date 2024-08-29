@@ -10,6 +10,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
+		<omicron.engine.version>0.0.6</omicron.engine.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -20,7 +21,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.msx80.omicron</groupId>
-			<version>0.0.4</version>
+			<version>${omicron.engine.version}</version>
 			<artifactId>omicron-desktop</artifactId>
 		</dependency>
 	</dependencies>
@@ -51,7 +52,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>${pkg}.${main}</mainClass>
+							<mainClass>${omicron.pkg}.${omicron.main}</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -97,7 +98,7 @@
 					<arguments>
 						<argument>-classpath</argument>
 						<classpath/>
-						<argument>${pkg}.${main}</argument>
+						<argument>${omicron.pkg}.${omicron.main}</argument>
 					</arguments>
 				</configuration>
 			</plugin>

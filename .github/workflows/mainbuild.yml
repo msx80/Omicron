@@ -65,8 +65,17 @@ jobs:
     - name: Deploy AlienBuster Android App
       uses: actions/upload-artifact@v2
       with:
-        name: 'AlienBusterGame.apk'
-        path: android-mvn/target/AlienBusterGame.apk
+        name: 'alienbuster.apk'
+        path: android-mvn/target/alienbuster.apk
+    - name: Build Featuredemo Android app
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+    - name: Deploy feature-demo Android App
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'feature-demo.apk'
+        path: android-mvn/target/feature-demo.apk
     - name: Deploy Player
       uses: actions/upload-artifact@v2
       with:
