@@ -22,6 +22,11 @@ jobs:
       run: |
         cd omicron-player
         mvn --batch-mode clean compile install package
+    - name: Deploy Player
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'omicron.jar'
+        path: omicron-player/omicron-assembly/target/omicron.jar       
     - name: Build Hello World cart
       run: |
         cd demo/HelloWorld
@@ -46,41 +51,11 @@ jobs:
       run: |
         cd demo/Snake
         mvn --batch-mode clean compile install package
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        cmdline-tools-version: 8512546
-    - name: Install packages        
-      run: |
-        sdkmanager "build-tools;33.0.2" "platforms;android-26"        
     - name: Deploy AlienBuster Demo
       uses: actions/upload-artifact@v2
       with:
         name: 'alienbuster.omicron'
         path: demo/AlienBuster/alienbuster.omicron
-    - name: Build AlienBuster Android app
-      run: |
-        cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
-    - name: Deploy AlienBuster Android App
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'alienbuster.apk'
-        path: android-mvn/target/alienbuster.apk
-    - name: Build Featuredemo Android app
-      run: |
-        cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
-    - name: Deploy feature-demo Android App
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'feature-demo.apk'
-        path: android-mvn/target/feature-demo.apk
-    - name: Deploy Player
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'omicron.jar'
-        path: omicron-player/omicron-assembly/target/omicron.jar       
     - name: Deploy HelloWorld Demo
       uses: actions/upload-artifact@v2
       with:
@@ -101,3 +76,56 @@ jobs:
       with:
         name: 'retrodrawing.omicron'
         path: demo/Retrodrawing/retrodrawing.omicron
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 8512546
+    - name: Install packages        
+      run: |
+        sdkmanager "build-tools;33.0.2" "platforms;android-26"        
+     - name: Build AlienBuster Android app
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+    - name: Deploy AlienBuster Android App
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'alienbuster.apk'
+        path: android-mvn/target/alienbuster.apk
+    - name: Build Featuredemo Android app
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+    - name: Deploy feature-demo Android App
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'feature-demo.apk'
+        path: android-mvn/target/feature-demo.apk
+    - name: Build retrodrawing Android app
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=retrodrawing -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+    - name: Deploy retrodrawing Android App
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'retrodrawing.apk'
+        path: android-mvn/target/retrodrawing.apk
+    - name: Build snake Android app
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=snake -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+    - name: Deploy snake Android App
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'snake.apk'
+        path: android-mvn/target/snake.apk
+    - name: Build helloworld Android app
+      run: |
+        cd android-mvn
+        mvn --batch-mode -Dcartridge.artifactId=helloworld -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+    - name: Deploy helloworld Android App
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'helloworld.apk'
+        path: android-mvn/target/helloworld.apk        
