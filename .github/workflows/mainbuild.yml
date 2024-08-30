@@ -84,7 +84,7 @@ jobs:
     - name: Install packages        
       run: |
         sdkmanager "build-tools;33.0.2" "platforms;android-26"        
-     - name: Build AlienBuster Android app
+    - name: Build AlienBuster Android app
       run: |
         cd android-mvn
         mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
