@@ -52,6 +52,6 @@ Take a look at it [here](https://github.com/msx80/Omicron/blob/master/omicron-pl
 Get Started
 -----------
 
-Take a look at the [Hello World](https://github.com/msx80/Omicron/blob/master/demo/HelloWorld/src/main/java/org/github/msx80/omicron/helloworld/HelloWorld.java) example to get a feeling!
+Take a look at the [Hello World](https://github.com/msx80/Omicron/tree/master/demo/HelloWorld) example to get a feeling!
 
 Then head to the [wiki](https://github.com/msx80/Omicron/wiki) for some documentation!
