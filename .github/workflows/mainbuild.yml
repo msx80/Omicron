@@ -23,7 +23,7 @@ jobs:
         cd omicron-player
         mvn --batch-mode clean compile install package
     - name: Deploy Player
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'omicron.jar'
         path: omicron-player/omicron-assembly/target/omicron.jar       
@@ -52,27 +52,27 @@ jobs:
         cd demo/Snake
         mvn --batch-mode clean compile install package
     - name: Deploy AlienBuster Demo
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'alienbuster.omicron'
         path: demo/AlienBuster/alienbuster.omicron
     - name: Deploy HelloWorld Demo
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'helloworld.omicron'
         path: demo/HelloWorld/helloworld.omicron
     - name: Deploy FeatureDemo Demo
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'feature-demo.omicron'
         path: demo/FeatureDemo/feature-demo.omicron
     - name: Deploy Snake Demo
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'snake.omicron'
         path: demo/Snake/snake.omicron
     - name: Deploy Retrodrawing Demo
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'retrodrawing.omicron'
         path: demo/Retrodrawing/retrodrawing.omicron
@@ -89,7 +89,7 @@ jobs:
         cd android-mvn
         mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
     - name: Deploy AlienBuster Android App
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'alienbuster.apk'
         path: android-mvn/target/alienbuster.apk
@@ -98,7 +98,7 @@ jobs:
         cd android-mvn
         mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
     - name: Deploy feature-demo Android App
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'feature-demo.apk'
         path: android-mvn/target/feature-demo.apk
@@ -107,7 +107,7 @@ jobs:
         cd android-mvn
         mvn --batch-mode -Dcartridge.artifactId=retrodrawing -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
     - name: Deploy retrodrawing Android App
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'retrodrawing.apk'
         path: android-mvn/target/retrodrawing.apk
@@ -116,7 +116,7 @@ jobs:
         cd android-mvn
         mvn --batch-mode -Dcartridge.artifactId=snake -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
     - name: Deploy snake Android App
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'snake.apk'
         path: android-mvn/target/snake.apk
@@ -125,7 +125,7 @@ jobs:
         cd android-mvn
         mvn --batch-mode -Dcartridge.artifactId=helloworld -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
     - name: Deploy helloworld Android App
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'helloworld.apk'
         path: android-mvn/target/helloworld.apk        
