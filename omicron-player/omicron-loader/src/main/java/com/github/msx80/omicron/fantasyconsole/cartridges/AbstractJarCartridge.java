@@ -23,7 +23,7 @@ public abstract class AbstractJarCartridge implements Cartridge {
 
 	@Override
 	public byte[] loadFile(String filePath) {
-		String path = properties.getProperty(PROP_PKG).replace('.', '/')+'/';
+		String path = properties.getProperty("omicron.pkg").replace('.', '/')+'/';
 		String cf = path+filePath;
 		
 		return loader.loadFile(cf);

@@ -121,7 +121,50 @@
     </pluginManagement>
 	
     <plugins>
-
+	
+	
+	 <plugin>
+	 <!-- parse the version of the cartridge into Major, Minor, Incremental etc. Used to derive the versionCode from the Incremental part. -->
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>build-helper-maven-plugin</artifactId>
+    <version>3.6.0</version>
+    <executions>
+      <execution>
+        <phase>validate</phase>
+        <id>parse-version</id>
+        <goals>
+          <goal>parse-version</goal>
+        </goals>
+        <configuration>
+            <propertyPrefix>cartridgeVersion</propertyPrefix>
+			<versionString>${cartridge.version}</versionString>
+        </configuration>
+      </execution>
+    </executions>
+  </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+                <execution>
+                    <phase>validate</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    <configuration>
+                        <tasks>
+						    <echo>Cartridge version breakup:</echo>
+                            <echo>Major: ${cartridgeVersion.majorVersion}</echo>
+                            <echo>Minor: ${cartridgeVersion.minorVersion}</echo>
+                            <echo>Incremental (this will be used as VersionCode): ${cartridgeVersion.incrementalVersion}</echo>
+                            <echo>Qualifier: ${cartridgeVersion.qualifier}</echo>
+                            <echo>BuildNumber: ${cartridgeVersion.buildNumber}</echo>
+                        </tasks>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
 	            <plugin>
 				
                 <groupId>org.apache.maven.plugins</groupId>

@@ -23,7 +23,7 @@ public class InsecureJarCartridge extends AbstractJarCartridge implements Cartri
 	private Game loadGameObject() 
 	{
 		try {
-			String className = properties.getProperty(PROP_PKG) + "." + properties.getProperty(PROP_MAIN);
+			String className = properties.getProperty("omicron.pkg") + "." + properties.getProperty("omicron.main");
 			ClassLoader c = getAllowAllClassLoader(this::loadCustomClass);
 			Class<?> userClass = c.loadClass(className);
 			return (Game) userClass.newInstance();
