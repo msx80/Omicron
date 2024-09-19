@@ -6,6 +6,7 @@
   <artifactId>android-wrapper</artifactId>
   <version>1.0.0</version>
   <packaging>apk</packaging>
+  
   <properties>
   
   <!-- This is the omicron cartridge to be package as an Android app. You can pass the properties as arguments to mvn with -D -->
@@ -265,13 +266,23 @@
 		<!-- main android plugin. select platform and build-tool version (33.0.2 is the last one supported by java 8) -->
         <groupId>com.github.msx80</groupId>
         <artifactId>android-maven-plugin</artifactId>
-		        <!--<executions>
+		        <executions>
           <execution>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>apk</goal>
-            </goals>-->
-        <configuration>
+			  <goal>zipalign</goal>
+            </goals>
+        </execution>
+        </executions>
+		<configuration>
+		<zipalignSkip>false</zipalignSkip>
+		<zipalign>
+			<skip>false</skip>
+			<verbose>true</verbose>
+			<inputApk>${project.build.directory}/${cartridge.artifactId}.apk</inputApk>
+			<outputApk>${project.build.directory}/${cartridge.artifactId}.apk</outputApk>
+		</zipalign>
 		  <!-- read natives from the folder we have unpacked them earlier -->
 		  <nativeLibrariesDirectory>${project.build.directory}/libgdxnatives/</nativeLibrariesDirectory>
           <sdk>
@@ -286,8 +297,7 @@
 		 <!-- use the dynamically built manifest -->
 		 <androidManifestFile>${project.build.directory}/filtered-manifest/src/main/AndroidManifest.xml.template</androidManifestFile>
         </configuration>
-		 <!--  </execution>
-        </executions> -->
+		
       </plugin>
     </plugins>
 	<finalName>${cartridge.artifactId}</finalName>

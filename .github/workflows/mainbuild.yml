@@ -77,7 +77,7 @@ jobs:
     - name: Build AlienBuster Android app
       run: |
         cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+        mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
     - name: Deploy AlienBuster Android App
       uses: actions/upload-artifact@v4
       with:
@@ -86,7 +86,7 @@ jobs:
     - name: Build Featuredemo Android app
       run: |
         cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+        mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
     - name: Deploy feature-demo Android App
       uses: actions/upload-artifact@v4
       with:
@@ -95,7 +95,7 @@ jobs:
     - name: Build snake Android app
       run: |
         cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=snake -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+        mvn --batch-mode -Dcartridge.artifactId=snake -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
     - name: Deploy snake Android App
       uses: actions/upload-artifact@v4
       with:
@@ -104,7 +104,7 @@ jobs:
     - name: Build helloworld Android app
       run: |
         cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=helloworld -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean install android:apk
+        mvn --batch-mode -Dcartridge.artifactId=helloworld -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
     - name: Deploy helloworld Android App
       uses: actions/upload-artifact@v4
       with:
