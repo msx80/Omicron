@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-parent</artifactId>
-    <version>0.0.7</version>  
+    <version>0.0.8</version>  
   </parent>
   <artifactId>omicron-player</artifactId>
   
@@ -28,18 +28,19 @@
 	  <groupId>testing</groupId>
   <artifactId>abstract-text-editor</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
-</dependency>-->
+</dependency>
+-->
     <dependency>
       <groupId>com.github.msx80</groupId>
       <artifactId>omicron-api</artifactId>
       <version>0.0.1</version>
       <scope>compile</scope>
     </dependency>
+    
     <dependency>
       <groupId>com.github.msx80</groupId>
       <artifactId>omicron-basics</artifactId>
-      <version>0.0.2</version>
+      <version>0.0.3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>    
 	<dependency>

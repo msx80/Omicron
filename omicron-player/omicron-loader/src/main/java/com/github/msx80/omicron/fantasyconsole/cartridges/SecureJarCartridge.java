@@ -33,7 +33,7 @@ public class SecureJarCartridge extends AbstractJarCartridge implements Cartridg
 	}
 
 	public static ClassLoader getWhitelistClassLoader(BytesLoader bl) {
-		WhitelistClassLoader c = new WhitelistClassLoader( bl, WhitelistedJDKClasses.LIST);
+		WhitelistClassLoader c = new WhitelistClassLoader( bl, false, WhitelistedJDKClasses.LIST);
 
 		c.allowClasses(
 				"java.lang.Class",

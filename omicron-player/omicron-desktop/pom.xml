@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-parent</artifactId>
-    <version>0.0.7</version>  
+    <version>0.0.8</version>  
   </parent>
   <artifactId>omicron-desktop</artifactId>
 
@@ -39,12 +39,12 @@
 	  <classifier>natives-desktop</classifier>
       <scope>compile</scope>
     </dependency>
-    <dependency>
+<!--    <dependency>
       <groupId>com.github.msx80</groupId>
       <artifactId>omicron-basics</artifactId>
       <version>0.0.2</version>
       <scope>compile</scope>
-    </dependency>    
+    </dependency>   --> 
 	<dependency>
       <groupId>com.github.msx80.omicron</groupId>
       <artifactId>omicron-engine</artifactId>

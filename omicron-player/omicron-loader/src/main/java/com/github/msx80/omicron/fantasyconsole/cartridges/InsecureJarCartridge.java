@@ -33,7 +33,7 @@ public class InsecureJarCartridge extends AbstractJarCartridge implements Cartri
 	}
 
 	public static ClassLoader getAllowAllClassLoader(BytesLoader bl) {
-		ArbitratorClassLoader c = new ArbitratorClassLoader( bl) {
+		ArbitratorClassLoader c = new ArbitratorClassLoader( bl, false) {
 
 			@Override
 			protected boolean allowClass(String name) {

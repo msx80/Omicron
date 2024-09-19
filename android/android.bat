@@ -1,1 +1,0 @@
-gradlew clean android:installDebug android:run

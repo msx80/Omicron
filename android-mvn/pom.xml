@@ -3,11 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.msx80.omicron</groupId>
-  <artifactId>omicronandroid</artifactId>
+  <artifactId>android-wrapper</artifactId>
   <version>1.0.0</version>
   <packaging>apk</packaging>
-
-  <name>OmicronAndroid</name>
   <properties>
   
   <!-- This is the omicron cartridge to be package as an Android app. You can pass the properties as arguments to mvn with -D -->
