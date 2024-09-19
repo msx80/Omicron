@@ -24,6 +24,11 @@
 			<version>${omicron.engine.version}</version>
 			<artifactId>omicron-desktop</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.msx80</groupId>
+			<artifactId>omicron-basics</artifactId>
+			<version>0.0.3</version>
+		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>
