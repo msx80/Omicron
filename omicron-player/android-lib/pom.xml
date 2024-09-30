@@ -10,7 +10,6 @@
   
   <artifactId>android-lib</artifactId>
   
-  <name>Omicron Android library</name>
   <description>Contains some common classes to wrap an omicron game as an android app.</description>
 
 

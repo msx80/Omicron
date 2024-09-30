@@ -4,7 +4,7 @@
 
   <groupId>com.github.msx80.omicron</groupId>
   <artifactId>omicron-parent</artifactId>
-  <version>0.0.8</version>
+  <version>0.0.9</version>
   
   <packaging>pom</packaging>
  

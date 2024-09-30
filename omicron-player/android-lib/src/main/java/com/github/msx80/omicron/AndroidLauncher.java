@@ -39,25 +39,17 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 		ExceptionHandler.addHandler(this);
 		Cartridge c = null;
 		try {
-		//    ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-		    //Bundle bundle = ai.metaData;
-		    //String gameClass = bundle.getString("gameClass");
 			
-			java.io.InputStream is = this.getClass().getClassLoader().getResourceAsStream("omicron_android.properties");
-			if(is == null) throw new RuntimeException("Unable to find omicron_android.properties where expected.");
-			java.util.Properties p = new Properties();
-			p.load(is);
-			String gameClass = p.getProperty("omicron.pkg")+"."+p.getProperty("omicron.main");
+			ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+			Bundle bundle = ai.metaData;
+			String gameClass = bundle.getString("omicronMain");
 			
 			int n = gameClass.lastIndexOf('.');
 			String pkg = gameClass.substring(0,  n);
 			String main = gameClass.substring(n+1);
 		
-			 c = new ClasspathCartridge("Gamex", pkg, main);
+            c = new ClasspathCartridge("Game", pkg, main);
 			 
-			 //plugin.onCreate(this, savedInstanceState);
-			 //if(true) throw new RuntimeException("err");
-		    //g = (Game)Class.forName(gameClass).newInstance();
 		} catch (Exception e) {
 		    throw new RuntimeException(e);
 		}

@@ -67,8 +67,34 @@ public class ScreenInfo {
 				cam.position.set(requiredSysConfig.width / 2f, requiredSysConfig.height / 2f, 0); // center on screen
 				cam.update();
 			}
+			else if (requiredSysConfig.mode == VirtualScreenMode.FILL_SIDE) {
+				
+				dx = winwidth;
+				dy = winheight;
+				
+				float tx = (float)winwidth/(float)requiredSysConfig.width;
+				float ty = (float)winheight/(float)requiredSysConfig.height;
+				
+				if(tx > ty)
+				{
+					cam.setToOrtho(true,
+							(float)winwidth/ty,
+							requiredSysConfig.height
+							);
+				}
+				else
+				{
+					cam.setToOrtho(true,
+							requiredSysConfig.width,
+							(float)winheight/tx
+							);
+					
+				}
+				cam.position.set(requiredSysConfig.width / 2f, requiredSysConfig.height / 2f, 0); // center on screen
+				cam.update();
+			}
 			else if (requiredSysConfig.mode == VirtualScreenMode.STRETCH_FULL) {
-		
+				
 				dx = winwidth;
 				dy = winheight;
 						
