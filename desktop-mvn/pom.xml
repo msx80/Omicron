@@ -5,6 +5,7 @@
   <groupId>com.github.msx80.omicron</groupId>
   <artifactId>desktop-wrapper</artifactId>
   <version>1.0.0</version>
+
   <properties>
   
   <!-- This is the omicron cartridge to be package as an Android app. You can pass the properties as arguments to mvn with -D -->
@@ -18,7 +19,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>	
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<gdx.version>1.12.1</gdx.version>
-	<omicron.engine.version>0.0.7</omicron.engine.version>
+	<omicron.engine.version>0.0.9</omicron.engine.version>
   </properties>
 
   <repositories>
