@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.github.msx80.omicron</groupId>
     <artifactId>omicron-parent</artifactId>
-    <version>0.0.9</version>  
+    <version>0.0.10</version>  
   </parent>
   <artifactId>omicron-loader</artifactId>
   
@@ -23,7 +23,7 @@
 		</repository>
 	</repositories>
   <dependencies>
-  <dependency>
+ <!--<dependency>
   <groupId>dev.jeka</groupId>
   <artifactId>jeka-core</artifactId>
   <version>0.9.20.RC14</version>
@@ -33,7 +33,7 @@
       <artifactId>miglayout-swing</artifactId>
       <version>5.2</version>
       <scope>compile</scope>
-    </dependency> 
+    </dependency> -->
     <dependency>
       <groupId>com.github.msx80</groupId>
       <artifactId>wiseloader</artifactId>

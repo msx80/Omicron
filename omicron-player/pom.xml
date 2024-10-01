@@ -4,7 +4,7 @@
 
   <groupId>com.github.msx80.omicron</groupId>
   <artifactId>omicron-parent</artifactId>
-  <version>0.0.9</version>
+  <version>0.0.10</version>
   
   <packaging>pom</packaging>
  
@@ -17,6 +17,7 @@
  
   <modules>  
     <module>omicron-loader</module>
+	<module>omicron-source-loader</module>
     <module>omicron-engine</module>
     <module>omicron-player</module>
     <module>omicron-desktop</module>

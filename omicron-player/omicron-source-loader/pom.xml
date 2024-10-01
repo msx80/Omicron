@@ -8,13 +8,13 @@
     <artifactId>omicron-parent</artifactId>
     <version>0.0.10</version>  
   </parent>
-  <artifactId>omicron-player</artifactId>
+  <artifactId>omicron-source-loader</artifactId>
   
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
-</properties>  
+</properties>
   
   	<repositories>
 		<repository>
@@ -23,37 +23,23 @@
 		</repository>
 	</repositories>
   <dependencies>
-	  <!--
-<dependency>
-	  <groupId>testing</groupId>
-  <artifactId>abstract-text-editor</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+ <dependency>
+  <groupId>dev.jeka</groupId>
+  <artifactId>jeka-core</artifactId>
+  <version>0.9.20.RC14</version>
 </dependency>
--->
     <dependency>
-      <groupId>com.github.msx80</groupId>
-      <artifactId>omicron-api</artifactId>
-      <version>0.0.1</version>
+      <groupId>com.miglayout</groupId>
+      <artifactId>miglayout-swing</artifactId>
+      <version>5.2</version>
       <scope>compile</scope>
     </dependency>
-    
     <dependency>
-      <groupId>com.github.msx80</groupId>
-      <artifactId>omicron-basics</artifactId>
-      <version>0.0.3</version>
-      <scope>compile</scope>
-    </dependency>    
-	<dependency>
       <groupId>com.github.msx80.omicron</groupId>
       <artifactId>omicron-loader</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-	<dependency>
-      <groupId>com.github.msx80.omicron</groupId>
-      <artifactId>omicron-source-loader</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
+  
 </project>
