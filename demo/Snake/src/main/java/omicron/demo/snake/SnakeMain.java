@@ -59,7 +59,6 @@ public class SnakeMain implements Game
 	
 	public static final String[] FINISH = {"WOW you finished the game!!","CONGRATS!", "", "You should stop eating now"};
 	
-	private Sys sys;
 	private TextDrawerFixed td = null;
 	private MapDataArray map = new MapDataArray(MAP_WIDTH, MAP_HEIGHT);
 	private MapDrawer mapDrawer;
@@ -76,16 +75,15 @@ public class SnakeMain implements Game
 	
 	private Runnable gameState; // this is the current "phase" of the game, there are 4: welcome (the intro), actual game, death screen and finish screen
 	
-    public void init(final Sys sys) 
+    public void init() 
     {
-    	this.r = new Random(sys.millis());
-        this.sys = sys;
-        td = new TextDrawerFixed(sys, SHEET_FONT, 6, 6, 6);
-        mapDrawer = new MapDrawer(sys, TILE_SIZE, TILE_SIZE, 8, map);
-        controller = sys.controllers()[0];
+    	this.r = new Random(Sys.millis());
+        td = new TextDrawerFixed( SHEET_FONT, 6, 6, 6);
+        mapDrawer = new MapDrawer( TILE_SIZE, TILE_SIZE, 8, map);
+        controller = Sys.controllers()[0];
         gameState = this::welcomeLoop;
         resetGame();
-        sys.sound(3, 1, 1);
+        Sys.sound(3, 1, 1);
     }
 
 	public void resetGame() {
@@ -143,8 +141,8 @@ public class SnakeMain implements Game
 
 
 	private void render() {
-		ShapeDrawer.rect(sys, 0, GAME_HEIGHT, WIDTH, HEIGHT-GAME_HEIGHT, 0, Colors.from(80, 40, 20)); // bottom box
-		sys.fill(0, 0, GAME_HEIGHT, WIDTH, 1, Colors.WHITE);	// bottom white line
+		ShapeDrawer.rect(0, GAME_HEIGHT, WIDTH, HEIGHT-GAME_HEIGHT, 0, Colors.from(80, 40, 20)); // bottom box
+		Sys.fill(0, 0, GAME_HEIGHT, WIDTH, 1, Colors.WHITE);	// bottom white line
         mapDrawer.draw(SHEET_MAP, 0, 0, 0, 0, MAP_WIDTH, MAP_HEIGHT);  // actual map (the game)
                
 	}
@@ -211,7 +209,7 @@ public class SnakeMain implements Game
 		{
 			// set the first apple
 			resetApple();
-			sys.sound(2, 1, 1);
+			Sys.sound(2, 1, 1);
 			switchState(this::gameLoop);
 		}
 		else
@@ -257,14 +255,14 @@ public class SnakeMain implements Game
 		int hitWhat = map.getTile(head.x, head.y);
 		if (hitWhat == 1) {
 			// apple!
-			sys.sound(1, 1, 1);
+			Sys.sound(1, 1, 1);
 			score += 10;
 			growing += 2;
 			finished = !resetApple();
 			
 		}
 		else if (hitWhat != 0) {
-			sys.sound(4, 1, 1);
+			Sys.sound(4, 1, 1);
 			return this::deathLoop;
 		}
 		// place new head tile

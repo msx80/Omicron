@@ -22,7 +22,6 @@ public class AlienBusterGame implements Game {
 	
 	private Status status = Status.INTRO;
 	
-	private Sys sys;
 	private int timeToNext = 100;
 	private TextDrawerFixed td = null;
 	
@@ -36,28 +35,27 @@ public class AlienBusterGame implements Game {
 	
 	Pointer m;
 	
-    public void init(final Sys sys) 
+    public void init() 
     {
-        this.sys = sys;
-        r = new Random(sys.millis());
-        td = new TextDrawerFixed(sys, 1, 6, 6, 6);
-        m = sys.pointers()[0];
+        r = new Random(Sys.millis());
+        td = new TextDrawerFixed(1, 6, 6, 6);
+        m = Sys.pointers()[0];
     }
 
     public void render() 
     {
     	// background
-    	sys.draw(3, 0,0, 0,0, 240,136, 0, 0);
+    	Sys.draw(3, 0,0, 0,0, 240,136, 0, 0);
 		switch (status) {
 		case INTRO:
-			sys.draw(4, 56, 0, 0, 0, 128, 64, 0, 0);
+			Sys.draw(4, 56, 0, 0, 0, 128, 64, 0, 0);
 			textWithBorder("TAP TO START", 90,50);
 			break;
 		case GAME:
 			renderGame();
 			break;
 		case GAMEOVER:
-			sys.draw(4, 56, 0, 0, 64, 128, 64, 0, 0);
+			Sys.draw(4, 56, 0, 0, 64, 128, 64, 0, 0);
 			textWithBorder("Defeated !!", 90,50);
 			break;
 
@@ -66,45 +64,45 @@ public class AlienBusterGame implements Game {
     }
 
 	private void textWithBorder(String text, int tx, int ty) {
-		sys.color(Colors.BLACK);
+		Sys.color(Colors.BLACK);
 		td.print(text, tx-1, ty);
 		td.print(text, tx+1, ty);
 		td.print(text, tx, ty+1);
 		td.print(text, tx, ty-1);
-		sys.color(Colors.GREEN);
+		Sys.color(Colors.GREEN);
 		td.print(text, tx, ty);
-		sys.color(Colors.WHITE);
+		Sys.color(Colors.WHITE);
 	}
 
 	private void renderGame() {
-		sys.color(Colors.BLACK);
+		Sys.color(Colors.BLACK);
         td.print("Score: "+score, 1, 1);
-        td.print("FPS:"+sys.fps(), 100, 130);
-        sys.color(Colors.WHITE);
+        td.print("FPS:"+Sys.fps(), 100, 130);
+        Sys.color(Colors.WHITE);
         
         
         
         for (Alien a : aliens) {
-			sys.draw(2, (int)a.x-16,(int)a.y-16,0,0,32,32, 0, 0);
+			Sys.draw(2, (int)a.x-16,(int)a.y-16,0,0,32,32, 0, 0);
 		}
         
         // shots left
         for (int i = 0; i < shots; i++) {
-        	sys.draw(2, i*16,136-16,32,0,16,16, 0, 0);
+        	Sys.draw(2, i*16,136-16,32,0,16,16, 0, 0);
 		}
         // lives left
         for (int i = 0; i < lives; i++) {
-        	sys.draw(2, 224-i*16,136-16,32,16,16,16, 0, 0);
+        	Sys.draw(2, 224-i*16,136-16,32,16,16,16, 0, 0);
 		}
         
         // reload icon
         if (shots == 0)
         {
-        	sys.draw(2, 240-32,0,32+16,0,32,32, 0, 0);
+        	Sys.draw(2, 240-32,0,32+16,0,32,32, 0, 0);
         }
         
         // crossair
-        sys.draw(2, m.x()-8,m.y()-8,80,0,16,16, 0, 0);
+        Sys.draw(2, m.x()-8,m.y()-8,80,0,16,16, 0, 0);
 	}
 
 
@@ -172,7 +170,7 @@ public class AlienBusterGame implements Game {
         
         if(m.btnp(0))
         {
-        	sys.sound(1,1f,1f);
+        	Sys.sound(1,1f,1f);
         	if(shots>0)
         	{
 	        	shots--;
