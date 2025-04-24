@@ -37,19 +37,11 @@ public class DesktopHardwareInterface implements HardwareInterface {
 	@Override
 	public Object hardware(String module, String command, Object param) {
 		
-		return plugins.getPlugin(module).exec(command, param);
-	}
-
-	@Override
-	public Sys getSys() {
-		
-		return sys;
-	}
-
-	@Override
-	public void setSys(Sys sys) {
-		this.sys = sys;
-		
+		try {
+			return plugins.getPlugin(module).exec(command, param);
+		} catch (Exception e) {
+			throw new RuntimeException("Plugin gave an exception: "+e.getMessage(), e);
+		}
 	}
 
 	@Override

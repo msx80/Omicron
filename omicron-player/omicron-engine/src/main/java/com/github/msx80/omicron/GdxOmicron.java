@@ -1,8 +1,10 @@
 package com.github.msx80.omicron;
 
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 //import java.security.AccessController;
 //import java.security.PrivilegedAction;
 import java.util.Stack;
@@ -36,9 +38,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.msx80.omicron.api.Controller;
+import com.github.msx80.omicron.api.OmicronSetter;
 import com.github.msx80.omicron.api.Pointer;
 import com.github.msx80.omicron.api.adv.AdvancedSys;
 import com.github.msx80.omicron.api.adv.Cartridge;
+import com.github.msx80.omicron.plugins.builtin.SurfacePlugin;
 
 
 public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys {
@@ -76,8 +80,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
+		OmicronSetter.setup(this);
 		this.hw = hw;
-		hw.setSys(this);
 		this.options = options;
 		GameRun gr = new GameRun(cartridge, new ScreenInfo(options.getRenderingToTexture()), null, null);
 		this.gameStack.push(gr);
@@ -97,7 +101,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	public void create () {
 		System.out.println("calling cr");
 		
-		contextReset();
+        contextReset();
 		//batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
 		//batch.enableBlending();
 		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
@@ -151,10 +155,28 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 //			for (HardwarePlugin hwp : r.plugins.values()) {
 //				hwp.init(this, hw);
 //			}
-			r.game.init(this); // TODO handle throws!
+			try {
+				initdefaults();
+				r.game.init();
+			} catch (Exception e) {
+				// TODO handle throws!
+				throw new RuntimeException("Error during init: "+e.getMessage(), e);
+			} 
 		}
 		if(r.screenInfo.requiredSysConfig.title!=null) Gdx.graphics.setTitle(r.screenInfo.requiredSysConfig.title);
 		setUpCam(r, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+	}
+
+	private void initdefaults() throws Exception {
+		try(InputStream is = new FileInputStream("C:\\Users\\msx_8\\dev\\Omicron\\omicron\\omicron-player\\omicron-engine\\src\\main\\resources\\omicrondefaultfont.png"))
+		{
+			byte[] arr = SurfacePlugin.read(is);
+			Pixmap px = new Pixmap(arr, 0, arr.length);
+		
+			int s = this.newSurface(px);
+			if(s!=-1) throw new RuntimeException("default font is not -1");
+		}
+		
 	}
 
 	private void setUpCam(GameRun r, int winwidth, int winheight) 
@@ -407,6 +429,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	@Override
 	public int newSurface(int w, int h) {
 		Pixmap p = new Pixmap(w, h, Format.RGBA8888);
+		
+		return newSurface(p);
+	}
+
+	public int newSurface(Pixmap p) {
+		
 		p.setBlending(Blending.None);
 		
 		int i = -1;
@@ -424,7 +452,15 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		
 		return i;
 	}
+	
+	public int[] surfSizes(int surfNum)
+	{
+		Texture s = current.getSheet(surfNum).getTexture();
+		
+		return new int[] {s.getWidth(), s.getHeight()};
+	}
 
+	
 	@Override
 	public void fill(int sheetNum, int x, int y, int w, int h, int color) {
 		if(sheetNum==0)

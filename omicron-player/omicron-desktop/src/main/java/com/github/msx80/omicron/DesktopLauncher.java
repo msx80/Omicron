@@ -2,6 +2,9 @@ package com.github.msx80.omicron;
 
 
 
+import java.io.InputStream;
+
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.github.msx80.omicron.api.SysConfig;
@@ -24,9 +27,21 @@ public class DesktopLauncher {
 		//config.fullscreen = fullScreen;
 		//config.forceExit = false;
 		config.setWindowPosition(50, 50);
-
 		config.setForegroundFPS(60);
 		config.setIdleFPS(0);
+		
+		// if we are running a classpath cartridge, we could have an icon available, let's use it for the window.
+		try(InputStream is = cartridge.getClass().getResourceAsStream("/omicronIcon.png"))
+		{
+			if(is != null)
+			{
+				config.setWindowIcon(FileType.Classpath, "omicronIcon.png");
+			}
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
 		new Lwjgl3Application(OmicronEngineLibgdx.getApplicationForLibgdx(cartridge, new DesktopHardwareInterface(args)), config);
 
 		/*

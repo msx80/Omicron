@@ -27,21 +27,6 @@ public class NullHardwareInterface implements HardwareInterface {
 
 
 	@Override
-	public Sys getSys() {
-		return sys;
-	}
-
-
-
-	@Override
-	public void setSys(Sys sys) {
-		this.sys = sys;
-		
-	}
-
-
-
-	@Override
 	public void gamePaused() {
 		
 	}

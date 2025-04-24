@@ -1,25 +1,20 @@
 package com.github.msx80.omicron;
 
-import android.os.Bundle;
-import android.net.Uri;
-import android.content.Intent;
-import android.widget.Toast;
-import android.app.Activity;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.function.Consumer;
+
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.github.msx80.omicron.GdxOmicron;
-import com.github.msx80.omicron.AndroidPlugin;
-import com.github.msx80.omicron.HardwareInterface;
-import com.github.msx80.omicron.api.Game;
-import com.github.msx80.omicron.api.Sys;
-import com.github.msx80.omicron.api.adv.*;
-import com.github.msx80.omicron.fantasyconsole.cartridges.*;
-import java.util.Properties;
+import com.github.msx80.omicron.api.adv.Cartridge;
+import com.github.msx80.omicron.fantasyconsole.cartridges.ClasspathCartridge;
 
-import android.content.pm.*;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.Toast;
 
 public class AndroidLauncher extends AndroidApplication implements HardwareInterface {
 	
@@ -27,12 +22,9 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 	
 	private byte[] bytesToSave = null;
 	private Consumer<String> fileResult = null;
-	
-	
-	private Sys sys;
     
     PluginManager plugins = new PluginManager(this);
-	
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,7 +48,7 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 		
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		GdxOmicron go = new GdxOmicron(c, this);
-		sys = go;
+		
 		initialize(go, config);
 	}
 	
@@ -160,7 +152,11 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 
 	public Object hardware(String module, String command, Object param)
 	{
-		return plugins.getPlugin(module).exec(command, param);
+		try {
+			return plugins.getPlugin(module).exec(command, param);
+		} catch (Exception e) {
+			throw new RuntimeException("Plugin gave an exception: "+e.getMessage(), e);
+		}
 	}
    
    
@@ -168,19 +164,6 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
    {
 	   return new String[0];
    }
-   
-   
-   	@Override
-	public Sys getSys() {
-		
-		return sys;
-	}
-
-	@Override
-	public void setSys(Sys sys) {
-		// not needed
-		
-	}
 
 	@Override
 	public void gamePaused() {
