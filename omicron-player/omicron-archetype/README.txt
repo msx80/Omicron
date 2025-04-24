@@ -1,0 +1,1 @@
+mvn archetype:generate -DarchetypeGroupId=com.github.msx80.omicron  -DarchetypeArtifactId=omicron-archetype -DarchetypeVersion=0.0.11
