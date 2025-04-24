@@ -1,25 +1,29 @@
 package com.github.msx80.omicron.fantasyconsole;
 
+import com.github.msx80.omicron.api.Sys;
+import com.github.msx80.omicron.api.adv.AdvancedSys.KeyboardListener;
 import com.github.msx80.omicron.basicutils.gui.BaseWidget;
+import com.github.msx80.omicron.basicutils.text.TextDrawerFixed;
 
 
-public class EditorWidget extends BaseWidget /*implements Controllable*/ {
+public class EditorWidget extends BaseWidget implements KeyboardListener {
 
+	public EditorWidget(TextDrawerFixed font, int w, int h) {
+		super(w, h);
+	}
+	/*
+	int charHeight = 6;
+	int charWidth = 4;
 	public EditorWidget(int w, int h) {
 		super(w, h);
 		
 	}
 
-	@Override
-	public void draw() {
-		
-	}
-	
-	
-/*
 	private Editor tb = new Editor();
 	private TextDrawerFixed td;
 	private Sys sys;
+	
+	final EnumSet<Modifiers> mod = EnumSet.noneOf(Modifiers.class);
 
 	
 	public EditorWidget(Sys sys, TextDrawerFixed font, int w, int h) {
@@ -28,73 +32,40 @@ public class EditorWidget extends BaseWidget /*implements Controllable*/ {
 		this.sys = sys;
 
 		
-		tb.appendLine("Hello");
-		tb.appendLine("World");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Very long line - Very long line - Very long line - Very long line");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("0");
-		tb.appendLine("1");
-		tb.appendLine("2");
-		tb.appendLine("3");
-		tb.appendLine("4");tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Very long line - Very long line - Very long line - Very long line");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("0");
-		tb.appendLine("1");
-		tb.appendLine("2");
-		tb.appendLine("3");
-		tb.appendLine("4");tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Very long line - Very long line - Very long line - Very long line");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("Lorem ipsum");
-		tb.appendLine("Bla bla bla bla");
-		tb.appendLine("0");
-		tb.appendLine("1");
-		tb.appendLine("2");
-		tb.appendLine("3");
-		tb.appendLine("4");
-		tb.appendLine("5");
-		tb.appendLine("6");
-		tb.appendLine("7");
-		tb.appendLine("8");
-		tb.appendLine("9");
-		tb.appendLine("End of file");
-		
-		
+		tb.appendLine("package omicron.demo.helloworld;");
+		tb.appendLine("");
+		tb.appendLine("import com.github.msx80.omicron.api.Game;");
+		tb.appendLine("import com.github.msx80.omicron.api.Sys;");
+		tb.appendLine("import com.github.msx80.omicron.api.SysConfig;");
+		tb.appendLine("import com.github.msx80.omicron.api.SysConfig.VirtualScreenMode;");
+		tb.appendLine("");
+		tb.appendLine("public class HelloWorld implements Game ");
+		tb.appendLine("{");
+		tb.appendLine("	");
+		tb.appendLine("	private Sys sys;");
+		tb.appendLine("	");
+		tb.appendLine("    public void init(final Sys sys) ");
+		tb.appendLine("    {");
+		tb.appendLine("        this.sys = sys;");
+		tb.appendLine("    }");
+		tb.appendLine("");
+		tb.appendLine("	public boolean loop() ");
+		tb.appendLine("	{");
+		tb.appendLine("    	sys.clear(0xFF); // RGBA black");
+		tb.appendLine("    	sys.draw(1, 70,20,0, 0, 100, 50, 0, 0);");
+		tb.appendLine("        return true;");
+		tb.appendLine("    }");
+		tb.appendLine("");
+		tb.appendLine("	@Override");
+		tb.appendLine("	public SysConfig sysConfig() ");
+		tb.appendLine("	{");
+		tb.appendLine("		return new SysConfig(240, 136, VirtualScreenMode.SCALED, \"Hello World!\", \"helloworld\");");
+		tb.appendLine("	}");
+		tb.appendLine("  ");
+		tb.appendLine("}");
+		tb.appendLine("");
 	}
 
-	@Override
-	public void control(Controller c) {
-		if(c.up())
-			tb.processSpecialKey(SpecialKeys.UP, null);
-		if(c.down())
-			tb.processSpecialKey(SpecialKeys.DOWN, null);
-		if(c.left())
-			tb.processSpecialKey(SpecialKeys.LEFT, null);
-		if(c.right())
-			tb.processSpecialKey(SpecialKeys.RIGHT, null);
-	
-		parent.ensureVisible(this, tb.cursor.pos * td.getStepping(), tb.cursor.line * 8, 4, 8);
-		
-		
-	}
 
 	@Override
 	public void draw() {
@@ -111,7 +82,7 @@ public class EditorWidget extends BaseWidget /*implements Controllable*/ {
 			// fill middle lines
 			for (int i = start.line+1; i < end.line; i++) 
 			{
-				sys.fill(0, 0, y+i*8-2, tb.lines().get(i).length()*6, 8, Colors.GREEN);
+				sys.fill(0, 0, y+i*charHeight-2, tb.lines().get(i).length()*charWidth, charHeight, Colors.GREEN);
 			}
 			
 			// beginning
@@ -125,13 +96,13 @@ public class EditorWidget extends BaseWidget /*implements Controllable*/ {
 				{
 					length = tb.lines().get(start.line).length() - start.pos;
 				}
-				sys.fill(0, start.pos*6, y+start.line*8-2, length*6, 8, Colors.GREEN);
+				sys.fill(0, start.pos*charWidth, y+start.line*charHeight-2, length*charWidth, charHeight, Colors.GREEN);
 			}
 			
 			// end
 			if(end.line != start.line)
 			{
-				sys.fill(0, 0, y+end.line*8-2, end.pos*6, 8, Colors.GREEN);
+				sys.fill(0, 0, y+end.line*charHeight-2, end.pos*charWidth, charHeight, Colors.GREEN);
 			}
 			
 		}
@@ -144,11 +115,91 @@ public class EditorWidget extends BaseWidget /*implements Controllable*/ {
 			{
 				sys.color(Colors.GREEN);
 			//	if( ((System.currentTimeMillis()>>8) % 2) == 0)
-					td.print("|", tb.cursor.pos*6-2, y-1);
+					td.print("|", tb.cursor.pos*charWidth-2, y-1);
 					sys.color(Colors.WHITE);
 			}
-			y+=8;
+			y+=charHeight;
 		}
 	}
+	
+
+
+
+	@Override
+	public boolean keyDown(int keycode) {
+		switch (keycode) {
+		
+		case Input.Keys.DOWN: 
+			tb.processSpecialKey(SpecialKeys.DOWN, mod);
+			break;
+		case Input.Keys.UP: 
+			tb.processSpecialKey(SpecialKeys.UP, mod);
+			break;
+		case Input.Keys.LEFT: 
+			tb.processSpecialKey(SpecialKeys.LEFT, mod);
+			break;
+		case Input.Keys.RIGHT: 
+			tb.processSpecialKey(SpecialKeys.RIGHT, mod);
+			break;
+		case Input.Keys.SHIFT_LEFT:
+		case Input.Keys.SHIFT_RIGHT:
+			mod.add(Modifiers.SHIFT);
+			break;
+		default: return false;
+		} 
+			
+		parent.ensureVisible(this, tb.cursor.pos * td.getStepping(), tb.cursor.line * 8, 4, 8);
+		return true;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		switch (keycode) {
+		
+		case Input.Keys.SHIFT_LEFT:
+		case Input.Keys.SHIFT_RIGHT:
+			mod.remove(Modifiers.SHIFT);
+			break;
+		default: return false;
+		} 
+		return true;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		if(character == 10)
+		{
+			tb.processSpecialKey(SpecialKeys.ENTER, mod);
+		}
+		else
+		{
+			tb.processKey(character, mod);
+		}
+		return true;
+	}
 */
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+		
+	}
 }
