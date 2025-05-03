@@ -6,7 +6,7 @@ ext {
 	gdxControllersVersion = "2.2.3"
 	cartridgeDep = property('cartridge.groupId')+":"+property('cartridge.artifactId')+":"+property('cartridge.version')
 	minVersion = property('cartridge.version').tokenize('.')[-1].toInteger()
-	omicronVersion = "0.0.11"
+	omicronVersion = "0.0.12"
 }
 
 project.logger.lifecycle('Cartridge dependency: '+cartridgeDep+' version: '+minVersion)
