@@ -1,0 +1,128 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+ext {
+	gdxVersion = "1.12.1"
+	gdxControllersVersion = "2.2.3"
+	cartridgeDep = property('cartridge.groupId')+":"+property('cartridge.artifactId')+":"+property('cartridge.version')
+	minVersion = property('cartridge.version').tokenize('.')[-1].toInteger()
+	omicronVersion = "0.0.11"
+}
+
+project.logger.lifecycle('Cartridge dependency: '+cartridgeDep+' version: '+minVersion)
+
+configurations { 
+	natives
+	toestract 
+}
+
+dependencies {
+
+	implementation ("com.github.msx80.omicron:android-lib:$omicronVersion") {
+	  exclude group: 'net.lingala.zip4j'
+      exclude module: 'zip4j'
+   }
+	implementation cartridgeDep
+	toestract (cartridgeDep) { 
+        transitive = false
+    }
+	
+	implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+	implementation "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
+}
+
+// load omicron.properties file from inside the cartridge
+def props = new Properties()
+zipTree(configurations.toestract.singleFile).filter(e -> "omicron.properties".equals(e.getName())).getSingleFile().withInputStream { props.load(it) }
+
+android {
+    namespace props.getProperty("omicron.pkg")
+    compileSdk 34
+	compileSdkVersion 34
+    defaultConfig {
+        applicationId props.getProperty('omicron.pkg')
+        minSdk 26
+        targetSdk 34
+        versionCode minVersion
+        versionName property('cartridge.version')
+		
+		manifestPlaceholders.orientation = props.getProperty('omicron.orientation')
+		manifestPlaceholders.appName = props.getProperty('omicron.name')
+		manifestPlaceholders.omicronMain = props.getProperty("omicron.pkg")+"."+props.getProperty("omicron.main")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+	sourceSets {
+        main {
+            jniLibs.srcDirs = ['build/libs']
+			res.srcDirs += 'build/res'
+        }
+    }
+}
+
+
+task copyNativeLibs() {
+  doFirst {
+    project.logger.lifecycle('Copying native files')
+	// copy native files into build/lib, so they are properly cleaned by clean
+    file("build/libs/armeabi/").mkdirs()
+    file("build/libs/armeabi-v7a/").mkdirs()
+    file("build/libs/arm64-v8a/").mkdirs()
+    file("build/libs/x86/").mkdirs()
+    file("build/libs/x86_64/").mkdirs()
+
+    configurations.getByName("natives").copy().files.each { jar ->
+        def outputDir = null
+        if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("build/libs/armeabi-v7a")
+        if (jar.name.endsWith("natives-armeabi.jar")) outputDir = file("build/libs/armeabi")
+        if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("build/libs/arm64-v8a")
+        if (jar.name.endsWith("natives-x86.jar")) outputDir = file("build/libs/x86")
+        if (jar.name.endsWith("natives-x86_64.jar")) outputDir = file("build/libs/x86_64")
+        if (outputDir != null) {
+            copy {
+                from zipTree(jar)
+                into outputDir
+                include "*.so"
+            }
+        }
+    }
+	// extract the icon from the cartridge to use it as app icon
+	def iconFile
+	def iconFiles = zipTree(configurations.toestract.singleFile).filter(e -> "omicronIcon.png".equals(e.getName())).getFiles()
+	file("build/res/drawable").mkdirs()
+	if(iconFiles.size() == 1)
+	{
+		iconFile = iconFiles.iterator().next()
+	}
+	else
+	{
+		iconFile = file("default.png")
+	}
+	System.out.println(iconFile)
+	java.nio.file.Files.copy(iconFile.toPath(), file("build/res/drawable/omicronicon.png").toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+  }
+}
+preBuild.dependsOn copyNativeLibs
