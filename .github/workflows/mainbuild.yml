@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 1.8
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: 17
         distribution: 'temurin'
     - name: Build Omicron Player
       run: |
@@ -68,44 +68,42 @@ jobs:
         path: demo/Snake/snake.omicron
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-      with:
-        cmdline-tools-version: 8512546
     - name: Install packages        
       run: |
         sdkmanager "build-tools;33.0.2" "platforms;android-26"        
     - name: Build AlienBuster Android app
       run: |
-        cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=alienbuster -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
+        cd wrappers/android-wrapper
+        ./gradlew -Pcartridge.artifactId=alienbuster -Pcartridge.groupId=com.github.msx80.omicron  -Pcartridge.version=0.0.3 clean assembleRelease
     - name: Deploy AlienBuster Android App
       uses: actions/upload-artifact@v4
       with:
         name: 'alienbuster.apk'
-        path: android-mvn/target/alienbuster.apk
+        path: wrappers/android-wrapper/app/build/outputs/apk/release/app-release-unsigned.apk
     - name: Build Featuredemo Android app
       run: |
-        cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=feature-demo -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
+        cd wrappers/android-wrapper
+        ./gradlew -Pcartridge.artifactId=feature-demo -Pcartridge.groupId=com.github.msx80.omicron  -Pcartridge.version=0.0.3 clean assembleRelease
     - name: Deploy feature-demo Android App
       uses: actions/upload-artifact@v4
       with:
         name: 'feature-demo.apk'
-        path: android-mvn/target/feature-demo.apk
+        path: wrappers/android-wrapper/app/build/outputs/apk/release/app-release-unsigned.apk
     - name: Build snake Android app
       run: |
-        cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=snake -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
+        cd wrappers/android-wrapper
+        ./gradlew -Pcartridge.artifactId=snake -Pcartridge.groupId=com.github.msx80.omicron  -Pcartridge.version=0.0.3 clean assembleRelease
     - name: Deploy snake Android App
       uses: actions/upload-artifact@v4
       with:
         name: 'snake.apk'
-        path: android-mvn/target/snake.apk
+        path: wrappers/android-wrapper/app/build/outputs/apk/release/app-release-unsigned.apk
     - name: Build helloworld Android app
       run: |
-        cd android-mvn
-        mvn --batch-mode -Dcartridge.artifactId=helloworld -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3 clean package
+        cd wrappers/android-wrapper
+        ./gradlew -Pcartridge.artifactId=helloworld -Pcartridge.groupId=com.github.msx80.omicron  -Pcartridge.version=0.0.3 clean assembleRelease
     - name: Deploy helloworld Android App
       uses: actions/upload-artifact@v4
       with:
         name: 'helloworld.apk'
-        path: android-mvn/target/helloworld.apk        
+        path: wrappers/android-wrapper/app/build/outputs/apk/release/app-release-unsigned.apk
