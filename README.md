@@ -24,7 +24,12 @@ A screenshot from the demo game, Alien Buster
 
 ![Doors of Doom](https://i.imgur.com/GoCecbG.png)
 
-A videogame developed with Omicron, **Doors of Doom**, available on [Play Store](https://play.google.com/store/apps/details?id=org.github.msx80.doorsofdoom.DoorsOfDoom)
+An open source videogame developed with Omicron, **Doors of Doom**, available on [FDroid](https://f-droid.org/packages/com.github.msx80.doorsofdoom/) - ([sources](https://github.com/msx80/DoorsOfDoomOmicron))
+
+
+![Retrodrawing](https://github.com/msx80/RetroDrawing/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg?raw=true)
+
+[Retrodrawing](https://github.com/msx80/retrodrawing), a simple drawing app with big pixels.
 
 
 How can I try it?
@@ -47,7 +52,7 @@ The API
 -------
 
 Omicron has a minimalistic and self-explanatory API.
-Take a look at it [here](https://github.com/msx80/Omicron/blob/master/omicron-player/omicron-api/src/main/java/org/github/msx80/omicron/api/Sys.java) for the full API!
+Take a look at it [here](https://github.com/msx80/omicron-api/blob/main/src/main/java/com/github/msx80/omicron/api/Sys.java) for the full API!
 
 Get Started
 -----------
