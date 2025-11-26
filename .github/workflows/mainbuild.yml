@@ -66,6 +66,10 @@ jobs:
       with:
         name: 'snake.omicron'
         path: demo/Snake/snake.omicron
+    - name: Build Web cart for Snake
+      run: |
+        cd wrappers/web-wrapper
+        mvn clean install package -Dcartridge.artifactId=snake -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
     - name: Install packages        

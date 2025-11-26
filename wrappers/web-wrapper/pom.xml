@@ -27,7 +27,7 @@
 	<dependency>
 		<artifactId>omicron-engine</artifactId>
 		<groupId>com.github.msx80.omicron</groupId>
-		<version>0.0.12</version>	
+		<version>0.0.13-SNAPSHOT</version>	
 	</dependency>
 	  <dependency>
     <groupId>com.squareup.tools.build</groupId>
