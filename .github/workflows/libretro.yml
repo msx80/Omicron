@@ -20,7 +20,6 @@ jobs:
     - name: make
       run: |
         sudo apt-get update
-        sudo apt-get upgrade
         sudo apt-get install mesa-common-dev
         cd libretro/LibretroOmicronCore
         make all
