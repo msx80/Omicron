@@ -34,10 +34,7 @@ class Point {
  */
 public class SnakeMain implements Game 
 {
-	
-	
-	private static final int SHEET_FONT = 1; // sheet with font
-	private static final int SHEET_MAP = 2;  // sheet with map
+	private static final int SHEET_MAP = 1;  // sheet with map
 	
 	public static final int UP = 0;
 	public static final int RIGHT = 1;
@@ -78,7 +75,7 @@ public class SnakeMain implements Game
     public void init() 
     {
     	this.r = new Random(Sys.millis());
-        td = new TextDrawerFixed( SHEET_FONT, 6, 6, 6);
+        td = TextDrawerFixed.DEFAULT;
         mapDrawer = new MapDrawer( TILE_SIZE, TILE_SIZE, 8, map);
         controller = Sys.controllers()[0];
         gameState = this::welcomeLoop;
