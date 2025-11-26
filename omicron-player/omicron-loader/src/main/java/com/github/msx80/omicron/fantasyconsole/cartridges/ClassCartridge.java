@@ -26,7 +26,7 @@ public class ClassCartridge implements Cartridge {
 			game = gameClass.getDeclaredConstructor().newInstance();
 			return game;
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Unable to instantiate class: "+e.getMessage(), e);
 		}
 	}
 

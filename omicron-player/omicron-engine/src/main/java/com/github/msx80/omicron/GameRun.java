@@ -40,6 +40,7 @@ public class GameRun {
 	
 	public GameRun(Cartridge cartridge, ScreenInfo screenInfo, Consumer<String> onResult, Consumer<Throwable> onException) {
 		try {
+			System.out.println("loading: "+cartridge);
 			this.cartridge = cartridge;
 			this.game = cartridge.getGameObject();
 			this.screenInfo = screenInfo;
@@ -94,7 +95,13 @@ public class GameRun {
 			}
 			return ff;
 		}
-		else
+		else if(Gdx.app.getType() == ApplicationType.WebGL) // using TeaVM
+			{
+				FileHandle ff = Gdx.files.internal(fn);
+				System.out.println("Loaded resource "+fn+": "+ff);
+				return ff;
+			}
+			else
 		{
 			
 			CartridgeFileHandle res = new CartridgeFileHandle(cartridge, fn);

@@ -16,7 +16,7 @@ public abstract class AbstractJarCartridge implements Cartridge {
 		this.loader = loader;
 
 		byte[] prop = loader.loadFile("omicron.properties");
-		if(prop== null) throw new RuntimeException("Zip/jar does not contains omicron.properties file.");
+		if(prop== null) throw new RuntimeException("Zip/jar does not contains omicron.properties file. It's not an omicron cartridge.");
 		this.properties = FileUtil.loadProps(prop);
 
 	}
