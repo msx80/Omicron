@@ -1,14 +1,12 @@
 package com.github.msx80.omicron;
 
-public class DesktopHardwareInterface implements HardwareInterface {
+public class DefaultHardwareInterface implements HardwareInterface {
 
-	
-	
 	private String[] args;
 	PluginManager plugins = new PluginManager(this);
 		
 
-	public DesktopHardwareInterface(String[] args) {
+	public DefaultHardwareInterface(String[] args) {
 		this.args = args;
 	}
 
@@ -46,10 +44,12 @@ public class DesktopHardwareInterface implements HardwareInterface {
 		}
 
 	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Class<? extends HardwarePlugin> loadPluginClass(String module) throws Exception {
 		
 		return  (Class<? extends HardwarePlugin>) this.getClass().getClassLoader().loadClass(module);
 	}
+
 }

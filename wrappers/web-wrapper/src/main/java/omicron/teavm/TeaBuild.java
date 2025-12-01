@@ -73,9 +73,6 @@ public class TeaBuild {
 			System.out.println("Main class fqn: "+fqn);
 			Path emitter = generateEmitter(fqn);
 			
-			// 		assertThat(dynamicType.newInstance().toString(), is("Hello World!"));
-			
-		
 			System.out.println("Cart: "+name);
 			System.out.println("Main class: "+fqn);
 			FileUtils.deleteDirectory(new File("build/dist/assets"));
@@ -86,6 +83,13 @@ public class TeaBuild {
 			
 	        TeaReflectionSupplier.addReflectionClass(fqn);
 	        TeaReflectionSupplier.addReflectionClass("emitter.Emitter");
+	        TeaReflectionSupplier.addReflectionClass("com.github.msx80.omicron.plugins.builtin.ArgsPlugin");
+	        TeaReflectionSupplier.addReflectionClass("com.github.msx80.omicron.plugins.builtin.PlatformPlugin");
+	        TeaReflectionSupplier.addReflectionClass("com.github.msx80.omicron.plugins.builtin.SaveFilePlugin");
+	        TeaReflectionSupplier.addReflectionClass("com.github.msx80.omicron.plugins.builtin.StatePlugin");
+	        // this one doesn't work as BufferedImage is not in TeaVM
+	        //TeaReflectionSupplier.addReflectionClass("com.github.msx80.omicron.plugins.builtin.SurfacePlugin");
+	        TeaReflectionSupplier.addReflectionClass("com.github.msx80.omicron.plugins.builtin.UrlOpenerPlugin");
  
 	        TeaBuildConfiguration teaBuildConfiguration = new TeaBuildConfiguration();
 	        teaBuildConfiguration.classesToPreserve.add(fqn);
@@ -112,7 +116,7 @@ public class TeaBuild {
 	        int size = 64 * (1 << 20);
 	        tool.setMaxDirectBuffersSize(size);
 	        
-	        System.out.println(tool.getClassesToPreserve());
+	        // System.out.println(tool.getClassesToPreserve());
 	        TeaBuilder.build(tool, true);
 
 	        FileUtils.deleteDirectory(assets.toFile());

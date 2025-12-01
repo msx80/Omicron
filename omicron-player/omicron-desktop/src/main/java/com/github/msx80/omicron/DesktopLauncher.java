@@ -42,7 +42,7 @@ public class DesktopLauncher {
 			throw new RuntimeException(e);
 		}
 		
-		new Lwjgl3Application(OmicronEngineLibgdx.getApplicationForLibgdx(cartridge, new DesktopHardwareInterface(args)), config);
+		new Lwjgl3Application(OmicronEngineLibgdx.getApplicationForLibgdx(cartridge, new DefaultHardwareInterface(args)), config);
 
 		/*
 		 * for lwjgl 2

@@ -473,6 +473,10 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	public int[] surfSizes(int surfNum)
 	{
+		if(surfNum == 0)
+		{
+			return new int[] {current.screenInfo.requiredSysConfig.width, current.screenInfo.requiredSysConfig.height};
+		}
 		Texture s = current.getSheet(surfNum).getTexture();
 		
 		return new int[] {s.getWidth(), s.getHeight()};

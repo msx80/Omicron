@@ -82,16 +82,16 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 	public void onNewIntent(Intent intent) {
 		
 		super.onNewIntent(intent);
-    setIntent(intent);
-	 for(HardwarePlugin p : plugins.getPlugins())
-	{
-		if(p instanceof AndroidPlugin)
+		setIntent(intent);
+		for(HardwarePlugin p : plugins.getPlugins())
 		{
-			 
-			boolean ok = ((AndroidPlugin)p).resolveIntent(intent);
-			if(ok) return;
+			if(p instanceof AndroidPlugin)
+			{
+				 
+				boolean ok = ((AndroidPlugin)p).resolveIntent(intent);
+				if(ok) return;
+			}
 		}
-	}
 	}
 
 /*	
@@ -181,6 +181,13 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 			p.onResume();
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends HardwarePlugin> loadPluginClass(String module) throws Exception {
+		
+		return  (Class<? extends HardwarePlugin>) this.getClass().getClassLoader().loadClass(module);
 	}
    
    

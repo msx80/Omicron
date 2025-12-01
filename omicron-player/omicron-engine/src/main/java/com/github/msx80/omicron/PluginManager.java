@@ -21,8 +21,16 @@ public class PluginManager {
 	}
 	private HardwarePlugin initPlugin(String module) {
 		try {
+			
+			Class<? extends HardwarePlugin> cc = this.hw.loadPluginClass(module);
+			// this load the class on the main Omicron classloader
+			/*
 			@SuppressWarnings("unchecked")
 			Class<? extends HardwarePlugin> cc = (Class<? extends HardwarePlugin>) this.getClass().getClassLoader().loadClass(module);
+			*/
+			
+			//Class<? extends HardwarePlugin> cc = (Class<? extends HardwarePlugin>) Class.forName(module);
+			
 			HardwarePlugin p = cc.newInstance();
 			p.init(hw);
 			plugins.put(module, p);

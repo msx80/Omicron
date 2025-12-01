@@ -1,6 +1,8 @@
 package omicron.teavm;
+import com.github.msx80.omicron.DefaultHardwareInterface;
 import com.github.msx80.omicron.GdxOmicron;
 import com.github.msx80.omicron.HardwareInterface;
+import com.github.msx80.omicron.HardwarePlugin;
 import com.github.msx80.omicron.api.adv.Cartridge;
 import com.github.msx80.omicron.fantasyconsole.cartridges.ClasspathCartridge;
 import com.github.xpenatan.gdx.backends.teavm.TeaApplication;
@@ -33,33 +35,19 @@ public class TeaLauncher {
 			String d = classname.substring(0, classname.lastIndexOf("."));
 			System.out.println(d);
 			
-			Cartridge c = new ClasspathCartridge("Prova", d, b);
+			Cartridge c = new ClasspathCartridge("Omicron", d, b);
 			
-			HardwareInterface hi = new HardwareInterface() {
-				
+			HardwareInterface hi = new DefaultHardwareInterface(new String[0]) {
+
+				@SuppressWarnings("unchecked")
 				@Override
-				public String[] startupArgs() {
-					// TODO Auto-generated method stub
-					return null;
+				public Class<? extends HardwarePlugin> loadPluginClass(String module) throws Exception {
+					// teavm doesn't support loading of arbitrary classes
+					return (Class<? extends HardwarePlugin>) Class.forName(module);
 				}
 				
-				@Override
-				public Object hardware(String module, String command, Object param) {
-					// TODO Auto-generated method stub
-					return null;
-				}
 				
-				@Override
-				public void gameRestored() {
-					// TODO Auto-generated method stub
-					
-				}
 				
-				@Override
-				public void gamePaused() {
-					// TODO Auto-generated method stub
-					
-				}
 			};
 			new TeaApplication(new GdxOmicron( c, hi) , config);
 		} catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.github.msx80.omicron.libretro.entrypoint;
 
 import com.github.msx80.omicron.HardwareInterface;
+import com.github.msx80.omicron.HardwarePlugin;
 import com.github.msx80.omicron.api.Sys;
 
 public class NullHardwareInterface implements HardwareInterface {
@@ -36,6 +37,13 @@ public class NullHardwareInterface implements HardwareInterface {
 	@Override
 	public void gameRestored() {
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends HardwarePlugin> loadPluginClass(String module) throws Exception {
+		
+		return  (Class<? extends HardwarePlugin>) this.getClass().getClassLoader().loadClass(module);
 	}
 
 
