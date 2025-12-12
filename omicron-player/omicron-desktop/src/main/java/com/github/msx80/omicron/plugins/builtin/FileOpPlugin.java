@@ -33,6 +33,7 @@ public class FileOpPlugin implements HardwarePlugin {
 		else if("CHOOSEOPEN".equals(command))
 		{
 			JFileChooser chooser = new JFileChooser();
+			if(params!=null) chooser.setDialogTitle((String) params);
 	        //FileNameExtensionFilter filter = new FileNameExtensionFilter("All files", "*.*");
 	        //chooser.setFileFilter(filter);
 	        int returnVal = chooser.showOpenDialog(null);
@@ -45,6 +46,7 @@ public class FileOpPlugin implements HardwarePlugin {
 		else if("CHOOSESAVE".equals(command))
 		{
 			JFileChooser chooser = new JFileChooser();
+			if(params!=null) chooser.setDialogTitle((String) params);
 	        //FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF Images", "jpg", "gif");
 	        //chooser.setFileFilter(filter);
 	        int returnVal = chooser.showSaveDialog(null);

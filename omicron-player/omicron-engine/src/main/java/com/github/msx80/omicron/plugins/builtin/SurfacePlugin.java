@@ -29,6 +29,21 @@ public class SurfacePlugin implements HardwarePlugin {
 	public Object exec(String command, Object params) throws Exception {
 		if(command.equals("LOAD"))
 		{
+			if(params instanceof InputStream)
+			{
+				InputStream is = (InputStream) params;
+				
+				return pngToNewSurface(is);
+			}
+			else if (params instanceof String) {
+				try(FileInputStream fis = new FileInputStream((String)params))
+				{
+					return pngToNewSurface(fis);
+				}
+			}
+		}
+		else if(command.equals("LOAD_TO_SURF"))
+		{
 			Object[] p = (Object[]) params;
 			Integer surfNum = (Integer) p[0];
 			Object dest = p[1];
@@ -36,12 +51,12 @@ public class SurfacePlugin implements HardwarePlugin {
 			{
 				InputStream is = (InputStream) dest;
 				
-				return pngToSurface(surfNum, is);
+				pngToSurface(surfNum, is);
 			}
 			else if (dest instanceof String) {
 				try(FileInputStream fis = new FileInputStream((String)dest))
 				{
-					return pngToSurface(surfNum, fis);
+					pngToSurface(surfNum, fis);
 				}
 			}
 		}
@@ -69,6 +84,27 @@ public class SurfacePlugin implements HardwarePlugin {
 			
 		}
 		throw new RuntimeException("Unknown command");
+	}
+
+	private int pngToNewSurface(InputStream is) throws IOException {
+
+		BufferedImage bi = ImageIO.read(is);
+		
+		int w = bi.getWidth();
+		int h = bi.getHeight();
+		
+		int nSurf = ((GdxOmicron)Omicron.sys()).newSurface(w, h);
+				
+		
+		for (int x = 0; x < w; x++) {
+        	for (int y = 0; y < h; y++) {
+        		int colot = (bi.getRGB(x, y) << 8) + 255;
+        		Sys.fill(nSurf, x, y, 1, 1, colot);
+			}
+		}
+
+		return nSurf;
+		
 	}
 
 	private Object surfaceToPng(int surfNum, OutputStream fos) throws IOException {
