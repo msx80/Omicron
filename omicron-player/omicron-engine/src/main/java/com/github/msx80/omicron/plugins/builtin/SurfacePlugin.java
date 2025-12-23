@@ -85,7 +85,16 @@ public class SurfacePlugin implements HardwarePlugin {
 		}
 		throw new RuntimeException("Unknown command");
 	}
-
+	public static int convertARGBtoRGBA(int argb) {
+        // 1. Extract Alpha (top 8 bits) and move it to the bottom 8 bits
+        int alpha = (argb >>> 24) & 0xFF;
+        
+        // 2. Extract RGB (bottom 24 bits) and shift them up by 8 bits
+        int rgb = (argb & 0x00FFFFFF) << 8;
+        
+        // 3. Combine them using bitwise OR
+        return rgb | alpha;
+    }
 	private int pngToNewSurface(InputStream is) throws IOException {
 
 		BufferedImage bi = ImageIO.read(is);
@@ -95,10 +104,10 @@ public class SurfacePlugin implements HardwarePlugin {
 		
 		int nSurf = ((GdxOmicron)Omicron.sys()).newSurface(w, h);
 				
-		
 		for (int x = 0; x < w; x++) {
         	for (int y = 0; y < h; y++) {
-        		int colot = (bi.getRGB(x, y) << 8) + 255;
+        		int argb = bi.getRGB(x, y);
+				int colot = convertARGBtoRGBA(argb);
         		Sys.fill(nSurf, x, y, 1, 1, colot);
 			}
 		}
