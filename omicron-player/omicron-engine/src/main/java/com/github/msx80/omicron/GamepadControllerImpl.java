@@ -12,13 +12,20 @@ public class GamepadControllerImpl implements Controller, ControllerListener {
 	public boolean down = false;
 	public boolean left = false;
 	public boolean right = false;
-	public boolean[] btn = new boolean[] {false, false, false, false};
-	public boolean[] oldbtn = new boolean[] {false, false, false, false};
+	public boolean[] btn;
+	public boolean[] oldbtn;
+	public float[] axis;
+	
 	private com.badlogic.gdx.controllers.Controller controller;
+	
 	
 	public GamepadControllerImpl(com.badlogic.gdx.controllers.Controller controller) {
 		this.controller = controller;
+		this.axis = new float[controller.getAxisCount()];
+		this.btn = new boolean[controller.getMaxButtonIndex()+1];
+		this.oldbtn = new boolean[controller.getMaxButtonIndex()+1];
 		controller.addListener(this);
+		
 	}
 	@Override
 	public boolean up() {
@@ -39,6 +46,11 @@ public class GamepadControllerImpl implements Controller, ControllerListener {
 	@Override
 	public boolean btn(int n) {
 		return btn[n];
+	}
+	
+	// Override - todo cambiare api
+	public float axis(int n) {
+		return axis[n];
 	}
 	@Override
 	public boolean btnp(int n) {
@@ -80,20 +92,21 @@ public class GamepadControllerImpl implements Controller, ControllerListener {
 
 	@Override
 	public boolean buttonDown(com.badlogic.gdx.controllers.Controller controller, int buttonCode) {
-		if(buttonCode < 4) btn[buttonCode] = true;
+		btn[buttonCode] = true;
 		return true;
 	}
 
 	@Override
 	public boolean buttonUp(com.badlogic.gdx.controllers.Controller controller, int buttonCode) {
 		System.out.println("btn code: "+buttonCode);
-		if(buttonCode < 4) btn[buttonCode] = false;
+		btn[buttonCode] = false;
 		return false;
 	}
 
 	@Override
 	public boolean axisMoved(com.badlogic.gdx.controllers.Controller controller, int axisCode, float value) {
 		System.out.println("Axis code: "+axisCode+" val "+value);
+		axis[axisCode] = value;
 		if(axisCode == 1)
 		{
 			if(value > 0.5) { down = true; up = false;}
