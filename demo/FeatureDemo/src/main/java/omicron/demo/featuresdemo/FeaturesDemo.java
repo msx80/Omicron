@@ -86,18 +86,22 @@ public class FeaturesDemo implements Game {
         
         font.print("Pointer: ", 10, 20);
         font.print(""+m, 10, 28);
-        Controller c = Sys.controllers()[0];
-        font.print("Controller: ", 10, 37);
-        font.print(""+c, 10, 37+8);
+        font.print("Controllers: ", 10, 37);
+        int cyy = 45;
+        for (Controller c : Sys.controllers() )
+        {
+          font.print(""+c, 10, cyy);
+          cyy+=8;
+        }
               
         
-        font.print("New surf:", 10, 55);
-        Sys.draw(newSurf, 10, 65, 0,0, 64, 16, 0, 0);
+        font.print("New surf:", 10, 75);
+        Sys.draw(newSurf, 10, 85, 0,0, 64, 16, 0, 0);
         
         
         testRot(140, 2);
     	
-        testTrans(10,100);
+        testTrans(10,105);
         
         
         
@@ -134,12 +138,13 @@ public class FeaturesDemo implements Game {
 
 	public boolean loop() {
 			
-        Controller c = Sys.controllers()[0];
-        if (c.up()) y--;
-        if (c.down()) y++;
-        if (c.left()) { x--; dir = 1; }
-        if (c.right()) { x++; dir = 0; }
-        
+        for( Controller c : Sys.controllers())
+        {
+          if (c.up()) y--;
+          if (c.down()) y++;
+          if (c.left()) { x--; dir = 1; }
+          if (c.right()) { x++; dir = 0; }
+        }
         
         m = Sys.pointers()[0];
         if(m.btnp(0)) {
