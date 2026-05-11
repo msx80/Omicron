@@ -13,23 +13,29 @@ Features:
 4. Plaform independent API
 5. Customizable resolution and scaling
 
+# Included demos
+
+Feature Demo, showing off most of the features:  
 ![Feature Demo example](https://i.imgur.com/VYVhZtv.png)
 
-Feature Demo example
 
-
+Alien Buster, an included micro game:  
 ![A screenshot from the demo](https://i.imgur.com/esxGpDW.png)
 
-A screenshot from the demo game, Alien Buster
+A complete Snake game:  
+<img width="868" height="524" alt="image" src="https://github.com/user-attachments/assets/f57d2ada-f7fd-40dc-9941-da1a9a83875f" />
+
+# Real games:
+
+An open source videogame developed with Omicron, **Doors of Doom**, available on [FDroid](https://f-droid.org/packages/com.github.msx80.doorsofdoom/) - ([sources](https://github.com/msx80/DoorsOfDoomOmicron)):
 
 ![Doors of Doom](https://i.imgur.com/GoCecbG.png)
 
-An open source videogame developed with Omicron, **Doors of Doom**, available on [FDroid](https://f-droid.org/packages/com.github.msx80.doorsofdoom/) - ([sources](https://github.com/msx80/DoorsOfDoomOmicron))
-
-
+[Retrodrawing](https://github.com/msx80/retrodrawing), a simple drawing app with big pixels:  
 ![Retrodrawing](https://github.com/msx80/RetroDrawing/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg?raw=true)
 
-[Retrodrawing](https://github.com/msx80/retrodrawing), a simple drawing app with big pixels.
+[Turns of War](https://github.com/msx80/turnsofwar) an open source turn based strategy game made with Omicron:  
+<img width="868" height="524" alt="image" src="https://raw.githubusercontent.com/msx80/turnsofwar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" />
 
 
 How can I try it?
