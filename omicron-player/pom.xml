@@ -13,7 +13,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <libgdx.version>1.14.0</libgdx.version>
-    <omicron.api.version>0.0.2</omicron.api.version>
+    <omicron.api.version>0.0.3-SNAPSHOT</omicron.api.version>
 </properties>
  
   <modules>  
@@ -27,5 +27,6 @@
 	<module>omicron-archetype</module>
 	<module>android-lib</module>
 	<module>desktop-lib</module>
+	<module>web-lib</module>
   </modules>
 </project>
