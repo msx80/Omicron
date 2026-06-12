@@ -41,6 +41,19 @@
       <version>${libgdx.version}</version>
       <scope>compile</scope>
     </dependency>
+    
+    
+    <dependency>
+      <groupId>com.crashinvaders.vfx</groupId> 
+      <artifactId>gdx-vfx-core</artifactId>
+      <version>0.5.4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.crashinvaders.vfx</groupId> 
+      <artifactId>gdx-vfx-effects</artifactId>
+      <version>0.5.4</version>
+    </dependency>
+    
 <!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx-controllers/gdx-controllers-core -->
 <dependency>
     <groupId>com.badlogicgames.gdx-controllers</groupId>

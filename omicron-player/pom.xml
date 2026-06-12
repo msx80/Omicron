@@ -27,6 +27,6 @@
 	<module>omicron-archetype</module>
 	<module>android-lib</module>
 	<module>desktop-lib</module>
-	<module>web-lib</module>
+	<!--<module>web-lib</module>-->
   </modules>
 </project>
