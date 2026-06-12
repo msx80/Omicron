@@ -47,4 +47,36 @@ public class NullHardwareInterface implements HardwareInterface {
 	}
 
 
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void beforeRender() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void afterRender() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }

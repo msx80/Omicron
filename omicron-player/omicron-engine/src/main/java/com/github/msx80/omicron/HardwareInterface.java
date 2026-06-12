@@ -16,4 +16,8 @@ public interface HardwareInterface {
 	 * @throws Exception 
 	 */
 	Class<? extends HardwarePlugin> loadPluginClass(String module) throws Exception;
+	void dispose();
+	void beforeRender();
+	void afterRender();
+	void resize(int width, int height);
 }

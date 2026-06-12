@@ -26,6 +26,7 @@ public class DesktopLauncher {
 		//config.set
 		//config.fullscreen = fullScreen;
 		//config.forceExit = false;
+		
 		config.setWindowPosition(50, 50);
 		config.setForegroundFPS(60);
 		config.setIdleFPS(0);

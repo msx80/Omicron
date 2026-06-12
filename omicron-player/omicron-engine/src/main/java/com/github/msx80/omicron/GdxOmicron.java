@@ -1,9 +1,6 @@
 package com.github.msx80.omicron;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 //import java.security.AccessController;
@@ -79,6 +76,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	private Runnable afterLoop;
 	
 	private int[] currentScreenCache = null; // cache for getPix, cleared any time a modification is made.
+
+	
 	
 	public GdxOmicron(Cartridge cartridge, HardwareInterface hw, GdxOmicronOptions options) {
 		super();
@@ -107,6 +106,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		//batch.enableBlending();
 		// batch.setBlendFunction(GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_DST_ALPHA);	
 	
+  
+        
 		ArrayList<Controller> con = new ArrayList<>();
 		con.add(new ControllerImpl()); // first is keyboard, TODO use joypad etc.
 		if(!( Gdx.app.getType() == ApplicationType.WebGL )) { //TeaVM doesn't seems to work for now
@@ -217,7 +218,7 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 	
 	@Override
 	public void resize(int width, int height) {
-		
+		hw.resize(width, height);
 		setUpCam(current,width, height);
 		
 	}
@@ -261,6 +262,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		{
 			Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
 			this.clear(ColorsCopy.BLACK);
+			
+			hw.beforeRender();
 			Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 		}	
 		current.screenInfo.applyGlClipping();
@@ -282,6 +285,12 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		{
 			if(batch.isDrawing()) batch.end();
 		}
+		
+		if(!options.getRenderingToTexture())
+		{
+			hw.afterRender();
+		}
+		
 		for (Controller controller : controllers) {
 			if(controller instanceof ControllerImpl)
 			{
@@ -325,6 +334,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 		{
 			gameStack.pop().dispose();
 		}
+		hw.dispose();
+		
 	}
 
 	@Override
@@ -742,7 +753,8 @@ public final class GdxOmicron extends ApplicationAdapter implements AdvancedSys 
 //			public Void run() {
 		if(value != null)
 		{
-			getPrefs().putString(key, value).flush();
+			getPrefs().putString(key, value)
+				.flush();
 		}
 		else
 		{

@@ -7,4 +7,9 @@ public interface HardwarePlugin
 	Object exec(String command, Object params) throws Exception;
 	default void onPause() {};
 	default void onResume() {};
+	
+	default void dispose() {};
+	default void beforeRender() {};
+	default void afterRender() {};
+	default void resize(int width, int height) {};
 }

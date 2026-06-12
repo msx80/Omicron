@@ -189,6 +189,45 @@ public class AndroidLauncher extends AndroidApplication implements HardwareInter
 		
 		return  (Class<? extends HardwarePlugin>) this.getClass().getClassLoader().loadClass(module);
 	}
+
+	@Override
+	public void dispose() {
+		for(HardwarePlugin p : plugins.getPlugins())
+		{
+			p.dispose();
+		}
+		
+	}
+	
+
+	@Override
+	public void beforeRender() {
+		for(HardwarePlugin p : plugins.getPlugins())
+		{
+			p.beforeRender();
+		}
+
+		
+	}
+
+	@Override
+	public void afterRender() {
+		for(HardwarePlugin p : plugins.getPlugins())
+		{
+			p.afterRender();
+		}
+
+	}
+	
+
+	@Override
+	public void resize(int width, int height) {
+		for(HardwarePlugin p : plugins.getPlugins())
+		{
+			p.resize(width, height);
+		}
+		
+	}
    
    
 }
