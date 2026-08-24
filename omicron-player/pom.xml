@@ -12,7 +12,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
-    <libgdx.version>1.14.0</libgdx.version>
+    <libgdx.version>1.14.2</libgdx.version>
     <omicron.api.version>0.0.2</omicron.api.version>
 </properties>
  
