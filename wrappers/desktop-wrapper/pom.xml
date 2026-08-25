@@ -18,8 +18,8 @@
 	<maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>	
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<gdx.version>1.12.1</gdx.version>
-	<omicron.engine.version>0.0.12</omicron.engine.version>
+	<gdx.version>1.14.2</gdx.version>
+	<omicron.engine.version>0.0.13-SNAPSHOT</omicron.engine.version>
   </properties>
 
   <repositories>

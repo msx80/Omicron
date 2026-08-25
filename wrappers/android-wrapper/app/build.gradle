@@ -2,11 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
 }
 ext {
-	gdxVersion = "1.12.1"
-	gdxControllersVersion = "2.2.3"
+	gdxVersion = "1.14.2"
+	gdxControllersVersion = "2.2.4"
 	cartridgeDep = property('cartridge.groupId')+":"+property('cartridge.artifactId')+":"+property('cartridge.version')
 	minVersion = property('cartridge.version').tokenize('.')[-1].toInteger()
-	omicronVersion = "0.0.12"
+	omicronVersion = "0.0.13-SNAPSHOT"
 }
 
 project.logger.lifecycle('Cartridge dependency: '+cartridgeDep+' version: '+minVersion)
