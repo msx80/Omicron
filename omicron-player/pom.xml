@@ -25,7 +25,7 @@
     <module>omicron-player-desktop</module>
     <module>omicron-assembly</module>
 	<module>omicron-archetype</module>
-	<module>android-lib</module>
+<!--<module>android-lib</module>-->
 	<module>desktop-lib</module>
 	<!--<module>web-lib</module>-->
   </modules>
