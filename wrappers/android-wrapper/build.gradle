@@ -1,3 +1,6 @@
+// this build is based on the libgdx android build, with additional stuff to make it generic, like extracting information from the cartridge jar
+// it's a hack but keeping it similar to libgdx will make it easier to align in future
+
 buildscript {
   repositories {
     mavenCentral()
@@ -63,11 +66,15 @@ dependencies {
     System.out.println("FILES: "+files)
     def destFileProp = new File(targetFolder, 'omicron.properties')
     def destFileIcon = new File(targetFolder, 'omicronIcon.png')
+    
+    def propFound = false
+    def iconFound = false
     files.each { file ->
                 zipTree(file).matching {
                     include '**/omicronIcon.png' 
                 }.each { propFile ->
                     System.out.println("Found icon file: "+propFile);
+                    iconFound = true
                     java.nio.file.Files.copy(propFile.toPath(), destFileIcon.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 }
             }
@@ -77,20 +84,21 @@ dependencies {
                     include '**/omicron.properties' 
                 }.each { propFile ->
                     System.out.println("Found property file: "+propFile);
+                    propFound = true
                     java.nio.file.Files.copy(propFile.toPath(), destFileProp.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 }
             }
     
     ext.omicronProperties = new Properties()
 
-    if (destFileProp.exists()) {
+    if (propFound) {
         System.out.println("Properties file found ***** "+destFileProp)
         Properties p = new Properties()
         p.load(destFileProp.newDataInputStream())
         rootProject.ext.omicronProperties = p
     }
 
-    if (destFileIcon.exists()) {
+    if (iconFound) {
         System.out.println("Icon file found ***** "+destFileIcon)
         // not very nice to change stuff outside the build folder, but ok
         java.nio.file.Files.copy(destFileIcon.toPath(), new File("android/res/drawable/omicronicon.png").toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
