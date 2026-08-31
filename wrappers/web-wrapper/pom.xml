@@ -11,33 +11,42 @@
 	</properties>
   
   <dependencies>
-
+  <!-- TODO see if we can do without -->
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.22.0</version>
+    <scope>compile</scope>
+</dependency>
+<!-- logs something during build
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>slf4j-simple</artifactId>
     <version>2.0.17</version>
-</dependency>
+</dependency>-->
 	<dependency>
 	    <groupId>com.github.xpenatan.gdx-teavm</groupId>
-	    <artifactId>backend-teavm</artifactId>
-	    <version>1.4.0</version>
+	    <artifactId>backend-web</artifactId>
+	    <version>1.6.1</version>
 	</dependency>
 	<dependency>
 		<artifactId>omicron-engine</artifactId>
 		<groupId>com.github.msx80.omicron</groupId>
 		<version>0.0.13-SNAPSHOT</version>	
+ 		<exclusions>
+                <exclusion>
+        <groupId>com.github.msx80</groupId>
+  <artifactId>wiseloader</artifactId>
+        </exclusion>
+            </exclusions>		
 	</dependency>
-	  <dependency>
-    <groupId>com.squareup.tools.build</groupId>
-    <artifactId>maven-archeologist</artifactId>
-    <version>0.0.10</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+
 <dependency>
-    <groupId>net.bytebuddy</groupId>
-    <artifactId>byte-buddy</artifactId>
-    <version>1.10.19</version>
+	<artifactId>${cartridge.artifactId}</artifactId>
+	<groupId>${cartridge.groupId}</groupId>
+	<version>${cartridge.version}</version>
 </dependency>
+
 
   </dependencies>
   	<build>
@@ -47,14 +56,20 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-					<mainClass>omicron.teavm.TeaBuild</mainClass>
+					<mainClass></mainClass>
+					<executable>java</executable>
+			        <arguments>
+			            <argument>-classpath</argument>
+			            <classpath/>
+			            <argument>omicron.teavm.TeaBuild</argument>
+			        </arguments>
 				</configuration>
 				<executions>
 					<execution>
 						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
-							<goal>java</goal>
+							<goal>exec</goal>
 						</goals>
 					</execution>
 				</executions>				

@@ -17,7 +17,13 @@ public class PlatformPlugin implements HardwarePlugin {
 		{
 			return Gdx.app.getType().toString().toUpperCase();
 		}
-		return "ERR: command not found";
+		else if("QUIT".equals(command))
+		{
+			System.out.println("Exiting application");
+			Gdx.app.exit();
+			return null;
+		}
+		else return "ERR: command not found";
 	}
 
 }
