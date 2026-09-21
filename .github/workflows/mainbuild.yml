@@ -65,4 +65,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: '${{ matrix.demo }}.apk'
-        path: wrappers/android-wrapper/app/build/outputs/apk/release/app-release-unsigned.apk
+        path: wrappers/android-wrapper/android/build/outputs/apk/release/android-release-unsigned.apk
