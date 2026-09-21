@@ -61,8 +61,20 @@ jobs:
       run: |
         cd wrappers/android-wrapper
         ./gradlew -Pcartridge.artifactId=${{ matrix.demo }} -Pcartridge.groupId=com.github.msx80.omicron  -Pcartridge.version=0.0.3 clean assembleRelease
+    - uses: ilharp/sign-android-release@v1
+      name: Sign app APK
+      id: sign_app
+      with:
+        releaseDir: wrappers/android-wrapper/android/build/outputs/apk/release/
+        signingKey: ${{ secrets.SIGNING_KEY }}
+        keyAlias: ${{ secrets.SIGNING_ALIAS }}
+        keyStorePassword: ${{ secrets.SIGNING_PASSWORD }}
+        buildToolsVersion: 33.0.2
+    - name: Rename apk
+      run: |
+        mv -v ${{steps.sign_app.outputs.signedFile}} ${{ matrix.demo }}.apk
     - name: Deploy ${{ matrix.demo }} Android App
       uses: actions/upload-artifact@v4
       with:
         name: '${{ matrix.demo }}.apk'
-        path: wrappers/android-wrapper/android/build/outputs/apk/release/android-release-unsigned.apk
+        path: '${{ matrix.demo }}.apk'
