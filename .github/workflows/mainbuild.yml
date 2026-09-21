@@ -27,7 +27,7 @@ jobs:
   buildDemos:
     strategy:
       matrix:
-        demo: [helloworld, featuresdemo, snake, alienbuster]
+        demo: [helloworld, featuredemo, snake, alienbuster]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
