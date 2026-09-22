@@ -15,14 +15,23 @@ Features:
 
 # Included demos
 
-Feature Demo, showing off most of the features:  
+**Feature Demo**, showing off most of the features:  
+
+[<img height='80' alt='Play in your browser' src='https://cdn.prod.website-files.com/62f10984b7ece0cd68b339a1/634414e97c8fd43650e0f799_play-in-browser.svg'/>](https://msx80.github.io/Omicron/featuredemo)
+
 ![Feature Demo example](https://i.imgur.com/VYVhZtv.png)
 
 
-Alien Buster, an included micro game:  
+**Alien Buster**, an included micro game:  
+
+[<img height='80' alt='Play in your browser' src='https://cdn.prod.website-files.com/62f10984b7ece0cd68b339a1/634414e97c8fd43650e0f799_play-in-browser.svg'/>](https://msx80.github.io/Omicron/alienbuster)
+
 ![A screenshot from the demo](https://i.imgur.com/esxGpDW.png)
 
-A complete Snake game:  
+**Snake** a complete Snake game:  
+
+[<img height='80' alt='Play in your browser' src='https://cdn.prod.website-files.com/62f10984b7ece0cd68b339a1/634414e97c8fd43650e0f799_play-in-browser.svg'/>](https://msx80.github.io/Omicron/snake)
+
 <img width="868" height="524" alt="image" src="https://github.com/user-attachments/assets/f57d2ada-f7fd-40dc-9941-da1a9a83875f" />
 
 # Real games:
