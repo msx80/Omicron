@@ -52,6 +52,12 @@ jobs:
       run: |
         cd wrappers/web-wrapper
         mvn clean install package -Dcartridge.artifactId=${{ matrix.demo }} -Dcartridge.groupId=com.github.msx80.omicron -Dcartridge.version=0.0.3
+    - name: Deploy Web cart for ${{ matrix.demo }}
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./wrappers/web-wrapper/target/web/dist/webapp
+        destination_dir: ${{ matrix.demo }}
     - name: Setup Android SDK
       uses: android-actions/setup-android@v4
     - name: Install packages        
