@@ -24,6 +24,17 @@ jobs:
       with:
         name: 'omicron.jar'
         path: omicron-player/omicron-assembly/target/omicron.jar
+    - name: Read version
+      run: |
+        cd omicron-player
+        echo "GITHUB_DDVER=$(mvn -q org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -DforceStdout)" >> $GITHUB_ENV
+    - name: Generate Archetype
+      run: |
+        mvn archetype:generate -DarchetypeGroupId=com.github.msx80.omicron  -DarchetypeArtifactId=omicron-archetype -DarchetypeVersion=$GITHUB_DDVER -DinteractiveMode=false -DgroupId=my.awesome.games -DartifactId=newgame
+    - name: Build Generated Archetype
+      run: |
+        cd newgame
+        mvn clean compile package
   buildDemos:
     strategy:
       max-parallel: 1
