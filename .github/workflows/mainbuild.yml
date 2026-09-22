@@ -26,6 +26,7 @@ jobs:
         path: omicron-player/omicron-assembly/target/omicron.jar
   buildDemos:
     strategy:
+      max-parallel: 1
       matrix:
         demo: [helloworld, featuredemo, snake, alienbuster]
     runs-on: ubuntu-latest
