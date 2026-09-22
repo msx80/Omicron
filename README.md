@@ -46,22 +46,50 @@ An open source videogame developed with Omicron, **Doors of Doom**, available on
 [Turns of War](https://github.com/msx80/turnsofwar) an open source turn based strategy game made with Omicron:  
 <img width="868" height="524" alt="image" src="https://raw.githubusercontent.com/msx80/turnsofwar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" />
 
+Architecture
+------------
+
+Omicron can work as a game engine (as a dependency in a standalone project) or as a Fantasy Console (Omicron itself is executed and it runs omicron cartridges).
+
+Cartridges are maven projects with a standardized pom.xml which can be run on the fly or produces an `.omicron` cartridge file.
+
+A maven archetype is available to produce a preconfigured cartridge projects ready to run.
+
+Some [wrappers](https://github.com/msx80/Omicron/tree/master/wrappers) are available that take a cartridge and produce an android, web or desktop app.
+
 
 How can I try it?
 -----------------
 
-1. Build the omicron-player project (`cd omicron-player\`, `mvn clean package`)
-2. Run the player jar in omicron-assembly/target (`java -jar omicron.jar`)
-3. Build some cartridges:
-4. `cd demo/HelloWorld` (or any other demo)
-5. `gradlew build`
-6. Open the cartridges within the player.
+**Quickest start**:
 
-For android:
+1. Build and install the omicron-player project:
+  - `cd omicron-player\`
+  - `mvn clean install package`
+3. Run a demo:
+  - `cd demo/snake`
+  - `mvn clean compile exec:exec`
 
-1. Go to android folder
-2. Edit `omicron.properties` to have it point to your cartridge
-3. Run `gradlew android:installDebug android:run`
+You can also run Omicron itself as a **Fantasy Console**:
+
+1. Generate a demo cartridge
+  - `cd demo/snake`
+  - `mvn clean package`
+3. Run the player jar in omicron-assembly/target:
+  - `java -jar omicron.jar`
+4. Open a cartrigde (demo/snake/snake.omicron)
+
+**Generate your own cartridge**:
+
+You can generate a preconfigured, ready to run project with the following command:
+
+- `mvn archetype:generate -DarchetypeGroupId=com.github.msx80.omicron  -DarchetypeArtifactId=omicron-archetype -DarchetypeVersion=0.0.13-SNAPSHOT`
+
+Then run it with:
+
+- `cd mygame`
+- `mvn clean compile exec:exec`
+
 
 The API
 -------
